@@ -8,7 +8,7 @@ type Rules struct {
 	rulesFile string
 }
 
-const SchemaURL = "https://github.com/http-everytning/httpe/main/pkg/rules/schema.json"
+const SchemaURL = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
 
 type Rule struct {
 	Name string `yaml:"name,omitempty" json:"name,omitempty"`
