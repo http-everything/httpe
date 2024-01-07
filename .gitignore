@@ -23,3 +23,6 @@ go.work
 
 # Intellij and goland
 .idea
+
+# All logs
+ *.log
