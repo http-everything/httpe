@@ -26,7 +26,7 @@ The httpe server makes it easy and secure. Just define a route and a command and
 
 Start the httpe server with
 ```shell
-./httpe --routes ./routes.yaml
+./httpe --rules ./rules.yaml
 ```
 
 Calling `curl http://localhost:8080/commands/log` will give you `httpe did the job` and the defined script has been

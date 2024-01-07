@@ -23,3 +23,8 @@ go.work
 
 # Intellij and goland
 .idea
+
+# All logs
+ *.log
+
+ testdata/certs/temp.key

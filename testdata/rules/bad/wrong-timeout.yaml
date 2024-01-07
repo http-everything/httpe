@@ -1,0 +1,28 @@
+- namex: Execute some commands
+  on:
+    path: /commands/1
+    methods:
+      - get
+      - postx
+  do:
+    name: exec first command
+    execute: date >> /tmp/cmd1.log
+    args:
+      interpreter: /bin/bash
+      timeout: "bla"
+  with:
+    auth_basic:
+      - username: john.doe
+        password: 1234abc
+      - username: jane.doe
+        password: 1b8e84ccf80aae39e1ca16393920c801a8fb78c5ae8ce5e6a5d636baa3d9386d
+        hash: sha256
+  respond:
+    on_success:
+      http_status: 200
+      body: "{{ .execute.stdout }}"
+    on_error:
+      http_status: 400
+      body: "{{ .execute.stderr }}"
+    with_headers:
+      Content-Type: text
