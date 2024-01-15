@@ -21,7 +21,7 @@ func New(logger *logger.Logger) (rules *Rules) {
 	return rules
 }
 
-func (r *Rules) LoadAndValidate(rulesFile string) (rules *[]Rule, err error) {
+func (r *Rules) Load(rulesFile string) (rules *[]Rule, err error) {
 	r.Rules = &[]Rule{}
 	r.rulesFile = rulesFile
 	rulesYaml, err := os.ReadFile(rulesFile)
@@ -34,15 +34,10 @@ func (r *Rules) LoadAndValidate(rulesFile string) (rules *[]Rule, err error) {
 		return r.Rules, err
 	}
 
-	err = r.validate()
-	if err != nil {
-		return r.Rules, err
-	}
-
 	return r.Rules, nil
 }
 
-func (r *Rules) validate() (err error) {
+func (r *Rules) Validate() (err error) {
 	rulesJSON, err := json.Marshal(r.Rules)
 	if err != nil {
 		return err
@@ -52,7 +47,7 @@ func (r *Rules) validate() (err error) {
 
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
-		return fmt.Errorf("json schema valdation failed: %w", err)
+		return fmt.Errorf("json schema validation failed: %w", err)
 	}
 
 	if result.Valid() {
@@ -65,4 +60,25 @@ func (r *Rules) validate() (err error) {
 		return fmt.Errorf("invalid rules file '%s'", r.rulesFile)
 	}
 	return nil
+}
+
+func (r *Rules) AsJSONString() string {
+	rulesJSON, err := json.MarshalIndent(r.Rules, "", "  ")
+	if err != nil {
+		return ""
+	}
+	return string(rulesJSON)
+}
+
+func (rule *Rule) GetAction() (action string) {
+	if rule.Do == nil {
+		return ""
+	}
+	if rule.Do.Script != "" {
+		return RuleActionScript
+	}
+	if rule.Do.Email != "" {
+		return RuleActionEmail
+	}
+	return ""
 }

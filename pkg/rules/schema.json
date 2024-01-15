@@ -6,140 +6,136 @@
   "type": "array",
   "items": {
     "type": "object",
-    "name": {
-      "description": "unique name of rule",
-      "type": "string"
-    },
-    "on": {
-      "description": "definition of the trigger for the 'do' action, case-sensitive",
-      "type": "object",
-      "properties": {
-        "path": {
-          "description": "path of the URL",
-          "type": "string"
-        },
-        "methods": {
-          "description": "http methods, case-insensitive",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "get",
-              "post",
-              "put",
-              "delete",
-              "options",
-              "any"
-            ]
-          }
-        }
+    "properties": {
+      "name": {
+        "description": "unique name of rule",
+        "type": "string"
       },
-      "required": [
-        "path",
-        "methods"
-      ]
-    },
-    "do": {
-      "description": "definition of what to do if request matches the route",
-      "type": "object",
-      "properties": {
-        "name": {
-          "description": "unique name of the action to be executed",
-          "type": "string"
-        },
-        "execute": {
-          "description": "a command or script to execute, supports templating",
-          "type": "string"
-        },
-        "args": {
-          "description": "options for the module",
-          "type": "object",
-          "properties": {
-            "interpreter": {
-              "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
-              "type": "string"
-            },
-            "timeout": {
-              "description": "timeout (seconds, float) after which the script execution will be aborted",
-              "type": "number"
+      "on": {
+        "description": "definition of the trigger for the 'do' action, case-sensitive",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "methods": {
+            "description": "optional http methods, case-insensitive, if omitted, matching path applies to any method",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "get",
+                "post",
+                "put",
+                "delete",
+                "options"
+              ]
             }
           }
         },
         "required": [
-          "name",
-          "execute"
+          "path"
         ]
-      }
-    },
-    "with": {
-      "description": "optional options applied to the request",
-      "type": "object",
-      "properties": {
-        "auth_basic": {
-          "description": "Require http basic authentication",
-          "type": "array",
-          "items": {
+      },
+      "do": {
+        "description": "definition of what to do if request matches the route",
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "script": {
+            "description": "a command or script to execute, supports templating",
+            "type": "string"
+          },
+          "args": {
+            "description": "options for the module",
+            "type": "object",
             "properties": {
-              "username": {
-                "description": "username",
+              "interpreter": {
+                "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
                 "type": "string"
               },
-              "password": {
-                "description": "password",
-                "type": "string"
-              },
-              "hash": {
-                "type": "string",
-                "description": "hashing algorithm, 'none' equals clear text",
-                "enum": [
-                  "none",
-                  "sha256",
-                  "sha512"
-                ]
+              "timeout": {
+                "description": "timeout (seconds, float) after which the script execution will be aborted",
+                "type": "number"
               }
             }
           }
         }
-      }
-    },
-    "respond": {
-      "description": "optional definition of the response",
-      "type": "object",
-      "properties": {
-        "on_success": {
-          "description": "What to respond if script terminates successfully (exit code = 0)",
-          "type": "object",
-          "properties": {
-            "http_status": {
-              "description": "http status code of the success response, supports templating",
-              "type": "integer"
+      },
+      "with": {
+        "description": "optional options applied to the request",
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "auth_basic": {
+            "description": "Require http basic authentication",
+            "items": {
+              "properties": {
+                "username": {
+                  "description": "username",
+                  "type": "string"
+                },
+                "password": {
+                  "description": "password",
+                  "type": "string"
+                }
+              }
             },
-            "body": {
-              "description": "http body of the success response",
-              "type": "string"
-            }
+            "type": "array"
+          },
+          "auth_hashing": {
+            "type": "string",
+            "description": "hashing algorithm, if omitted, passwords are considered to be clear text",
+            "enum": [
+              "sha256",
+              "sha512"
+            ]
           }
-        },
-        "on_error": {
-          "description": "What to respond if script terminates with an error (exit code > 0)",
-          "type": "object",
-          "properties": {
-            "http_status": {
-              "description": "http status code of the error response",
-              "type": "integer"
-            },
-            "body": {
-              "description": "http body of the error response, supports templating",
-              "type": "string"
+        }
+      },
+      "respond": {
+        "description": "optional definition of the response",
+        "type": "object",
+        "properties": {
+          "on_success": {
+            "description": "What to respond if script terminates successfully (exit code = 0)",
+            "type": "object",
+            "properties": {
+              "http_status": {
+                "description": "http status code of the success response, supports templating",
+                "type": "integer"
+              },
+              "body": {
+                "description": "http body of the success response",
+                "type": "string"
+              }
             }
-          }
-        },
-        "with_headers": {
-          "description": "optional http headers send with the response, applies to success and error response",
-          "type": "object",
-          "patternProperties": {
-            ".*": {
-              "type": "string"
+          },
+          "on_error": {
+            "description": "What to respond if script terminates with an error (exit code > 0)",
+            "type": "object",
+            "properties": {
+              "http_status": {
+                "description": "http status code of the error response",
+                "type": "integer"
+              },
+              "body": {
+                "description": "http body of the error response, supports templating",
+                "type": "string"
+              }
+            }
+          },
+          "with_headers": {
+            "description": "optional http headers send with the response, applies to success and error response",
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "string"
+              }
             }
           }
         }
@@ -147,8 +143,7 @@
     },
     "required": [
       "name",
-      "on",
-      "do"
+      "on"
     ]
   }
 }

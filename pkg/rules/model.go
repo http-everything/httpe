@@ -8,12 +8,18 @@ type Rules struct {
 	rulesFile string
 }
 
-const SchemaURL = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
+const (
+	SchemaURL        = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
+	RuleActionScript = "script"
+	RuleActionEmail  = "email"
+)
 
 type Rule struct {
-	Name string `yaml:"name,omitempty" json:"name,omitempty"`
-	On   *On    `yaml:"on,omitempty" json:"on,omitempty"`
-	Do   *Do    `yaml:"do,omitempty" json:"do,omitempty"`
+	Name    string  `yaml:"name,omitempty" json:"name,omitempty"`
+	On      *On     `yaml:"on,omitempty" json:"on,omitempty"`
+	Do      *Do     `yaml:"do,omitempty" json:"do,omitempty"`
+	With    *With   `yaml:"with" json:"with,omitempty"`
+	Respond Respond `yaml:"respond" json:"respond"`
 }
 
 type On struct {
@@ -22,26 +28,37 @@ type On struct {
 }
 
 type Do struct {
-	Name    string `yaml:"name,omitempty" json:"name,omitempty"`
-	Execute string `yaml:"execute,omitempty" json:"execute,omitempty"`
-	Args    *Args  `yaml:"args,omitempty" json:"args,omitempty"`
+	Script string `yaml:"script,omitempty" json:"script,omitempty"`
+	Email  string `yaml:"email,omitempty" json:"email,omitempty"`
+	Args   Args   `yaml:"args" json:"args"`
 }
 
 type Args struct {
-	Interpreter string  `yaml:"interpreter,omitempty" json:"interpreter,omitempty"`
-	Timeout     float64 `yaml:"timeout,omitempty" json:"timeout,omitempty"`
+	Interpreter string  `yaml:"interpreter" json:"interpreter"`
+	Timeout     float64 `yaml:"timeout" json:"timeout"`
 }
 
 type With struct {
-	AuthBasic *AuthBasic `yaml:"auth_basic,omitempty" json:"auth_basic,omitempty"`
-}
-
-type AuthBasic struct {
-	Users []User
+	AuthBasic   []User `yaml:"auth_basic,omitempty" json:"auth_basic,omitempty"`
+	AuthHashing string `yaml:"auth_hashing,omitempty" json:"auth_hashing,omitempty"`
 }
 
 type User struct {
-	Username string `yaml:"username" json:"username"`
-	Password string `yaml:"password" json:"password"`
-	Hash     string `yaml:"hash" json:"hash"`
+	Username string `yaml:"username,omitempty" json:"username,omitempty"`
+	Password string `yaml:"password,omitempty" json:"password,omitempty"`
+}
+
+type Respond struct {
+	OnSuccess OnSuccess `yaml:"on_success" json:"on_success"`
+	OnError   OnError   `yaml:"on_error" json:"on_error"`
+}
+
+type OnSuccess struct {
+	HTTPStatus int    `yaml:"http_status" json:"http_status"`
+	Body       string `yaml:"body" json:"body"`
+}
+
+type OnError struct {
+	HTTPStatus int    `yaml:"http_status,omitempty" json:"omitempty"`
+	Body       string `yaml:"body,omitempty" json:"body,omitempty"`
 }

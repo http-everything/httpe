@@ -13,9 +13,11 @@ import (
 
 func TestShouldSucceed(t *testing.T) {
 	logger, logFile := makeTestLogger(t)
-	ru := rules.New(logger)
-	_, ruleErr := ru.LoadAndValidate("../../testdata/rules/good/all.yaml")
+	rules := rules.New(logger)
+	_, ruleErr := rules.Load("../../testdata/rules/good/all.yaml")
 	require.NoError(t, ruleErr)
+	valErr := rules.Validate()
+	require.NoError(t, valErr)
 	log, err := os.ReadFile(logFile)
 	require.NoError(t, err)
 
@@ -38,7 +40,14 @@ func TestShouldFail(t *testing.T) {
 			expectedErrors: []string{
 				"name is required",
 				"on is required",
-				"do is required",
+			},
+			expectedMarshalErr: false,
+		},
+		{
+			name: "wrong-enums",
+			expectedErrors: []string{
+				"0.on.methods.1: 0.on.methods.1 must be one of the following: \"get\", \"post\", \"put\", \"delete\", \"options\"",
+				"0.with.auth_hashing: 0.with.auth_hashing must be one of the following: \"sha256\", \"sha512\"",
 			},
 			expectedMarshalErr: false,
 		},
@@ -47,13 +56,19 @@ func TestShouldFail(t *testing.T) {
 			expectedErrors:     []string{"cannot unmarshal !!str `bla` into float64"},
 			expectedMarshalErr: true,
 		},
+		{
+			name:               "broken-yaml",
+			expectedErrors:     []string{"mapping values are not allowed in this context"},
+			expectedMarshalErr: true,
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			logger, logFile := makeTestLogger(t)
 			ru := rules.New(logger)
-			_, ruleErr := ru.LoadAndValidate("../../testdata/rules/bad/" + tc.name + ".yaml")
+			_, ruleErr := ru.Load("../../testdata/rules/bad/" + tc.name + ".yaml")
 			t.Logf("Err %s", ruleErr)
+			valErr := ru.Validate()
 			log, err := os.ReadFile(logFile)
 			require.NoError(t, err)
 			t.Logf("Logged: %s", string(log))
@@ -63,7 +78,7 @@ func TestShouldFail(t *testing.T) {
 					assert.ErrorContains(t, ruleErr, exp)
 				}
 			} else {
-				assert.ErrorContains(t, ruleErr, "invalid rules file")
+				assert.ErrorContains(t, valErr, "invalid rules file")
 				assert.Contains(t, string(log), fmt.Sprintf("ERROR: test: schema validation against %s failed", rules.SchemaURL))
 				for _, exp := range tc.expectedErrors {
 					assert.Contains(t, string(log), exp)

@@ -3,10 +3,10 @@
     path: /commands/1
     methods:
       - get
-      - postx
+      - post
   do:
     name: exec first command
-    execute: date >> /tmp/cmd1.log
+    script: date >> /tmp/cmd1.log
     args:
       #interpreter: /bin/bash
       timeout: 1.9
@@ -16,13 +16,19 @@
         password: 1234abc
       - username: jane.doe
         password: 1b8e84ccf80aae39e1ca16393920c801a8fb78c5ae8ce5e6a5d636baa3d9386d
-        hash: sha256
+    auth_hashing: sha256
   respond:
     on_success:
       http_status: 200
-      body: "{{ .execute.stdout }}"
+      body: "{{ .script.stdout }}"
     on_error:
       http_status: 400
-      body: "{{ .execute.stderr }}"
+      body: "{{ .script.stderr }}"
     with_headers:
       Content-Type: text
+- name: simple rule
+  on:
+    path: /path/1
+  respond:
+    on_success:
+      body: hello world

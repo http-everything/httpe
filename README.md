@@ -17,7 +17,7 @@ The httpe server makes it easy and secure. Just define a route and a command and
     path: /commands/log
     method: get
   do:
-    execute:
+    script:
       interpreter: /bin/bash
       exec: |
         echo "$(date) -- /command/logs has been called" >> /tmp/command.log

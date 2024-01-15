@@ -1,0 +1,63 @@
+- name: Execute some commands
+  on:
+    path: /commands/1
+    methods:
+      - get
+      - post
+  do:
+    script: |
+      date
+      id
+      whoami
+    args:
+      interpreter: /bin/bash
+      timeout: 1.9
+  with:
+    auth_basic:
+      - username: john.doe
+        password: 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+      - username: jane.doe
+        password: 1b8e84ccf80aae39e1ca16393920c801a8fb78c5ae8ce5e6a5d636baa3d9386d
+    auth_hashing: sha256
+  respond:
+    on_success:
+      http_status: 200
+      body: |
+        The script says: 
+        {{ .Action.SuccessBody }}
+        -- End of Script output ---
+        Script Errors:
+        {{ .Action.ErrorBody }}
+- name: Execute some more commands
+  on:
+    path: /commands/2
+  do:
+    script: date -foo
+    args:
+      interpreter: /bin/bash
+  respond:
+    on_error:
+      body: |
+        Your script has failed with: {{ .Action.ErrorBody }} Exit Code: {{ .Action.Code }}
+- name: execute python
+  on:
+    path: /commands/3
+  do:
+    script: |
+      import platform
+      print(platform.python_version())
+    args:
+      interpreter: python3
+
+- name: Respond with text
+  on:
+    path: /text
+  respond:
+    on_success:
+      http_status: 500
+      body: |
+        Hello World 
+        You are using {{ .UserAgent |ToUpper }}
+
+  with_headers:
+    Content-Type: text

@@ -15,6 +15,10 @@ const (
 	LogLevelDebug LogLevel = 2
 )
 
+// ParseLogLevel parses the string representation of a log level and returns the corresponding LogLevel enum value.
+// It uses a map to map the string value to its corresponding LogLevel value.
+// If the given string value is found in the map, it returns the corresponding LogLevel value.
+// Otherwise, it returns LogLevelError and an error indicating that the log level is invalid.
 func ParseLogLevel(str string) (LogLevel, error) {
 	var m = map[string]LogLevel{
 		"error": LogLevelError,
@@ -27,6 +31,10 @@ func ParseLogLevel(str string) (LogLevel, error) {
 	return LogLevelError, fmt.Errorf("invalid log level: %q", str)
 }
 
+// LogLevelStr returns the string representation of the given LogLevel.
+// It uses a map to map the integer value of LogLevel to its corresponding string value.
+// If the given LogLevel is found in the map, it returns the string value.
+// Otherwise, it returns "unknown".
 func LogLevelStr(level LogLevel) (levelStr string) {
 	var m = map[int]string{
 		0: "ERROR",

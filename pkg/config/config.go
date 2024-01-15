@@ -39,6 +39,8 @@ type SvrConfig struct {
 	LogFile       string `mapstructure:"log_file"`
 	LogLevel      string `mapstructure:"log_level"`
 	RulesFile     string `mapstructure:"rules_file"`
+	ValidateOnly  bool   `mapstructure:"validate"`
+	DumpRules     bool   `mapstructure:"dump_rules"`
 }
 
 // Config is used for managing the license server config values
@@ -92,6 +94,8 @@ func (c *Config) Setup() {
 		_ = viperCfg.BindPFlag("server.log_file", c.pFlags.Lookup("log-file"))
 		_ = viperCfg.BindPFlag("server.log_level", c.pFlags.Lookup("log-level"))
 		_ = viperCfg.BindPFlag("server.rules_file", c.pFlags.Lookup("rules-file"))
+		_ = viperCfg.BindPFlag("server.dump_rules", c.pFlags.Lookup("dump-rules"))
+		_ = viperCfg.BindPFlag("server.validate", c.pFlags.Lookup("validate"))
 	}
 
 	viperCfg.SetEnvPrefix(EnvPrefix)

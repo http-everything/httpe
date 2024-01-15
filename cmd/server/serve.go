@@ -18,8 +18,14 @@ const (
 )
 
 // serve starts and runs the HTTPE server
-func serve(validateOnly bool) {
+func serve() {
 	pFlags := RootCmd.PersistentFlags()
+
+	pv, _ := pFlags.GetBool("version")
+	if pv {
+		fmt.Printf("httpe %s\n", version.HTTPEServerVersion)
+		return
+	}
 
 	cfg := config.New(pFlags)
 
@@ -45,15 +51,24 @@ func serve(validateOnly bool) {
 
 	rulesLogger := baseLogger.Fork("rules")
 	ru := rules.New(rulesLogger)
-	rules, err := ru.LoadAndValidate(cfg.S.RulesFile)
+	rules, err := ru.Load(cfg.S.RulesFile)
 	if err != nil {
 		reportErrorAndExit(rulesLogger, err)
 		return
 	}
-
-	if validateOnly {
+	if cfg.S.DumpRules {
+		fmt.Println(ru.AsJSONString())
 		return
 	}
+	err = ru.Validate()
+	if err != nil {
+		reportErrorAndExit(rulesLogger, err)
+	}
+	if cfg.S.ValidateOnly {
+		// End here if only the validation has been requested
+		return
+	}
+
 	svr, err := server.New(cfg, rules, baseLogger, accessLogWriter)
 	if err != nil {
 		reportErrorAndExit(baseLogger, fmt.Errorf("unable to setup HTTPE server: %w", err))

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"http-everything/httpe/pkg/share/version"
 	"os"
 
 	"http-everything/httpe/pkg/config"
@@ -21,21 +20,9 @@ func Execute() {
 		Short: "Start the httpe server",
 		Long:  "The HTTPE server allows you to trigger a variety of actions via HTTP requests.",
 		Run: func(cmd *cobra.Command, args []string) {
-			serve(false)
+			serve()
 		},
 	}
-
-	RootCmd.AddCommand(&cobra.Command{
-		Use:   "validate",
-		Short: "Validate config and rules",
-		Long: "Validate config and rules then exit. On errors errors, exit code>0." +
-			" Use in combination with '--log-level debug' to get all details of validation errors.",
-		Run: func(cmd *cobra.Command, args []string) {
-			serve(true)
-		},
-	})
-
-	RootCmd.AddCommand(version.Cmd)
 
 	pFlags := RootCmd.PersistentFlags()
 
@@ -48,11 +35,14 @@ func Execute() {
 	pFlags.StringP("address", "a", config.DefaultServerAddress, "set the listen address for the server")
 	pFlags.StringP("data-dir", "d", config.DefaultDataDir, "set the data directory for license json files")
 	pFlags.String("log-level", config.DefaultLogLevel, "specify server log level. either error, info, or debug.")
-	pFlags.StringP("log-file", "p", "", "specify server log file")
+	pFlags.StringP("log-file", "l", "", "specify server log file")
 	pFlags.StringP("rules-file", "r", "", "specify rules to map route to actions")
 	pFlags.String("access-log-file", "", "set the access log file in the apache common log format")
 	pFlags.String("cert-file", "", "specify the TLS certificate file")
 	pFlags.String("key-file", "", "specify the TLS key file")
+	pFlags.Bool("validate", false, "validate configuration and rules, then exit")
+	pFlags.BoolP("version", "v", false, "print version information")
+	pFlags.Bool("dump-rules", false, "dump a json representation of the rules yaml, skips validation")
 
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)

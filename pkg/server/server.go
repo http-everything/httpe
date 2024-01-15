@@ -15,13 +15,15 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
+	"github.com/gorilla/handlers"
 )
 
 // Server is the core HTTP server for the HTTPE server
 type Server struct {
-	cfg *config.Config
+	cfg   *config.Config
+	rules *[]rules.Rule
 
 	Handler http.Handler
 
@@ -32,7 +34,7 @@ type Server struct {
 
 // New creates a new Server. It will also create a new baseLogger which will be used to fork
 // the loggers used by other packages.
-func New(cfg *config.Config, _ *[]rules.Rule, baseLogger *logger.Logger, accessLogWriter io.Writer) (
+func New(cfg *config.Config, rules *[]rules.Rule, baseLogger *logger.Logger, accessLogWriter io.Writer) (
 	svr *Server, err error) {
 	l := baseLogger.Fork("server")
 
@@ -40,6 +42,7 @@ func New(cfg *config.Config, _ *[]rules.Rule, baseLogger *logger.Logger, accessL
 		cfg:             cfg,
 		logger:          l,
 		accessLogWriter: accessLogWriter,
+		rules:           rules,
 	}
 	return svr, nil
 }
@@ -49,8 +52,16 @@ func (s *Server) Setup() {
 	s.logger.Infof("setting up")
 	r := mux.NewRouter()
 
-	r.HandleFunc("/gaga", requesthandler.Get).Methods("GET")
-	r.HandleFunc("/foo", requesthandler.Get).Methods("GET")
+	for _, rule := range *s.rules {
+		h := requesthandler.Execute(rule, s.logger)
+		if len(rule.On.Methods) == 0 {
+			r.Handle(rule.On.Path, h)
+			continue
+		}
+		for _, m := range rule.On.Methods {
+			r.Handle(rule.On.Path, h).Methods(m)
+		}
+	}
 	r.PathPrefix("/").Handler(http.HandlerFunc(s.catchAllHandler))
 
 	if s.accessLogWriter != nil {
@@ -108,7 +119,7 @@ func (s *Server) Serve(ctx context.Context, withWait bool) (err error) {
 // catchAllHandler returns unauthorised for all unknown routes
 func (s *Server) catchAllHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	_, err := w.Write([]byte("not found"))
+	_, err := w.Write([]byte("not found\n"))
 	if err != nil {
 		s.logger.Errorf("unable to write response: %s", err)
 	}
