@@ -32,13 +32,22 @@
   on:
     path: /commands/2
   do:
-    script: date -foo
+    script: "{{ .Input.Form.Script }}"
     args:
-      interpreter: /bin/bash
+      interpreter: /bin/sh
+      timeout: 3
   respond:
     on_error:
       body: |
-        Your script has failed with: {{ .Action.ErrorBody }} Exit Code: {{ .Action.Code }}
+        Your script '{{ .Input.Form.Script }}' has failed with: 
+          Stderr: {{ .Action.ErrorBody }}
+          Stdout: {{ .Action.SuccessBody }}
+        Exit Code: {{ .Action.Code }}
+    on_success:
+      body: |
+        Your script '{{ .Input.Form.Script }}' returns:
+        {{ .Action.SuccessBody }}
+        {{ .Action.ErrorBody }}
 - name: execute python
   on:
     path: /commands/3
@@ -52,12 +61,71 @@
 - name: Respond with text
   on:
     path: /text
+  do:
+    noaction: []
   respond:
     on_success:
-      http_status: 500
+      http_status: 200
       body: |
         Hello World 
-        You are using {{ .UserAgent |ToUpper }}
+        You are using {{ .Meta.UserAgent |ToUpper }}
+        Input Foo = {{ .Input.Foo }}
 
   with_headers:
     Content-Type: text
+
+- name: path with placeholder
+  on:
+    path: /prefix/{var1}
+  do:
+    answer.content: |
+      Var 1 = {{ .Input.URLPlaceholders.var1 }}
+      URL = {{ .Meta.URL }}
+
+- name: path with placeholder
+  on:
+    path: /prefix2/:id
+  do:
+    answer.content: |
+      Var 1 = {{ .Input.URLPlaceholders.id }}
+      URL = {{ .Meta.URL }}
+    
+
+- name: text answer
+  on:
+    path: /answer
+  do:
+    answer.content: |
+      This is my answer.
+      This is your Form Input:
+      {{- range $key,$value := .Input.Form }}
+      * {{ $key }}: {{ $value }}
+      {{- end }}
+      
+      This is your Json Input:
+      {{- range $key,$value := .Input.JSON }}
+      * {{ $key }}: {{ $value }}
+      {{- end }}
+      
+      These are your URL Parameters:
+      {{- range $key,$value := .Input.Params }}
+      * {{ $key }}: {{ $value }}
+      {{- end }}
+      
+      These are your headers:
+      {{- range $key,$values := .Meta.Headers }}
+      * {{ $key }}: {{ $values }}
+      {{- end }}
+      
+      This is the first file upload:
+      {{ $upload := index .Input.Uploads 0 }}
+      {{ $upload.FieldName }}
+      {{ $upload.FileName }}
+      {{ $upload.Stored }}
+      {{ $upload.Type }}
+      
+      
+      User Agent: {{ .Meta.UserAgent }}
+      Method: {{ .Meta.Method }}
+      URL: {{ .Meta.URL }}
+      -- End of Answer --

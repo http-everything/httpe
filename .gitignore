@@ -26,5 +26,3 @@ go.work
 
 # All logs
  *.log
-
- testdata/certs/temp.key

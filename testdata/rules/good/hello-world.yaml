@@ -1,0 +1,6 @@
+---
+- name: Hello World
+  on:
+    path: /
+  do:
+    answer.content: Hello World

@@ -18,16 +18,16 @@ func TestShouldValidateConfig(t *testing.T) {
 		RulesFile: "../../testdata/rules/good/all.yaml",
 	}
 	cases := []struct {
-		name        string
-		cfg         *config.Config
-		expectedErr error
+		name      string
+		cfg       *config.Config
+		wantError error
 	}{
 		{
 			name: "valid config",
 			cfg: &config.Config{
 				S: validServerConfig,
 			},
-			expectedErr: nil,
+			wantError: nil,
 		},
 		{
 			name: "bad address (includes scheme)",
@@ -38,7 +38,7 @@ func TestShouldValidateConfig(t *testing.T) {
 					KeyFile:  "../../testdata/certs/testkey.pem",
 				},
 			},
-			expectedErr: config.ErrAddressIncludesScheme,
+			wantError: config.ErrAddressIncludesScheme,
 		},
 		{
 			name: "cert file inaccessible",
@@ -49,7 +49,7 @@ func TestShouldValidateConfig(t *testing.T) {
 					KeyFile:  "../../testdata/certs/testkey.pem",
 				},
 			},
-			expectedErr: config.ErrUnableToAccessCertFile,
+			wantError: config.ErrUnableToAccessCertFile,
 		},
 		{
 			name: "key file inaccessible",
@@ -60,7 +60,7 @@ func TestShouldValidateConfig(t *testing.T) {
 					KeyFile:  "none-existing.pem",
 				},
 			},
-			expectedErr: config.ErrUnableToAccessKeyFile,
+			wantError: config.ErrUnableToAccessKeyFile,
 		},
 		{
 			name: "missing key file",
@@ -70,7 +70,7 @@ func TestShouldValidateConfig(t *testing.T) {
 					KeyFile: "none-existing.pem",
 				},
 			},
-			expectedErr: config.ErrCertOrKeyMissing,
+			wantError: config.ErrCertOrKeyMissing,
 		},
 		{
 			name: "missing cert file",
@@ -80,15 +80,15 @@ func TestShouldValidateConfig(t *testing.T) {
 					CertFile: "none-existing.pem",
 				},
 			},
-			expectedErr: config.ErrCertOrKeyMissing,
+			wantError: config.ErrCertOrKeyMissing,
 		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			err := tc.cfg.Validate()
 
-			if tc.expectedErr != nil {
-				assert.EqualError(t, err, tc.expectedErr.Error())
+			if tc.wantError != nil {
+				assert.EqualError(t, err, tc.wantError.Error())
 			} else {
 				assert.NoError(t, err)
 			}

@@ -1,0 +1,15 @@
+---
+- name: GET File 1
+  on:
+    path: /file1
+    methods:
+      - get
+  do:
+    answer.file: /etc/hosts
+- name: GET File 2
+  on:
+    path: /file2
+    methods:
+      - get
+  do:
+    answer.file: /tmp/nonsense

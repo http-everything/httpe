@@ -9,15 +9,19 @@ type Rules struct {
 }
 
 const (
-	SchemaURL        = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
-	RuleActionScript = "script"
-	RuleActionEmail  = "email"
+	SchemaURL     = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
+	RunScript     = "run.script"
+	SendEmail     = "send.email"
+	AnswerContent = "answer.content"
+	AnswerFile    = "answer.file"
 )
+
+var ValidActions = []string{RunScript, SendEmail, AnswerFile, AnswerContent}
 
 type Rule struct {
 	Name    string  `yaml:"name,omitempty" json:"name,omitempty"`
-	On      *On     `yaml:"on,omitempty" json:"on,omitempty"`
-	Do      *Do     `yaml:"do,omitempty" json:"do,omitempty"`
+	On      *On     `yaml:"on" json:"on"`
+	Do      *Do     `yaml:"do" json:"do"`
 	With    *With   `yaml:"with" json:"with,omitempty"`
 	Respond Respond `yaml:"respond" json:"respond"`
 }
@@ -28,14 +32,17 @@ type On struct {
 }
 
 type Do struct {
-	Script string `yaml:"script,omitempty" json:"script,omitempty"`
-	Email  string `yaml:"email,omitempty" json:"email,omitempty"`
-	Args   Args   `yaml:"args" json:"args"`
+	RunScript     string `yaml:"run.script,omitempty" json:"run.script,omitempty"`
+	SendEmail     string `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	AnswerContent string `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
+	AnswerFile    string `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
+	Args          Args   `yaml:"args" json:"args"`
 }
 
 type Args struct {
-	Interpreter string  `yaml:"interpreter" json:"interpreter"`
-	Timeout     float64 `yaml:"timeout" json:"timeout"`
+	Interpreter string `yaml:"interpreter" json:"interpreter"`
+	Timeout     int    `yaml:"timeout" json:"timeout"`
+	Cwd         string `yaml:"cwd" json:"cwd"`
 }
 
 type With struct {

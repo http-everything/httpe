@@ -39,30 +39,67 @@
       },
       "do": {
         "description": "definition of what to do if request matches the route",
-        "type": [
-          "object",
-          "null"
-        ],
+        "type": "object",
         "properties": {
-          "script": {
+          "run.script": {
             "description": "a command or script to execute, supports templating",
+            "type": "string"
+          },
+          "answer.content": {
+            "description": "text to respond, supports templating",
+            "type": "string"
+          },
+          "answer.file": {
+            "description": "file to respond, supports templating",
+            "type": "string"
+          },
+          "send.email": {
+            "description": "send an email, supports templating",
             "type": "string"
           },
           "args": {
             "description": "options for the module",
             "type": "object",
+            "additionalProperties": false,
             "properties": {
               "interpreter": {
                 "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
                 "type": "string"
               },
               "timeout": {
-                "description": "timeout (seconds, float) after which the script execution will be aborted",
-                "type": "number"
+                "description": "timeout (seconds, int) after which the script execution will be aborted",
+                "type": "integer"
+              },
+              "cwd": {
+                "description": "change working directory. If not set, the OS temp dir will be used",
+                "type": "string"
               }
             }
           }
-        }
+        },
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "answer.content"
+            ]
+          },
+          {
+            "required": [
+              "run.script"
+            ]
+          },
+          {
+            "required": [
+              "answer.file"
+            ]
+          },
+          {
+            "required": [
+              "send.email"
+            ]
+          }
+        ]
       },
       "with": {
         "description": "optional options applied to the request",

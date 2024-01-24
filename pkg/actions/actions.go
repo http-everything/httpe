@@ -1,6 +1,9 @@
 package actions
 
-import "http-everything/httpe/pkg/rules"
+import (
+	"http-everything/httpe/pkg/requestdata"
+	"http-everything/httpe/pkg/rules"
+)
 
 type ActionResponse struct {
 	SuccessBody string
@@ -8,6 +11,6 @@ type ActionResponse struct {
 	Code        int
 }
 
-type Action interface {
-	Execute(rule rules.Rule) (response ActionResponse, err error)
+type Actioner interface {
+	Execute(rule rules.Rule, reqData requestdata.Data) (response ActionResponse, err error)
 }

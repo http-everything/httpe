@@ -3,7 +3,7 @@
     path: /commands/1
     methods:
       - get
-      - bad_method
+      - post
   do:
     run.script: date >> /tmp/cmd1.log
     args:

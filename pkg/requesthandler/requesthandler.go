@@ -2,62 +2,70 @@ package requesthandler
 
 import (
 	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/script"
+	"http-everything/httpe/pkg/actions/answercontent"
+	"http-everything/httpe/pkg/actions/answerfile"
+	"http-everything/httpe/pkg/actions/runscript"
 	"http-everything/httpe/pkg/auth"
-	"http-everything/httpe/pkg/request"
+	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/response"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/logger"
-	"log"
 	"net/http"
 )
 
 func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		rw := response.New(w, rule.Respond, request.BuildMetaData(r), logger)
-		err := r.ParseForm()
-		if err != nil {
-			rw.InternalServerError(err)
-			return
-		}
-		for k, v := range r.PostForm {
-			for i, value := range v {
-				log.Printf("k: %s, i: %d, value: %s \n", k, i, value)
-			}
-		}
+		// Initialise a new http response writer.
+		respWriter := response.New(w, rule.Respond, logger)
+
+		// Authenticate, if requested by the rule
 		if rule.With != nil {
 			ok, err := auth.IsRequestAuthenticated(rule.With.AuthBasic, rule.With.AuthHashing, r)
 			if err != nil {
-				rw.InternalServerError(err)
+				respWriter.InternalServerError(err)
 				return
 			}
 			if !ok {
-				http.Error(w, "Unauthorised", http.StatusUnauthorized)
+				respWriter.Unauthorised()
 				return
 			}
 		}
-		var a actions.Action //Create a container for the action that implements the action interface
 
-		// Hand over the request to the action specified by the rule action defined by rule.Do using switch case
-		do := rule.GetAction()
-		switch do {
-		case rules.RuleActionScript:
-			// Execute a script
-			a = script.Script{}
-		case rules.RuleActionEmail:
-			// Send an email
-			a = script.Script{}
-		default:
-			// Do nothing, just create a response
-			a = script.Script{}
-		}
-		// Execute the action by calling the mandatory function Execute()
-		resp, err := a.Execute(rule)
+		// Collect data from the request to be made available to the template engine and add to the response writer
+		reqData, err := requestdata.Collect(r)
 		if err != nil {
-			rw.InternalServerErrorf("action=%s: %s", do, err)
+			respWriter.InternalServerError(err)
 			return
 		}
-		rw.ActionResponse(resp)
+		respWriter.AddRequestData(reqData)
+
+		//Create a container for the action that implements the action interface
+		var actioner actions.Actioner
+
+		// Hand over the request to the action specified by the rule defined by 'rule.Do' using switch case
+		switch rule.Action() {
+		case rules.RunScript:
+			// Execute a script
+			actioner = runscript.Script{}
+		case rules.SendEmail:
+			// Send an email
+			actioner = runscript.Script{}
+		case rules.AnswerContent:
+			actioner = answercontent.AnswerContent{}
+		case rules.AnswerFile:
+			actioner = answerfile.AnswerFile{}
+		default:
+			// Do nothing, just create a response
+			actioner = answercontent.AnswerContent{}
+		}
+		// Execute the action by calling the mandatory function Execute()
+		actionResp, err := actioner.Execute(rule, reqData)
+		if err != nil {
+			respWriter.InternalServerErrorf("action %s: %s", rule.Action(), err)
+			return
+		}
+		// Hand over the action response to our HTTP response writer
+		respWriter.ActionResponse(actionResp)
 	}
 	return http.HandlerFunc(fn)
 }
