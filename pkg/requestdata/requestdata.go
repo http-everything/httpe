@@ -209,12 +209,12 @@ func extractFileUploads(r *http.Request) (uploads []Upload, err error) {
 		fn := os.TempDir() + UploadPrefix + shortuuid.New()
 		dst, err := os.Create(fn)
 		if err != nil {
-			return uploads, fmt.Errorf("error extracting uploads: %w", err)
+			return uploads, fmt.Errorf("error creating temp file for upload: %w", err)
 		}
 		defer dst.Close()
 		// copy the uploaded file to the destination
 		if _, err := io.Copy(dst, upload); err != nil {
-			return uploads, fmt.Errorf("error extracting uploads: %w", err)
+			return uploads, fmt.Errorf("error copying upload to destination: %w", err)
 		}
 		dst.Close()
 

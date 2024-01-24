@@ -18,7 +18,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const UserAgent = "Test User Agent"
+const (
+	UserAgent         = "Test User Agent"
+	Name              = "John Doe"
+	Email             = "john@example.com"
+	HeaderContentType = "Content-Type"
+)
 
 func TestRequestDataGet(t *testing.T) {
 	req := &http.Request{
@@ -49,8 +54,8 @@ func TestRequestDataGet(t *testing.T) {
 func TestRequestDataPostWWWUrlEncoded(t *testing.T) {
 	// Create a map of the form values
 	data := url.Values{
-		"name":  {"John Doe"},
-		"email": {"john@example.com"},
+		"name":  {Name},
+		"email": {Email},
 	}
 
 	// Encode the form values
@@ -65,15 +70,15 @@ func TestRequestDataPostWWWUrlEncoded(t *testing.T) {
 	require.NoError(t, err)
 
 	// Add content-type header
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add(HeaderContentType, "application/x-www-form-urlencoded")
 
 	reqData, err := requestdata.Collect(req)
 	require.NoError(t, err)
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
 	assert.Equal(t, "/form", reqData.Meta.URL)
-	assert.Equal(t, "John Doe", reqData.Input.Form["name"])
-	assert.Equal(t, "john@example.com", reqData.Input.Form["email"])
+	assert.Equal(t, Name, reqData.Input.Form["name"])
+	assert.Equal(t, Email, reqData.Input.Form["email"])
 }
 
 func TestRequestDataPostMultipartFormData(t *testing.T) {
@@ -84,8 +89,8 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 	writer := multipart.NewWriter(body)
 
 	// Add form fields
-	_ = writer.WriteField("name", "John Doe")
-	_ = writer.WriteField("email", "john@example.com")
+	_ = writer.WriteField("name", Name)
+	_ = writer.WriteField("email", Email)
 
 	// Add file
 	file, err := os.Open("../../testdata/files/text.txt")
@@ -103,15 +108,15 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 	req, _ := http.NewRequest("POST", "http://localhost/upload", body)
 
 	// Add headers
-	req.Header.Add("Content-Type", writer.FormDataContentType())
+	req.Header.Add(HeaderContentType, writer.FormDataContentType())
 
 	reqData, err := requestdata.Collect(req)
 	require.NoError(t, err)
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
 	assert.Equal(t, "/upload", reqData.Meta.URL)
-	assert.Equal(t, "John Doe", reqData.Input.Form["name"])
-	assert.Equal(t, "john@example.com", reqData.Input.Form["email"])
+	assert.Equal(t, Name, reqData.Input.Form["name"])
+	assert.Equal(t, Email, reqData.Input.Form["email"])
 	assert.Equal(t, "file", reqData.Input.Uploads[0].FieldName)
 	assert.Equal(t, "text/UTF-8", reqData.Input.Uploads[0].Type)
 	assert.Equal(t, int64(21), reqData.Input.Uploads[0].Size)
@@ -121,8 +126,8 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 func TestRequestDataPostJSON(t *testing.T) {
 	// Create JSON data
 	data := map[string]string{
-		"name":  "John Doe",
-		"email": "john@example.com",
+		"name":  Name,
+		"email": Email,
 	}
 	jsonData, err := json.Marshal(data)
 	require.NoError(t, err)
@@ -139,7 +144,7 @@ func TestRequestDataPostJSON(t *testing.T) {
 	require.NoError(t, err)
 
 	// Set content type to JSON
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(HeaderContentType, "application/json")
 
 	reqData, err := requestdata.Collect(req)
 	require.NoError(t, err)

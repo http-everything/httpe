@@ -143,7 +143,6 @@ func (c *Config) Validate() (err error) {
 		return ErrAddressIncludesScheme
 	}
 
-	// TODO: hack so that the address will pass the Parse validation. is there a better way?
 	address = "https://" + address
 
 	_, err = url.Parse(address)

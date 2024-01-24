@@ -24,6 +24,7 @@ const (
 type Script struct{}
 
 func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
+	var exitCode = -1
 	timeoutSec := firstof.Int(rule.Do.Args.Timeout, DefaultTimeoutSecs)
 	script, _ := templating.RenderActionInput(rule.Do.RunScript, reqData)
 	interpreter := firstof.String(rule.Do.Args.Interpreter, DefaultInterpreter)
@@ -63,7 +64,10 @@ func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response act
 
 	killCh := make(chan error, 10)
 	doneCh := make(chan error, 10)
+	exitCodeCh := make(chan int, 10)
 
+	// Start goroutine to monitor for context timeout and kill the process.
+	// goroutine waits on either the context or the command to finish
 	process, processDone := context.WithCancel(context.Background())
 	go func() {
 		select {
@@ -76,10 +80,13 @@ func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response act
 			}
 
 		case <-process.Done():
+			exitCodeCh <- cmd.ProcessState.ExitCode()
 		}
+		close(exitCodeCh)
 		close(killCh)
 	}()
 
+	// Start go routine to wait for completion and signal on the doneCh channel
 	go func() {
 		err := cmd.Wait()
 		if err != nil {
@@ -108,13 +115,15 @@ func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response act
 		for err := range doneCh {
 			errs = append(errs, err.Error())
 		}
+		for c := range exitCodeCh {
+			exitCode = c
+		}
 	}
 
-	exitCode := cmd.ProcessState.ExitCode()
+	if stderrBu.String() != "" {
+		errs = append(errs, stderrBu.String())
+	}
 	if exitCode < 0 {
-		if stderrBu.String() != "" {
-			errs = append(errs, stderrBu.String())
-		}
 		return actions.ActionResponse{}, errors.New(strings.Join(errs, ", "))
 	}
 

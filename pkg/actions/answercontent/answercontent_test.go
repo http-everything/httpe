@@ -2,16 +2,17 @@ package answercontent_test
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answercontent"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestAnswerContent_Execute(t *testing.T) {
+func TestAnswerContentExecute(t *testing.T) {
 	reqData, err := requestdata.Mock()
 	require.NoError(t, err)
 	rule := rules.Rule{

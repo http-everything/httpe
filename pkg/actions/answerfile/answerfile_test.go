@@ -2,17 +2,18 @@ package answerfile_test
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answerfile"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestAnswerFile_Execute(t *testing.T) {
+func TestAnswerFileExecute(t *testing.T) {
 	testFile := t.TempDir() + "/test.txt"
 	err := os.WriteFile(testFile, []byte("Agent is {{ .Meta.UserAgent }}, FormField1 is {{ .Input.Form.Field1 }}"), 0400)
 	require.NoError(t, err)
@@ -36,7 +37,7 @@ func TestAnswerFile_Execute(t *testing.T) {
 	)
 }
 
-func TestAnswerFile_Execute_FileNotFound(t *testing.T) {
+func TestAnswerFileExecuteFileNotFound(t *testing.T) {
 	testFile := t.TempDir() + "/test.txt"
 	rule := rules.Rule{
 		Do: &rules.Do{

@@ -9,11 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"http-everything/httpe/pkg/requestdata"
-
-	"github.com/stretchr/testify/require"
 )
 
-func TestScript_Execute(t *testing.T) {
+func TestScriptExecute(t *testing.T) {
 	cases := []struct {
 		name            string
 		script          string
@@ -84,7 +82,7 @@ func TestScript_Execute(t *testing.T) {
 			actionResp, err := actioner.Execute(rule, reqData)
 
 			if tc.wantError == "" {
-				require.NoError(t, err)
+				assert.NoError(t, err)
 				assert.Equal(t, actions.ActionResponse{
 					SuccessBody: tc.wantSuccessBody,
 					ErrorBody:   tc.wantErrorBody,

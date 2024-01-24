@@ -1,4 +1,4 @@
-name: Build
+name: Sonarcube Scan
 on: [push]
 jobs:
   sonarcloud:

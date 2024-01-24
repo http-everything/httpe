@@ -1,13 +1,14 @@
 package requesthandler_test
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/requesthandler"
 	"http-everything/httpe/pkg/rules"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestRequestHandler(t *testing.T) {
@@ -72,5 +73,4 @@ func TestRequestHandlerWithAuth(t *testing.T) {
 		assert.Equal(t, "foo", rec.Body.String())
 		assert.Equal(t, http.StatusOK, rec.Code)
 	})
-
 }

@@ -49,11 +49,11 @@ func hashPassword(password string, algorithm string) (hash string, err error) {
 	case "":
 		return password, nil
 	case "sha256":
-		_hash := sha256.Sum256([]byte(password))
-		return hex.EncodeToString(_hash[:]), nil
+		h := sha256.Sum256([]byte(password))
+		return hex.EncodeToString(h[:]), nil
 	case "sha512":
-		_hash := sha512.Sum512([]byte(password))
-		return hex.EncodeToString(_hash[:]), nil
+		h := sha512.Sum512([]byte(password))
+		return hex.EncodeToString(h[:]), nil
 	default:
 		return hash, errors.New("unknown hashing algorithm")
 	}

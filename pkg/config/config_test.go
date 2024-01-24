@@ -10,11 +10,18 @@ import (
 	"http-everything/httpe/pkg/config"
 )
 
+const (
+	Address         = "127.0.0.0:3000"
+	CertFile        = "../../testdata/certs/testcert.pem"
+	KeyFile         = "../../testdata/certs/testkey.pem"
+	NonExistingFile = "/tmp/aiWa0weshie4Shahcoh4"
+)
+
 func TestShouldValidateConfig(t *testing.T) {
 	validServerConfig := &config.SvrConfig{
-		Address:   "127.0.0.0:3000",
-		CertFile:  "../../testdata/certs/testcert.pem",
-		KeyFile:   "../../testdata/certs/testkey.pem",
+		Address:   Address,
+		CertFile:  CertFile,
+		KeyFile:   KeyFile,
 		RulesFile: "../../testdata/rules/good/all.yaml",
 	}
 	cases := []struct {
@@ -33,9 +40,9 @@ func TestShouldValidateConfig(t *testing.T) {
 			name: "bad address (includes scheme)",
 			cfg: &config.Config{
 				S: &config.SvrConfig{
-					Address:  "http://127.0.0.0:3000",
-					CertFile: "../../testdata/certs/testcert.pem",
-					KeyFile:  "../../testdata/certs/testkey.pem",
+					Address:  "http://" + Address,
+					CertFile: CertFile,
+					KeyFile:  KeyFile,
 				},
 			},
 			wantError: config.ErrAddressIncludesScheme,
@@ -44,9 +51,9 @@ func TestShouldValidateConfig(t *testing.T) {
 			name: "cert file inaccessible",
 			cfg: &config.Config{
 				S: &config.SvrConfig{
-					Address:  "127.0.0.0:3000",
-					CertFile: "none-existing.pem",
-					KeyFile:  "../../testdata/certs/testkey.pem",
+					Address:  Address,
+					CertFile: NonExistingFile,
+					KeyFile:  KeyFile,
 				},
 			},
 			wantError: config.ErrUnableToAccessCertFile,
@@ -55,9 +62,9 @@ func TestShouldValidateConfig(t *testing.T) {
 			name: "key file inaccessible",
 			cfg: &config.Config{
 				S: &config.SvrConfig{
-					Address:  "127.0.0.0:3000",
-					CertFile: "../../testdata/certs/testcert.pem",
-					KeyFile:  "none-existing.pem",
+					Address:  Address,
+					CertFile: CertFile,
+					KeyFile:  NonExistingFile,
 				},
 			},
 			wantError: config.ErrUnableToAccessKeyFile,
@@ -66,8 +73,8 @@ func TestShouldValidateConfig(t *testing.T) {
 			name: "missing key file",
 			cfg: &config.Config{
 				S: &config.SvrConfig{
-					Address: "127.0.0.0:3000",
-					KeyFile: "none-existing.pem",
+					Address: Address,
+					KeyFile: NonExistingFile,
 				},
 			},
 			wantError: config.ErrCertOrKeyMissing,
@@ -76,8 +83,8 @@ func TestShouldValidateConfig(t *testing.T) {
 			name: "missing cert file",
 			cfg: &config.Config{
 				S: &config.SvrConfig{
-					Address:  "127.0.0.0:3000",
-					CertFile: "none-existing.pem",
+					Address:  Address,
+					CertFile: NonExistingFile,
 				},
 			},
 			wantError: config.ErrCertOrKeyMissing,
