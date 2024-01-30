@@ -2,6 +2,8 @@ package templating_test
 
 import (
 	"bytes"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/templating"
 	"testing"
 
@@ -11,51 +13,58 @@ import (
 
 func TestRenderActionResponse(t *testing.T) {
 	// Create mock request data
-	reqData := requestdata.Data{
-		Meta: requestdata.MetaData{},
-		Input: requestdata.Input{
-			Form: map[string]string{"name": "John"},
-		},
-	}
+	reqData, err := requestdata.Mock()
+	require.NoError(t, err)
 
 	// Create mock action response
 	actionResp := actions.ActionResponse{
-		SuccessBody: "Hello {{.Input.Form.name}}",
+		SuccessBody: "Hello {{.Input.Form.Field1}}",
 	}
 
 	// Render template
 	var buf bytes.Buffer
-	err := templating.RenderActionResponse(actionResp, actionResp.SuccessBody, reqData, &buf)
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-	}
+	err = templating.RenderActionResponse(actionResp, actionResp.SuccessBody, reqData, &buf)
+	require.NoError(t, err)
 
 	// Validate output
-	want := "Hello John"
-	if buf.String() != want {
-		t.Errorf("Expected %q, got %q", want, buf.String())
-	}
+	want := "Hello Field Value 1"
+	assert.Equal(t, want, buf.String())
 }
 
-func TestRenderActionInput(t *testing.T) {
+func TestRenderString(t *testing.T) {
 	// Create mock request data
-	reqData := requestdata.Data{
-		Meta: requestdata.MetaData{},
-		Input: requestdata.Input{
-			Form: map[string]string{"name": "John"},
-		},
-	}
+	reqData, err := requestdata.Mock()
+	require.NoError(t, err)
 
 	// Render template
-	inputTpl := "Hello {{.Input.Form.name | ToUpper}}"
-	output, err := templating.RenderActionInput(inputTpl, reqData)
+	inputTpl := "Hello {{.Input.Form.Field1 | ToUpper}}"
+	output, err := templating.RenderString(inputTpl, reqData)
+	require.NoError(t, err)
+
+	// Validate output
+	want := "Hello FIELD VALUE 1"
+	assert.Equal(t, want, output)
+}
+
+func TestRenderStringMap(t *testing.T) {
+	// Create mock request data
+	reqData, err := requestdata.Mock()
+	require.NoError(t, err)
+
+	// Render template
+	inputTpl := map[string]string{
+		"key1": "Hello {{.Input.Form.Field1 | ToUpper}}",
+		"key2": "Hello {{.Input.Form.Field2 | ToUpper}}",
+	}
+	output, err := templating.RenderStringMap(inputTpl, reqData)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
 
 	// Validate output
-	want := "Hello JOHN"
-	if output != want {
-		t.Errorf("Expected %q, got %q", want, output)
+	want := map[string]string{
+		"key1": "Hello FIELD VALUE 1",
+		"key2": "Hello FIELD VALUE 2",
 	}
+	assert.Equal(t, want, output)
 }

@@ -6,9 +6,13 @@ import (
 )
 
 type ActionResponse struct {
-	SuccessBody string
-	ErrorBody   string
-	Code        int
+	SuccessBody       string
+	ErrorBody         string
+	Code              int
+	SuccessHTTPStatus int
+	ErrorHTTPStatus   int
+	SuccessHeaders    map[string]string
+	ErrorHeaders      map[string]string
 }
 
 type Actioner interface {

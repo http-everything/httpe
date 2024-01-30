@@ -1,0 +1,8 @@
+rules:
+  - name: Wrong Bytes
+    on:
+      path: /
+    do:
+      run.script: date >> /tmp/cmd1.log
+    with:
+      max_request_body: 15X

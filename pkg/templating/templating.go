@@ -37,7 +37,7 @@ func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData
 	return nil
 }
 
-func RenderActionInput(input string, reqData requestdata.Data) (output string, err error) {
+func RenderString(input string, reqData requestdata.Data) (output string, err error) {
 	te, err := template.New("input").Funcs(tplFunc).Parse(input)
 	if err != nil {
 		return "", err
@@ -52,4 +52,14 @@ func RenderActionInput(input string, reqData requestdata.Data) (output string, e
 		return "", err
 	}
 	return bu.String(), nil
+}
+
+func RenderStringMap(input map[string]string, reqData requestdata.Data) (output map[string]string, err error) {
+	output = make(map[string]string)
+	for k, v := range input {
+		if output[k], err = RenderString(v, reqData); err != nil {
+			return output, err
+		}
+	}
+	return output, nil
 }

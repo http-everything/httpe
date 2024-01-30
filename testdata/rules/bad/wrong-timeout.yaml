@@ -1,8 +1,8 @@
-- name: Execute some commands
-  on:
-    path: /commands/1
-  do:
-    name: exec first command
-    run.script: date >> /tmp/cmd1.log
-    args:
-      timeout: "bla"
+rules:
+  - name: Execute some commands
+    on:
+      path: /commands/1
+    do:
+      run.script: date >> /tmp/cmd1.log
+      args:
+        timeout: "bla"

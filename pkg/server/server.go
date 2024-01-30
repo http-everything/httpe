@@ -5,7 +5,9 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"http-everything/httpe/pkg/actions/servedirectory"
 	"http-everything/httpe/pkg/config"
+	"http-everything/httpe/pkg/middleware"
 	"http-everything/httpe/pkg/requesthandler"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/logger"
@@ -51,15 +53,18 @@ func New(cfg *config.Config, rules *[]rules.Rule, baseLogger *logger.Logger, acc
 func (s *Server) Setup() {
 	s.logger.Infof("setting up")
 	r := mux.NewRouter()
-
 	for _, rule := range *s.rules {
 		h := requesthandler.Execute(rule, s.logger)
+		m := middleware.New(rule, s.logger)
 		if len(rule.On.Methods) == 0 {
-			r.Handle(rule.On.Path, h)
-			continue
+			r.Handle(rule.On.Path, m.Collection(h))
+		} else {
+			for _, method := range rule.On.Methods {
+				r.Handle(rule.On.Path, m.Collection(h)).Methods(method)
+			}
 		}
-		for _, m := range rule.On.Methods {
-			r.Handle(rule.On.Path, h).Methods(m)
+		if rule.Action() == rules.ServeDirectory {
+			r.PathPrefix(rule.On.Path).Handler(m.Collection(servedirectory.Handle(rule.On.Path, rule.Do.ServeDirectory)))
 		}
 	}
 	r.PathPrefix("/").Handler(http.HandlerFunc(s.catchAllHandler))

@@ -4,6 +4,7 @@ import (
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/runscript"
 	"http-everything/httpe/pkg/rules"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,6 +13,13 @@ import (
 )
 
 func TestScriptExecute(t *testing.T) {
+	var dir string
+	switch runtime.GOOS {
+	case "darwin":
+		dir = "/private/tmp" // On macOS /tmp is a symlink causing the pwd command resolving it to /private/tmp
+	default:
+		dir = "/tmp"
+	}
 	cases := []struct {
 		name            string
 		script          string
@@ -54,11 +62,17 @@ func TestScriptExecute(t *testing.T) {
 			wantError:    "script killed, timeout 1 sec exceeded",
 		},
 		{
-			name:         "Sh Script timed out and error",
+			name:         "Bash Script timed out and error",
 			script:       `nonsense;sleep 2`,
 			timeout:      1,
+			interpreter:  "/bin/bash",
 			wantExitCode: -1,
-			wantError:    "script killed, timeout 1 sec exceeded, sh: line 1: nonsense: command not found\n",
+			wantError:    "script killed, timeout 1 sec exceeded, /bin/bash: line 1: nonsense: command not found\n",
+		},
+		{
+			name:            "Verify directory",
+			script:          "pwd",
+			wantSuccessBody: dir + "\n",
 		},
 	}
 	reqData := requestdata.Data{}
@@ -71,6 +85,7 @@ func TestScriptExecute(t *testing.T) {
 					Args: rules.Args{
 						Interpreter: tc.interpreter,
 						Timeout:     tc.timeout,
+						Cwd:         dir,
 					},
 				},
 			}

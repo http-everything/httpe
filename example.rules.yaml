@@ -62,14 +62,7 @@
   on:
     path: /text
   do:
-    answer.content: "foo"
-  respond:
-    on_success:
-      http_status: 200
-      body: |
-        Hello World 
-        You are using {{ .Meta.UserAgent |ToUpper }}
-        Input Foo = {{ .Input.Foo }}
+    answer.content: "foo {{ .Meta.UserAgent |ToUpper }}"
 
   with_headers:
     Content-Type: text
@@ -89,7 +82,22 @@
     answer.content: |
       Var 1 = {{ .Input.URLPlaceholders.id }}
       URL = {{ .Meta.URL }}
-    
+
+- name: redirect perm
+  on:
+    path: /redirect/perm
+  do:
+    redirect.permanent: http://www.google.de
+  respond:
+    on_success:
+      headers:
+        Location: https://"{{ .Meta.UserAgent }}"
+
+- name: redirect temp
+  on:
+    path: /redirect/tmp/{new_loc}
+  do:
+    redirect.temporary: https://{{ .Input.URLPlaceholders.new_loc }}
 
 - name: text answer
   on:
@@ -129,3 +137,11 @@
       Method: {{ .Meta.Method }}
       URL: {{ .Meta.URL }}
       -- End of Answer --
+  with:
+    max_request_body: 5MB
+
+- name: Serve Dir
+  on:
+    path: /dir
+  do:
+    serve.directory: /Users/thorsten/tmp/

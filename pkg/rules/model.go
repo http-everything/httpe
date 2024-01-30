@@ -1,22 +1,25 @@
 package rules
 
-import "http-everything/httpe/pkg/share/logger"
-
-type Rules struct {
-	Rules     *[]Rule
-	logger    *logger.Logger
-	rulesFile string
-}
-
 const (
-	SchemaURL     = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
-	RunScript     = "run.script"
-	SendEmail     = "send.email"
-	AnswerContent = "answer.content"
-	AnswerFile    = "answer.file"
+	SchemaURL         = "https://github.com/http-everything/httpe/main/pkg/rules/schema.json"
+	RunScript         = "run.script"
+	SendEmail         = "send.email"
+	AnswerContent     = "answer.content"
+	AnswerFile        = "answer.file"
+	RedirectPermanent = "redirect.permanent"
+	RedirectTemporary = "redirect.temporary"
+	ServeDirectory    = "serve.directory"
 )
 
-var ValidActions = []string{RunScript, SendEmail, AnswerFile, AnswerContent}
+var ValidActions = []string{
+	RunScript,
+	SendEmail,
+	AnswerFile,
+	AnswerContent,
+	RedirectPermanent,
+	RedirectTemporary,
+	ServeDirectory,
+}
 
 type Rule struct {
 	Name    string  `yaml:"name,omitempty" json:"name,omitempty"`
@@ -32,11 +35,14 @@ type On struct {
 }
 
 type Do struct {
-	RunScript     string `yaml:"run.script,omitempty" json:"run.script,omitempty"`
-	SendEmail     string `yaml:"send.email,omitempty" json:"send.email,omitempty"`
-	AnswerContent string `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
-	AnswerFile    string `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
-	Args          Args   `yaml:"args" json:"args"`
+	RunScript         string `yaml:"run.script,omitempty" json:"run.script,omitempty"`
+	SendEmail         string `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	AnswerContent     string `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
+	AnswerFile        string `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
+	RedirectPermanent string `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
+	RedirectTemporary string `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
+	ServeDirectory    string `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
+	Args              Args   `yaml:"args" json:"args"`
 }
 
 type Args struct {
@@ -46,8 +52,9 @@ type Args struct {
 }
 
 type With struct {
-	AuthBasic   []User `yaml:"auth_basic,omitempty" json:"auth_basic,omitempty"`
-	AuthHashing string `yaml:"auth_hashing,omitempty" json:"auth_hashing,omitempty"`
+	AuthBasic      []User `yaml:"auth_basic,omitempty" json:"auth_basic,omitempty"`
+	AuthHashing    string `yaml:"auth_hashing,omitempty" json:"auth_hashing,omitempty"`
+	MaxRequestBody string `yaml:"max_request_body,omitempty" json:"max_request_body,omitempty"`
 }
 
 type User struct {
@@ -61,11 +68,15 @@ type Respond struct {
 }
 
 type OnSuccess struct {
-	HTTPStatus int    `yaml:"http_status" json:"http_status"`
-	Body       string `yaml:"body" json:"body"`
+	HTTPStatus int     `yaml:"http_status" json:"http_status"`
+	Body       string  `yaml:"body" json:"body"`
+	Headers    Headers `yaml:"headers" json:"headers"`
 }
 
 type OnError struct {
-	HTTPStatus int    `yaml:"http_status,omitempty" json:"omitempty"`
-	Body       string `yaml:"body,omitempty" json:"body,omitempty"`
+	HTTPStatus int     `yaml:"http_status" json:"http_status"`
+	Body       string  `yaml:"body" json:"body"`
+	Headers    Headers `yaml:"headers" json:"headers"`
 }
+
+type Headers map[string]string

@@ -1,0 +1,12 @@
+rules:
+  - name: Wrong Headers
+    on:
+      path: /
+    do:
+      answer.content: foo
+    respond:
+      on_success:
+        headers:
+          Content-Type: Text
+          Föö: bla
+          "White Space": not allowed

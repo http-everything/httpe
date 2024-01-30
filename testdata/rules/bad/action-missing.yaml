@@ -1,8 +1,9 @@
 ---
-- name: Action missing
-  on:
-    path: /
-  do:
-    answer.files: bla
-    args:
-      foo: bla
+rules:
+  - name: Action missing
+    on:
+      path: /
+    do:
+      answer.files: bla
+      args:
+        foo: bla

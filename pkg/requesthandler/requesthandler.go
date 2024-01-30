@@ -4,8 +4,8 @@ import (
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answercontent"
 	"http-everything/httpe/pkg/actions/answerfile"
+	"http-everything/httpe/pkg/actions/redirect"
 	"http-everything/httpe/pkg/actions/runscript"
-	"http-everything/httpe/pkg/auth"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/response"
 	"http-everything/httpe/pkg/rules"
@@ -13,23 +13,13 @@ import (
 	"net/http"
 )
 
+const DefaultMaxRequestBody = "512KB"
+
 func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
+	//return http.StripPrefix("/dir", http.FileServer(http.Dir("/Users/thorsten/tmp")))
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		// Initialise a new http response writer.
 		respWriter := response.New(w, rule.Respond, logger)
-
-		// Authenticate, if requested by the rule
-		if rule.With != nil {
-			ok, err := auth.IsRequestAuthenticated(rule.With.AuthBasic, rule.With.AuthHashing, r)
-			if err != nil {
-				respWriter.InternalServerError(err)
-				return
-			}
-			if !ok {
-				respWriter.Unauthorised()
-				return
-			}
-		}
 
 		// Collect data from the request to be made available to the template engine and add to the response writer
 		reqData, err := requestdata.Collect(r)
@@ -54,6 +44,9 @@ func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
 			actioner = answercontent.AnswerContent{}
 		case rules.AnswerFile:
 			actioner = answerfile.AnswerFile{}
+		case rules.RedirectPermanent, rules.RedirectTemporary:
+			actioner = redirect.Redirect{}
+
 		default:
 			// Do nothing, just create a response
 			actioner = answercontent.AnswerContent{}

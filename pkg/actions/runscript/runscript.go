@@ -11,6 +11,7 @@ import (
 	"http-everything/httpe/pkg/share/firstof"
 	"http-everything/httpe/pkg/templating"
 	"io"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -26,8 +27,11 @@ type Script struct{}
 func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
 	var exitCode = -1
 	timeoutSec := firstof.Int(rule.Do.Args.Timeout, DefaultTimeoutSecs)
-	script, _ := templating.RenderActionInput(rule.Do.RunScript, reqData)
+	script, _ := templating.RenderString(rule.Do.RunScript, reqData)
 	interpreter := firstof.String(rule.Do.Args.Interpreter, DefaultInterpreter)
+
+	// Change to the working directory if specified by the rule.
+	os.Chdir(firstof.String(rule.Do.Args.Cwd, os.TempDir()))
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
 	defer cancel()

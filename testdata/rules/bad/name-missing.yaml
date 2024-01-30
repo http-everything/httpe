@@ -1,5 +1,0 @@
-- namex: Name Missing
-  on:
-    path: /
-  do:
-    answer.content: nothing

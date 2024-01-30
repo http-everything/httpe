@@ -1,0 +1,17 @@
+---
+rules:
+  - name: Before
+    on:
+      path: /dir/main.go
+    do:
+      answer.content: main.go blocked
+  - name: After
+    on:
+      path: /dir/go.mod
+    do:
+      answer.content: go.mod blocked
+  - name: Server Dir
+    on:
+      path: /dir
+    do:
+      serve.directory: .

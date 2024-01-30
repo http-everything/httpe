@@ -23,7 +23,7 @@ func (n AnswerFile) Execute(rule rules.Rule, reqData requestdata.Data) (response
 		return actions.ActionResponse{}, err
 	}
 
-	content, err := templating.RenderActionInput(string(fileContent), reqData)
+	content, err := templating.RenderString(string(fileContent), reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}

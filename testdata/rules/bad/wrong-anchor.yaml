@@ -1,0 +1,23 @@
+---
+define:
+  with:
+    auth_basic:
+      - username: john
+        password: "1234"
+
+rules:
+  - name: Test 1
+    on:
+      path: /test1
+    do:
+      answer.content: test1
+    with:
+      <<: *auth
+
+  - name: Test
+    on:
+      path: /test2
+    do:
+      answer.content: test2
+    with:
+      <<: *auth

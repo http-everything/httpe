@@ -1,6 +1,7 @@
-- name: Execute some commands
-  on:
-    path /commands/1
-    methods:
-      - get
-      - bad_method
+rules:
+  - name: Execute some commands
+    on:
+      path /commands/1
+      methods:
+        - get
+        - bad_method

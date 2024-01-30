@@ -191,7 +191,7 @@ func extractMultipartFormData(r *http.Request) (i map[string]string, err error) 
 
 func extractFileUploads(r *http.Request) (uploads []Upload, err error) {
 	uploads = make([]Upload, 0)
-	if err = r.ParseMultipartForm(1024); err != nil {
+	if err = r.ParseMultipartForm(r.ContentLength); err != nil {
 		return uploads, fmt.Errorf("error parsing form to extract uploads: %w", err)
 	}
 
@@ -206,7 +206,7 @@ func extractFileUploads(r *http.Request) (uploads []Upload, err error) {
 		defer upload.Close()
 
 		//create a temporary file to store the uploaded file
-		fn := os.TempDir() + UploadPrefix + shortuuid.New()
+		fn := os.TempDir() + "/" + UploadPrefix + shortuuid.New()
 		dst, err := os.Create(fn)
 		if err != nil {
 			return uploads, fmt.Errorf("error creating temp file for upload: %w", err)
@@ -257,7 +257,7 @@ func Mock() (d Data, err error) {
 		Input: Input{
 			Form: map[string]string{
 				"Field1": "Field Value 1",
-				"Field2": "Field Values 2",
+				"Field2": "Field Value 2",
 			},
 			Params: map[string]string{
 				"Param1": "Param Value 1",
@@ -266,6 +266,7 @@ func Mock() (d Data, err error) {
 			URLPlaceholders: map[string]string{
 				"URLVar1": "URL Value 1",
 				"URLVar2": "URL Value 2",
+				"redir":   "https://example.com",
 			},
 			JSON: json,
 			Uploads: []Upload{

@@ -5,6 +5,7 @@ import (
 	"http-everything/httpe/pkg/rules"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,65 +13,73 @@ import (
 )
 
 func TestRequestHandler(t *testing.T) {
-	rule := rules.Rule{
-		On: &rules.On{
-			Path: "/",
-		},
-		Do: &rules.Do{
-			AnswerContent: "foo",
-		},
-	}
+	dummyFile := t.TempDir() + "/dummy.txt"
+	os.WriteFile(dummyFile, []byte("test"), 0400)
 
-	req, err := http.NewRequest("get", "/", nil)
-	require.NoError(t, err)
-	rec := httptest.NewRecorder()
-	httpHandler := requesthandler.Execute(rule, nil)
-	httpHandler.ServeHTTP(rec, req)
-
-	assert.Equal(t, "foo", rec.Body.String())
-	assert.Equal(t, http.StatusOK, rec.Code)
-}
-
-func TestRequestHandlerWithAuth(t *testing.T) {
-	rule := rules.Rule{
-		On: &rules.On{
-			Path: "/",
-		},
-		Do: &rules.Do{
-			AnswerContent: "foo",
-		},
-		With: &rules.With{
-			AuthBasic: []rules.User{
-				{
-					Username: "john.doe",
-					Password: "1234abc",
-				},
+	cases := []struct {
+		name       string
+		do         *rules.Do
+		wantBody   string
+		wantStatus int
+	}{
+		{
+			name: "Answer Content",
+			do: &rules.Do{
+				AnswerContent: "foo",
 			},
+			wantBody:   "foo",
+			wantStatus: http.StatusOK,
+		},
+		{
+			name: "Answer File",
+			do: &rules.Do{
+				AnswerFile: dummyFile,
+			},
+			wantBody:   "test",
+			wantStatus: http.StatusOK,
+		},
+		{
+			name: "Redir Perm",
+			do: &rules.Do{
+				RedirectPermanent: "/test",
+			},
+			wantBody:   "",
+			wantStatus: http.StatusMovedPermanently,
+		},
+		{
+			name: "Redir Temp",
+			do: &rules.Do{
+				RedirectTemporary: "/test",
+			},
+			wantBody:   "",
+			wantStatus: http.StatusFound,
+		},
+		{
+			name: "Collection Script",
+			do: &rules.Do{
+				RunScript: "echo test",
+			},
+			wantBody:   "test\n",
+			wantStatus: http.StatusOK,
 		},
 	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			rule := rules.Rule{
+				On: &rules.On{
+					Path: "/",
+				},
+				Do: tc.do,
+			}
 
-	t.Run("Access denied", func(t *testing.T) {
-		// Test access denied
-		req, err := http.NewRequest("get", "/", nil)
-		require.NoError(t, err)
-		rec := httptest.NewRecorder()
-		httpHandler := requesthandler.Execute(rule, nil)
-		httpHandler.ServeHTTP(rec, req)
+			req, err := http.NewRequest("get", "/", nil)
+			require.NoError(t, err)
+			rec := httptest.NewRecorder()
+			httpHandler := requesthandler.Execute(rule, nil)
+			httpHandler.ServeHTTP(rec, req)
 
-		assert.Equal(t, "Unauthorised\n", rec.Body.String())
-		assert.Equal(t, http.StatusUnauthorized, rec.Code)
-	})
-
-	t.Run("Access granted", func(t *testing.T) {
-		// Test access granted
-		req, err := http.NewRequest("get", "/", nil)
-		req.SetBasicAuth("john.doe", "1234abc")
-		require.NoError(t, err)
-		rec := httptest.NewRecorder()
-		httpHandler := requesthandler.Execute(rule, nil)
-		httpHandler.ServeHTTP(rec, req)
-
-		assert.Equal(t, "foo", rec.Body.String())
-		assert.Equal(t, http.StatusOK, rec.Code)
-	})
+			assert.Equal(t, tc.wantBody, rec.Body.String())
+			assert.Equal(t, tc.wantStatus, rec.Code)
+		})
+	}
 }

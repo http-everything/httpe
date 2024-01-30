@@ -10,7 +10,7 @@ import (
 type AnswerContent struct{}
 
 func (n AnswerContent) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
-	content, err := templating.RenderActionInput(rule.Do.AnswerContent, reqData)
+	content, err := templating.RenderString(rule.Do.AnswerContent, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}

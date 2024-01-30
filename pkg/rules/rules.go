@@ -3,45 +3,75 @@ package rules
 import (
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"http-everything/httpe/pkg/share/logger"
 	"os"
 	"strings"
 
 	"github.com/xeipuuv/gojsonschema"
-	"gopkg.in/yaml.v2"
 )
+
+type Rules struct {
+	Rules  *[]Rule `yaml:"rules" json:"rules"`
+	logger *logger.Logger
+}
+
+type Cfg struct {
+	Rules []Rule `yaml:"rules" json:"rules"`
+}
 
 //go:embed schema.json
 var schemaJSON string
 
-func New(logger *logger.Logger) (rules *Rules) {
-	rules = &Rules{
-		logger: logger,
+// Read reads the yaml file containing the rules
+func Read(yamlFile string, logger *logger.Logger) (rules *Rules, err error) {
+	yml, err := os.ReadFile(yamlFile)
+	if err != nil {
+		return &Rules{}, fmt.Errorf("error reading yaml file '%s': %s", yamlFile, err)
 	}
-	return rules
+
+	cfg := Cfg{}
+	err = yaml.Unmarshal(yml, &cfg)
+	if err != nil {
+		return &Rules{}, fmt.Errorf("error parsing yaml file '%s': %s", yamlFile, err)
+	}
+	return &Rules{
+		Rules:  &cfg.Rules,
+		logger: logger,
+	}, nil
 }
 
-func (r *Rules) Load(rulesFile string) (rules *[]Rule, err error) {
-	r.Rules = &[]Rule{}
-	r.rulesFile = rulesFile
-	rulesYaml, err := os.ReadFile(rulesFile)
+func YamlToJson(yamlFile string) string {
+	yamlData, err := os.ReadFile(yamlFile)
 	if err != nil {
-		return r.Rules, err
+		return err.Error()
 	}
 
-	err = yaml.Unmarshal(rulesYaml, r.Rules)
+	var data interface{}
+	err = yaml.Unmarshal(yamlData, &data)
 	if err != nil {
-		return r.Rules, err
+		return err.Error()
 	}
 
-	return r.Rules, nil
+	jsonData, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(jsonData)
 }
 
 func (r *Rules) Validate() (err error) {
-	rulesJSON, err := json.Marshal(r.Rules)
+	// Convert the rules into JSON
+	JSONConf, err := json.Marshal(r)
 	if err != nil {
 		return err
+	}
+
+	if len(*r.Rules) == 0 {
+		return errors.New("no rules specified")
 	}
 
 	// Validate the rule action. Doing it here and before the schema validation creates a more user-friendly error
@@ -57,35 +87,27 @@ func (r *Rules) Validate() (err error) {
 		}
 	}
 	if hasErrors {
-		return fmt.Errorf("invalid rules file '%s'", r.rulesFile)
+		return fmt.Errorf("invalid rules")
 	}
 
 	// Validate against schema
 	schemaLoader := gojsonschema.NewStringLoader(schemaJSON)
-	documentLoader := gojsonschema.NewStringLoader(string(rulesJSON))
+	documentLoader := gojsonschema.NewStringLoader(string(JSONConf))
 	result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 	if err != nil {
 		return fmt.Errorf("json schema validation failed: %w", err)
 	}
 
 	if result.Valid() {
-		r.logger.Debugf("'%s' successfully validated against schema", r.rulesFile)
+		r.logger.Debugf("successfully validated against schema")
 	} else {
 		r.logger.Errorf("schema validation against %s failed", SchemaURL)
 		for _, desc := range result.Errors() {
 			r.logger.Errorf("%s\n", desc)
 		}
-		return fmt.Errorf("invalid rules file '%s'", r.rulesFile)
+		return fmt.Errorf("invalid rules")
 	}
 	return nil
-}
-
-func (r *Rules) AsJSONString() string {
-	rulesJSON, err := json.MarshalIndent(r.Rules, "", "  ")
-	if err != nil {
-		return ""
-	}
-	return string(rulesJSON)
 }
 
 func (rule *Rule) Action() (action string) {
@@ -104,5 +126,40 @@ func (rule *Rule) Action() (action string) {
 	if rule.Do.AnswerFile != "" {
 		return AnswerFile
 	}
+	if rule.Do.RedirectPermanent != "" {
+		return RedirectPermanent
+	}
+	if rule.Do.RedirectTemporary != "" {
+		return RedirectTemporary
+	}
+	if rule.Do.ServeDirectory != "" {
+		return ServeDirectory
+	}
 	return ""
+}
+
+func (rule *Rule) MaxRequestBody() string {
+	if rule.With != nil {
+		return rule.With.MaxRequestBody
+	}
+	return ""
+}
+
+func (ruleResp *Respond) Headers(onError bool) map[string]string {
+	if onError {
+		return ruleResp.OnError.Headers
+	}
+	return ruleResp.OnSuccess.Headers
+}
+
+func (rule *Rule) MatchesURI(URI string) bool {
+	if rule.On.Path == URI {
+		// Exact match
+		return true
+	}
+	if !strings.HasPrefix(rule.On.Path, "{") && !strings.HasSuffix(rule.On.Path, "}") {
+		// The rule is not using URL Placeholders, e.g. /foo/{key1}/{key2}/
+		return false
+	}
+	return false
 }

@@ -1,6 +1,7 @@
 ---
-- name: Hello World
-  on:
-    path: /
-  do:
-    answer.content: Hello World
+rules:
+  - name: Hello World
+    on:
+      path: /
+    do:
+      answer.content: Hello World

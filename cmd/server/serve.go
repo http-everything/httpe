@@ -49,27 +49,25 @@ func serve() {
 		baseLogger.Infof("config loaded from %s", config.DefaultConfigFilename)
 	}
 
-	rulesLogger := baseLogger.Fork("rules")
-	ru := rules.New(rulesLogger)
-	rules, err := ru.Load(cfg.S.RulesFile)
+	rulesCfg, err := rules.Read(cfg.S.RulesFile, baseLogger.Fork("rules"))
 	if err != nil {
-		reportErrorAndExit(rulesLogger, err)
+		reportErrorAndExit(baseLogger, err)
 		return
 	}
 	if cfg.S.DumpRules {
-		fmt.Println(ru.AsJSONString())
+		fmt.Println(rules.YamlToJson(cfg.S.RulesFile))
 		return
 	}
-	err = ru.Validate()
+	err = rulesCfg.Validate()
 	if err != nil {
-		reportErrorAndExit(rulesLogger, err)
+		reportErrorAndExit(baseLogger, err)
 	}
 	if cfg.S.ValidateOnly {
 		// End here if only the validation has been requested
 		return
 	}
 
-	svr, err := server.New(cfg, rules, baseLogger, accessLogWriter)
+	svr, err := server.New(cfg, rulesCfg.Rules, baseLogger, accessLogWriter)
 	if err != nil {
 		reportErrorAndExit(baseLogger, fmt.Errorf("unable to setup HTTPE server: %w", err))
 		return

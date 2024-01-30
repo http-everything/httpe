@@ -3,184 +3,246 @@
   "$id": "https://github.com/http-everytning/httpe/main/pkg/rules/schema.json",
   "title": "Httpe routes",
   "description": "Definition of routes and linked actions for the httpe server",
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "name": {
-        "description": "unique name of rule",
-        "type": "string"
-      },
-      "on": {
-        "description": "definition of the trigger for the 'do' action, case-sensitive",
+  "type": "object",
+  "properties": {
+    "rules": {
+      "description": "rule for creating routes and attaching actions to them",
+      "type": "array",
+      "items": {
         "type": "object",
         "properties": {
-          "path": {
+          "name": {
+            "description": "unique name of rule",
             "type": "string"
           },
-          "methods": {
-            "description": "optional http methods, case-insensitive, if omitted, matching path applies to any method",
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "get",
-                "post",
-                "put",
-                "delete",
-                "options"
-              ]
+          "on": {
+            "description": "definition of the trigger for the 'do' action, case-sensitive",
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "methods": {
+                "description": "optional http methods, case-insensitive, if omitted, matching path applies to any method",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "get",
+                    "post",
+                    "put",
+                    "delete",
+                    "options"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "path"
+            ]
+          },
+          "do": {
+            "description": "definition of what to do if request matches the route",
+            "type": "object",
+            "properties": {
+              "run.script": {
+                "description": "a command or script to execute, supports templating",
+                "type": "string"
+              },
+              "answer.content": {
+                "description": "text to respond, supports templating",
+                "type": "string"
+              },
+              "answer.file": {
+                "description": "file to respond, supports templating",
+                "type": "string"
+              },
+              "send.email": {
+                "description": "send an email, supports templating",
+                "type": "string"
+              },
+              "redirect.permanent": {
+                "description": "send a 301 permanent redirect, supports templating",
+                "type": "string"
+              },
+              "redirect.temporary": {
+                "description": "send a 303 temporary redirect, supports templating",
+                "type": "string"
+              },
+              "serve.directory": {
+                "description": "serve files from directory",
+                "type": "string"
+              },
+              "args": {
+                "description": "options for the module",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "interpreter": {
+                    "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
+                    "type": "string"
+                  },
+                  "timeout": {
+                    "description": "timeout (seconds, int) after which the script execution will be aborted",
+                    "type": "integer"
+                  },
+                  "cwd": {
+                    "description": "change working directory. If not set, the OS temp dir will be used",
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "additionalProperties": false,
+            "oneOf": [
+              {
+                "required": [
+                  "answer.content"
+                ]
+              },
+              {
+                "required": [
+                  "run.script"
+                ]
+              },
+              {
+                "required": [
+                  "answer.file"
+                ]
+              },
+              {
+                "required": [
+                  "send.email"
+                ]
+              },
+              {
+                "required": [
+                  "redirect.permanent"
+                ]
+              },
+              {
+                "required": [
+                  "redirect.temporary"
+                ]
+              },
+              {
+                "required": [
+                  "serve.directory"
+                ]
+              }
+            ]
+          },
+          "with": {
+            "description": "optional options applied to the request",
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "auth_basic": {
+                "description": "Require http basic authentication",
+                "items": {
+                  "properties": {
+                    "username": {
+                      "description": "username",
+                      "type": "string"
+                    },
+                    "password": {
+                      "description": "password",
+                      "type": "string"
+                    }
+                  }
+                },
+                "type": "array"
+              },
+              "auth_hashing": {
+                "type": "string",
+                "description": "hashing algorithm, if omitted, passwords are considered to be clear text",
+                "enum": [
+                  "sha256",
+                  "sha512"
+                ]
+              },
+              "max_request_body": {
+                "type": "string",
+                "description": "maximum allowed body size bytes or number plus unit, if omitted a default of 512KB is applied",
+                "pattern": "^[0-9]+ ?[BKMGTP]{0,2}$"
+              }
+            }
+          },
+          "respond": {
+            "description": "optional definition of the response",
+            "type": "object",
+            "properties": {
+              "on_success": {
+                "description": "What to respond if script terminates successfully (exit code = 0)",
+                "type": "object",
+                "properties": {
+                  "http_status": {
+                    "description": "http status code of the success response, supports templating",
+                    "type": "integer"
+                  },
+                  "body": {
+                    "description": "http body of the success response",
+                    "type": "string"
+                  },
+                  "headers": {
+                    "description": "http headers added to the success response, supports templating",
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "patternProperties": {
+                      "^[A-Za-z-_]+$": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "on_error": {
+                "description": "What to respond if script terminates with an error (exit code > 0)",
+                "type": "object",
+                "properties": {
+                  "http_status": {
+                    "description": "http status code of the error response",
+                    "type": "integer"
+                  },
+                  "body": {
+                    "description": "http body of the error response, supports templating",
+                    "type": "string"
+                  },
+                  "headers": {
+                    "description": "http headers added to the error response, supports templating",
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "patternProperties": {
+                      "^[A-Za-z-_]+$": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              }
             }
           }
         },
         "required": [
-          "path"
+          "name",
+          "on"
         ]
-      },
-      "do": {
-        "description": "definition of what to do if request matches the route",
-        "type": "object",
-        "properties": {
-          "run.script": {
-            "description": "a command or script to execute, supports templating",
-            "type": "string"
-          },
-          "answer.content": {
-            "description": "text to respond, supports templating",
-            "type": "string"
-          },
-          "answer.file": {
-            "description": "file to respond, supports templating",
-            "type": "string"
-          },
-          "send.email": {
-            "description": "send an email, supports templating",
-            "type": "string"
-          },
-          "args": {
-            "description": "options for the module",
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "interpreter": {
-                "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
-                "type": "string"
-              },
-              "timeout": {
-                "description": "timeout (seconds, int) after which the script execution will be aborted",
-                "type": "integer"
-              },
-              "cwd": {
-                "description": "change working directory. If not set, the OS temp dir will be used",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "additionalProperties": false,
-        "oneOf": [
-          {
-            "required": [
-              "answer.content"
-            ]
-          },
-          {
-            "required": [
-              "run.script"
-            ]
-          },
-          {
-            "required": [
-              "answer.file"
-            ]
-          },
-          {
-            "required": [
-              "send.email"
-            ]
-          }
-        ]
-      },
-      "with": {
-        "description": "optional options applied to the request",
-        "type": [
-          "object",
-          "null"
-        ],
-        "properties": {
-          "auth_basic": {
-            "description": "Require http basic authentication",
-            "items": {
-              "properties": {
-                "username": {
-                  "description": "username",
-                  "type": "string"
-                },
-                "password": {
-                  "description": "password",
-                  "type": "string"
-                }
-              }
-            },
-            "type": "array"
-          },
-          "auth_hashing": {
-            "type": "string",
-            "description": "hashing algorithm, if omitted, passwords are considered to be clear text",
-            "enum": [
-              "sha256",
-              "sha512"
-            ]
-          }
-        }
-      },
-      "respond": {
-        "description": "optional definition of the response",
-        "type": "object",
-        "properties": {
-          "on_success": {
-            "description": "What to respond if script terminates successfully (exit code = 0)",
-            "type": "object",
-            "properties": {
-              "http_status": {
-                "description": "http status code of the success response, supports templating",
-                "type": "integer"
-              },
-              "body": {
-                "description": "http body of the success response",
-                "type": "string"
-              }
-            }
-          },
-          "on_error": {
-            "description": "What to respond if script terminates with an error (exit code > 0)",
-            "type": "object",
-            "properties": {
-              "http_status": {
-                "description": "http status code of the error response",
-                "type": "integer"
-              },
-              "body": {
-                "description": "http body of the error response, supports templating",
-                "type": "string"
-              }
-            }
-          },
-          "with_headers": {
-            "description": "optional http headers send with the response, applies to success and error response",
-            "type": "object",
-            "patternProperties": {
-              ".*": {
-                "type": "string"
-              }
-            }
-          }
-        }
       }
     },
-    "required": [
-      "name",
-      "on"
-    ]
+    "definitions": {
+      "description": "section ignored by the rule processor. put your yaml anchors here.",
+      "type": [
+        "object",
+        "array"
+      ]
+    }
   }
 }

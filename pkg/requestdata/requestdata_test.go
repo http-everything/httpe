@@ -151,7 +151,6 @@ func TestRequestDataPostJSON(t *testing.T) {
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
 	assert.Equal(t, "/data", reqData.Meta.URL)
-	t.Log(getValue(t, reqData.Input.JSON, "name"))
 }
 
 func TestURLPlaceholders(t *testing.T) {
