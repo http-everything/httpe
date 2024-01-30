@@ -2,7 +2,6 @@ package response
 
 import (
 	"fmt"
-	"github.com/dustin/go-humanize"
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
@@ -11,6 +10,8 @@ import (
 	"http-everything/httpe/pkg/share/merge"
 	"http-everything/httpe/pkg/templating"
 	"net/http"
+
+	"github.com/dustin/go-humanize" //nolint:misspell
 )
 
 const (

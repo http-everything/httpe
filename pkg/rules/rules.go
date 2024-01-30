@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"http-everything/httpe/pkg/share/logger"
 	"os"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 
 	"github.com/xeipuuv/gojsonschema"
 )
@@ -29,13 +30,13 @@ var schemaJSON string
 func Read(yamlFile string, logger *logger.Logger) (rules *Rules, err error) {
 	yml, err := os.ReadFile(yamlFile)
 	if err != nil {
-		return &Rules{}, fmt.Errorf("error reading yaml file '%s': %s", yamlFile, err)
+		return &Rules{}, fmt.Errorf("error reading yaml file '%s': %w", yamlFile, err)
 	}
 
 	cfg := Cfg{}
 	err = yaml.Unmarshal(yml, &cfg)
 	if err != nil {
-		return &Rules{}, fmt.Errorf("error parsing yaml file '%s': %s", yamlFile, err)
+		return &Rules{}, fmt.Errorf("error parsing yaml file '%s': %w", yamlFile, err)
 	}
 	return &Rules{
 		Rules:  &cfg.Rules,
@@ -43,7 +44,7 @@ func Read(yamlFile string, logger *logger.Logger) (rules *Rules, err error) {
 	}, nil
 }
 
-func YamlToJson(yamlFile string) string {
+func YamlToJSON(yamlFile string) string {
 	yamlData, err := os.ReadFile(yamlFile)
 	if err != nil {
 		return err.Error()

@@ -2,10 +2,11 @@ package templating_test
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/templating"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"

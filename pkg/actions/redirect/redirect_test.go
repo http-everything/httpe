@@ -2,14 +2,15 @@ package redirect_test
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/redirect"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestRedirectExecute(t *testing.T) {
@@ -40,5 +41,4 @@ func TestRedirectExecute(t *testing.T) {
 		assert.Equal(t, fmt.Sprintf(reqData.Input.URLPlaceholders["redir"]), actionResp.SuccessHeaders["Location"])
 		assert.Equal(t, http.StatusFound, actionResp.SuccessHTTPStatus)
 	})
-
 }

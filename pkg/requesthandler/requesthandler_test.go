@@ -14,7 +14,8 @@ import (
 
 func TestRequestHandler(t *testing.T) {
 	dummyFile := t.TempDir() + "/dummy.txt"
-	os.WriteFile(dummyFile, []byte("test"), 0400)
+	err := os.WriteFile(dummyFile, []byte("test"), 0400)
+	require.NoError(t, err)
 
 	cases := []struct {
 		name       string

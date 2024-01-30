@@ -31,7 +31,10 @@ func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response act
 	interpreter := firstof.String(rule.Do.Args.Interpreter, DefaultInterpreter)
 
 	// Change to the working directory if specified by the rule.
-	os.Chdir(firstof.String(rule.Do.Args.Cwd, os.TempDir()))
+	err = os.Chdir(firstof.String(rule.Do.Args.Cwd, os.TempDir()))
+	if err != nil {
+		return actions.ActionResponse{}, fmt.Errorf("error changing to directory '%s': %w", rule.Do.Args.Cwd, err)
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
 	defer cancel()

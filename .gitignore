@@ -26,3 +26,6 @@ go.work
 
 # All logs
  *.log
+
+ # Test coverage report
+ coverage.out

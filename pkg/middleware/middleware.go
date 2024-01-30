@@ -1,13 +1,14 @@
 package middleware
 
 import (
-	"github.com/dustin/go-humanize"
 	"http-everything/httpe/pkg/auth"
 	"http-everything/httpe/pkg/response"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/firstof"
 	"http-everything/httpe/pkg/share/logger"
 	"net/http"
+
+	"github.com/dustin/go-humanize" //nolint:misspell
 )
 
 const DefaultMaxRequestBody = "512KB"

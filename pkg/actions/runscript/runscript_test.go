@@ -12,6 +12,8 @@ import (
 	"http-everything/httpe/pkg/requestdata"
 )
 
+const Bash = "/bin/bash"
+
 func TestScriptExecute(t *testing.T) {
 	var dir string
 	switch runtime.GOOS {
@@ -34,7 +36,7 @@ func TestScriptExecute(t *testing.T) {
 			name:            "Bash Script succeeded",
 			script:          `echo "Hello, world"`,
 			timeout:         1,
-			interpreter:     "/bin/bash",
+			interpreter:     Bash,
 			wantSuccessBody: "Hello, world\n",
 			wantExitCode:    0,
 		},
@@ -50,7 +52,7 @@ func TestScriptExecute(t *testing.T) {
 			name:          "Bash Script failed",
 			script:        `nonsense`,
 			timeout:       1,
-			interpreter:   "/bin/bash",
+			interpreter:   Bash,
 			wantErrorBody: "/bin/bash: line 1: nonsense: command not found\n",
 			wantExitCode:  127,
 		},
@@ -65,7 +67,7 @@ func TestScriptExecute(t *testing.T) {
 			name:         "Bash Script timed out and error",
 			script:       `nonsense;sleep 2`,
 			timeout:      1,
-			interpreter:  "/bin/bash",
+			interpreter:  Bash,
 			wantExitCode: -1,
 			wantError:    "script killed, timeout 1 sec exceeded, /bin/bash: line 1: nonsense: command not found\n",
 		},

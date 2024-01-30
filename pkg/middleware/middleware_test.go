@@ -2,14 +2,15 @@ package middleware_test
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"http-everything/httpe/pkg/middleware"
 	"http-everything/httpe/pkg/rules"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func DummyRequestHandler(t *testing.T) http.Handler {

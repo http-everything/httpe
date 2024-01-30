@@ -55,7 +55,7 @@ func serve() {
 		return
 	}
 	if cfg.S.DumpRules {
-		fmt.Println(rules.YamlToJson(cfg.S.RulesFile))
+		fmt.Println(rules.YamlToJSON(cfg.S.RulesFile))
 		return
 	}
 	err = rulesCfg.Validate()

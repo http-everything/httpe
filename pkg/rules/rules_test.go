@@ -31,7 +31,6 @@ func TestShouldSucceed(t *testing.T) {
 			assert.Contains(t, string(log), "successfully validated against schema")
 		})
 	}
-
 }
 
 func TestShouldFail(t *testing.T) {

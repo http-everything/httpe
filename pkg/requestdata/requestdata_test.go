@@ -2,14 +2,13 @@ package requestdata_test
 
 import (
 	"bytes"
-	"encoding/json"
 	"http-everything/httpe/pkg/requestdata"
+	"http-everything/httpe/pkg/share/extract"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/url"
 	"os"
-	"reflect"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -124,16 +123,8 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 }
 
 func TestRequestDataPostJSON(t *testing.T) {
-	// Create JSON data
-	data := map[string]string{
-		"name":  Name,
-		"email": Email,
-	}
-	jsonData, err := json.Marshal(data)
-	require.NoError(t, err)
-
-	// Create request body from JSON
-	body := bytes.NewBuffer(jsonData)
+	// Create request body with JSON data
+	body := bytes.NewBuffer([]byte(`{"Name":"John","Address":{"City":"London"}}`))
 
 	// Create POST request
 	req, err := http.NewRequest(
@@ -151,6 +142,8 @@ func TestRequestDataPostJSON(t *testing.T) {
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
 	assert.Equal(t, "/data", reqData.Meta.URL)
+	assert.Equal(t, "John", extract.SFromI("Name", reqData.Input.JSON))
+	assert.Equal(t, "London", extract.SFromI("Address.City", reqData.Input.JSON))
 }
 
 func TestURLPlaceholders(t *testing.T) {
@@ -166,27 +159,4 @@ func TestURLPlaceholders(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "foo", reqData.Input.URLPlaceholders["id"])
-}
-
-func getValue(t *testing.T, data interface{}, key string) string {
-	t.Helper()
-
-	// Handle nil data
-	if data == nil {
-		return ""
-	}
-
-	// Get the reflected Value
-	val := reflect.ValueOf(data)
-
-	// Handle invalid types
-	if val.Kind() != reflect.Map {
-		return ""
-	}
-
-	// Lookup key
-	value := val.MapIndex(reflect.ValueOf(key))
-
-	// Return value as interface
-	return value.String()
 }

@@ -9,7 +9,7 @@ import (
 
 type Email struct{}
 
-func (e Email) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
+func (e Email) Execute(_ rules.Rule, _ requestdata.Data) (response actions.ActionResponse, err error) {
 	return actions.ActionResponse{
 		SuccessBody:       "not implemented yet",
 		SuccessHTTPStatus: http.StatusNotImplemented,
