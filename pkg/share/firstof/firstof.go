@@ -21,12 +21,3 @@ func Int(values ...int) int {
 	}
 	return 0
 }
-
-func Float32(values ...float32) float32 {
-	for _, val := range values {
-		if val != 0 {
-			return val
-		}
-	}
-	return 0
-}

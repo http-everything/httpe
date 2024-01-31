@@ -1,3 +1,5 @@
+//go:build darwin || linux
+
 package runscript_test
 
 import (
@@ -14,7 +16,7 @@ import (
 
 const Bash = "/bin/bash"
 
-func TestScriptExecute(t *testing.T) {
+func TestScriptExecuteUnix(t *testing.T) {
 	var dir string
 	switch runtime.GOOS {
 	case "darwin":

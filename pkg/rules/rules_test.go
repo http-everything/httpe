@@ -1,10 +1,13 @@
 package rules_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"http-everything/httpe/pkg/rules"
+	"http-everything/httpe/pkg/share/extract"
 	"http-everything/httpe/pkg/share/logger"
 	"os"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -12,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestShouldSucceed(t *testing.T) {
+func TestRulesShouldSucceed(t *testing.T) {
 	logger, logFile := makeTestLogger(t)
 	files, err := os.ReadDir("../../testdata/rules/good/")
 	require.NoError(t, err)
@@ -31,9 +34,10 @@ func TestShouldSucceed(t *testing.T) {
 			assert.Contains(t, string(log), "successfully validated against schema")
 		})
 	}
+	logger.Shutdown()
 }
 
-func TestShouldFail(t *testing.T) {
+func TestRulesShouldFail(t *testing.T) {
 	cases := []struct {
 		name                    string
 		wantErrors              []string
@@ -99,6 +103,7 @@ func TestShouldFail(t *testing.T) {
 
 			log, err := os.ReadFile(logFile)
 			require.NoError(t, err)
+			logger.Shutdown()
 
 			if tc.wantMarshalError {
 				for _, exp := range tc.wantErrors {
@@ -115,6 +120,39 @@ func TestShouldFail(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestYamlToJSON(t *testing.T) {
+	t.Run("file not found", func(t *testing.T) {
+		JSON := rules.YamlToJSON("test.yaml")
+
+		if runtime.GOOS == "windows" {
+			assert.Equal(t, "open test.yaml: The system cannot find the file specified.", JSON)
+		} else {
+			assert.Equal(t, "open test.yaml: no such file or directory", JSON)
+		}
+	})
+
+	t.Run("good yaml", func(t *testing.T) {
+		yaml := t.TempDir() + "/test.yaml"
+		err := os.WriteFile(yaml, []byte(`foo: test`), 0400)
+		require.NoError(t, err)
+		JSON := rules.YamlToJSON(yaml)
+		var data interface{}
+		err = json.Unmarshal([]byte(JSON), &data)
+		require.NoError(t, err)
+
+		assert.Equal(t, "test", extract.SFromI("foo", data))
+	})
+
+	t.Run("bad yaml", func(t *testing.T) {
+		yaml := t.TempDir() + "/test.yaml"
+		err := os.WriteFile(yaml, []byte(`&*`), 0400)
+		require.NoError(t, err)
+		JSON := rules.YamlToJSON(yaml)
+
+		assert.Equal(t, "yaml: did not find expected alphabetic or numeric character", JSON)
+	})
 }
 
 func makeTestLogger(t *testing.T) (l *logger.Logger, logFile string) {

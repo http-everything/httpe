@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -56,11 +57,11 @@ func TestRequestHandler(t *testing.T) {
 			wantStatus: http.StatusFound,
 		},
 		{
-			name: "Collection Script",
+			name: "Run Script",
 			do: &rules.Do{
 				RunScript: "echo test",
 			},
-			wantBody:   "test\n",
+			wantBody:   "test" + newline(t),
 			wantStatus: http.StatusOK,
 		},
 	}
@@ -83,4 +84,12 @@ func TestRequestHandler(t *testing.T) {
 			assert.Equal(t, tc.wantStatus, rec.Code)
 		})
 	}
+}
+
+func newline(t *testing.T) string {
+	t.Helper()
+	if runtime.GOOS == "windows" {
+		return "\r\n"
+	}
+	return "\n"
 }

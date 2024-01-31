@@ -30,6 +30,7 @@ func TestLoggerInfoLevel(t *testing.T) {
 
 			require.FileExists(t, logFile)
 			require.Contains(t, string(lf), fmt.Sprintf("%s: test: --%s--", strings.ToUpper(tc), tc))
+			l.Shutdown()
 		})
 	}
 }
@@ -43,4 +44,5 @@ func TestLoggerInfoError(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Empty(t, string(lf))
+	l.Shutdown()
 }

@@ -15,6 +15,7 @@ const (
 	CertFile        = "../../testdata/certs/testcert.pem"
 	KeyFile         = "../../testdata/certs/testkey.pem"
 	NonExistingFile = "/tmp/aiWa0weshie4Shahcoh4"
+	CfgPath         = "../../example.httpe.conf"
 )
 
 func TestShouldValidateConfig(t *testing.T) {
@@ -129,7 +130,7 @@ func TestShouldVerifyEnvVars(t *testing.T) {
 	cfg := config.New(nil)
 	cfg.Setup()
 
-	cfgPath := "../../example.httpe.conf"
+	cfgPath := CfgPath
 	_, err := cfg.Load(&cfgPath, nil)
 	require.NoError(t, err)
 
@@ -137,4 +138,28 @@ func TestShouldVerifyEnvVars(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "127.0.0.1:3001", cfg.S.Address)
+}
+
+func TestLoadAndValidateShouldFail(t *testing.T) {
+	t.Run("bad config", func(t *testing.T) {
+		os.Setenv("HTTPE_SERVER_RULES_FILE", "../../testdata/rules/good/all.yaml")
+		cfg := config.New(nil)
+		cfg.Setup()
+
+		cfgPath := "invalid-path"
+		err := cfg.LoadAndValidate(&cfgPath, nil)
+
+		assert.ErrorContains(t, err, "unable to read config file: open invalid-path:")
+	})
+
+	t.Run("bad rules", func(t *testing.T) {
+		os.Setenv("HTTPE_SERVER_RULES_FILE", "invalid")
+		cfg := config.New(nil)
+		cfg.Setup()
+
+		cfgPath := CfgPath
+		err := cfg.LoadAndValidate(&cfgPath, nil)
+
+		assert.ErrorContains(t, err, "rules file not found or not readable")
+	})
 }
