@@ -90,12 +90,12 @@ func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response act
 		select {
 		case <-ctx.Done():
 			err := cmd.Process.Kill()
-			if err != nil {
-				killCh <- fmt.Errorf("killing of the script failed, script killed because of ctx cancel: %w", err)
-			} else {
-				killCh <- fmt.Errorf("script killed")
-			}
 
+			if err != nil {
+				killCh <- fmt.Errorf("killing the script with pid %d failed: %w", cmd.Process.Pid, err)
+			} else {
+				killCh <- errors.New("script killed")
+			}
 		case <-process.Done():
 			exitCodeCh <- cmd.ProcessState.ExitCode()
 		}
@@ -107,6 +107,9 @@ func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response act
 	go func() {
 		err := cmd.Wait()
 		if err != nil {
+			if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+				doneCh <- fmt.Errorf("timeout exceeded")
+			}
 			doneCh <- fmt.Errorf("process error: %w", err)
 		}
 		close(doneCh)

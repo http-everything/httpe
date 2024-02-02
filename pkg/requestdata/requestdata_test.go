@@ -111,6 +111,8 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 
 	reqData, err := requestdata.Collect(req)
 	require.NoError(t, err)
+	fStat, err := file.Stat()
+	require.NoError(t, err)
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
 	assert.Equal(t, "/upload", reqData.Meta.URL)
@@ -118,7 +120,7 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 	assert.Equal(t, Email, reqData.Input.Form["email"])
 	assert.Equal(t, "file", reqData.Input.Uploads[0].FieldName)
 	assert.Equal(t, "text/UTF-8", reqData.Input.Uploads[0].Type)
-	assert.Equal(t, int64(21), reqData.Input.Uploads[0].Size)
+	assert.Equal(t, fStat.Size(), reqData.Input.Uploads[0].Size, "File size")
 	assert.Contains(t, reqData.Input.Uploads[0].Stored, requestdata.UploadPrefix)
 }
 

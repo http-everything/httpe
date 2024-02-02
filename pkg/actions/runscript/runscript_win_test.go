@@ -53,10 +53,10 @@ func TestScriptExecuteWindows(t *testing.T) {
 		},
 		{
 			name:         "Powershell Script timed out",
-			script:       `Start-Sleep 2`,
-			timeout:      1,
+			script:       "ping -n 60 127.0.0.1",
+			timeout:      3,
 			wantExitCode: -1,
-			wantError:    "process error: exit status 1",
+			wantError:    "script killed, timeout 3 sec exceeded",
 		},
 		{
 			name:            "Verify directory",
@@ -81,10 +81,10 @@ func TestScriptExecuteWindows(t *testing.T) {
 		},
 		{
 			name:         "Cmd Script timeout",
-			script:       "ping -n 5 127.0.0.1",
-			timeout:      1,
+			script:       "ping -n 60 127.0.0.1",
+			timeout:      3,
 			interpreter:  "cmd",
-			wantError:    "script killed, timeout 1 sec exceeded",
+			wantError:    "script killed, timeout 3 sec exceeded",
 			wantExitCode: 0,
 		},
 		{
@@ -140,7 +140,7 @@ echo line2`,
 				assert.Contains(t, actionResp.ErrorBody, tc.wantErrorBody, "invalid error body")
 				assert.Equal(t, tc.wantExitCode, actionResp.Code, "exit code doesn't match")
 			} else {
-				assert.EqualError(t, err, tc.wantError, "Script Error")
+				assert.EqualError(t, err, tc.wantError, "Script Error doesnt match")
 			}
 		})
 	}

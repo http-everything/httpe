@@ -145,3 +145,11 @@ rules:
       path: /dir
     do:
       serve.directory: /Users/thorsten/tmp/
+
+  - name: ping
+    on:
+      path: /ping
+    do:
+      run.script: ping -n 60 127.0.0.1
+      args:
+        timeout: 5
