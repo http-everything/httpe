@@ -9,6 +9,7 @@ const (
 	RedirectPermanent = "redirect.permanent"
 	RedirectTemporary = "redirect.temporary"
 	ServeDirectory    = "serve.directory"
+	RenderButtons     = "render.buttons"
 )
 
 var ValidActions = []string{
@@ -19,6 +20,7 @@ var ValidActions = []string{
 	RedirectPermanent,
 	RedirectTemporary,
 	ServeDirectory,
+	RenderButtons,
 }
 
 type Rule struct {
@@ -35,20 +37,28 @@ type On struct {
 }
 
 type Do struct {
-	RunScript         string `yaml:"run.script,omitempty" json:"run.script,omitempty"`
-	SendEmail         string `yaml:"send.email,omitempty" json:"send.email,omitempty"`
-	AnswerContent     string `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
-	AnswerFile        string `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
-	RedirectPermanent string `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
-	RedirectTemporary string `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
-	ServeDirectory    string `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
-	Args              Args   `yaml:"args" json:"args"`
+	RunScript         string   `yaml:"run.script,omitempty" json:"run.script,omitempty"`
+	SendEmail         string   `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	AnswerContent     string   `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
+	AnswerFile        string   `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
+	RedirectPermanent string   `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
+	RedirectTemporary string   `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
+	ServeDirectory    string   `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
+	RenderButtons     []Button `yaml:"render.buttons,omitempty" json:"render.buttons,omitempty"`
+	Args              Args     `yaml:"args" json:"args"`
+}
+
+type Button struct {
+	Name    string `yaml:"name" json:"name"`
+	URL     string `yaml:"url" json:"url"`
+	Classes string `yaml:"classes" json:"classes"`
 }
 
 type Args struct {
 	Interpreter string `yaml:"interpreter" json:"interpreter"`
 	Timeout     int    `yaml:"timeout" json:"timeout"`
 	Cwd         string `yaml:"cwd" json:"cwd"`
+	Template    string `yaml:"template" json:"template"`
 }
 
 type With struct {

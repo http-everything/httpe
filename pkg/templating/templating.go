@@ -5,6 +5,7 @@ import (
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"io"
+	"reflect"
 	"strings"
 	"text/template"
 )
@@ -15,13 +16,37 @@ type templateData struct {
 	Input  requestdata.Input
 }
 
-var tplFunc = template.FuncMap{
+// recovery will silently swallow all unexpected panics.
+func recovery() {
+	_ = recover()
+}
+
+var TplFuncs = template.FuncMap{
 	"ToUpper": strings.ToUpper,
 	"ToLower": strings.ToLower,
+	"Default": func(arg interface{}, value interface{}) interface{} {
+		defer recovery()
+
+		v := reflect.ValueOf(value)
+		switch v.Kind() {
+		case reflect.String, reflect.Slice, reflect.Array, reflect.Map:
+			if v.Len() == 0 {
+				return arg
+			}
+		case reflect.Bool:
+			if !v.Bool() {
+				return arg
+			}
+		default:
+			return value
+		}
+
+		return value
+	},
 }
 
 func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData requestdata.Data, wr io.Writer) (err error) {
-	te, err := template.New("response").Funcs(tplFunc).Parse(tpl)
+	te, err := template.New("response").Funcs(TplFuncs).Parse(tpl)
 	if err != nil {
 		return err
 	}
@@ -38,7 +63,7 @@ func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData
 }
 
 func RenderString(input string, reqData requestdata.Data) (output string, err error) {
-	te, err := template.New("input").Funcs(tplFunc).Parse(input)
+	te, err := template.New("input").Funcs(TplFuncs).Parse(input)
 	if err != nil {
 		return "", err
 	}

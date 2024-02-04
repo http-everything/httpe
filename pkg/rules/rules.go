@@ -136,6 +136,9 @@ func (rule *Rule) Action() (action string) {
 	if rule.Do.ServeDirectory != "" {
 		return ServeDirectory
 	}
+	if len(rule.Do.RenderButtons) > 0 {
+		return RenderButtons
+	}
 	return ""
 }
 

@@ -146,10 +146,43 @@ rules:
     do:
       serve.directory: /Users/thorsten/tmp/
 
+  - name: Play
+    on:
+      path: /music/play
+    do:
+      run.script: |
+        nohup afplay /Users/thorsten/Swound-2023-03-4.mp3 >/dev/null 2>&1 &
+        echo "Music now playing"
+
+  - name: Stop
+    on:
+      path: /music/stop
+    do:
+      run.script: killall afplay
+
   - name: ping
     on:
       path: /ping
     do:
-      run.script: ping -n 60 127.0.0.1
+      run.script: ping -c 4 127.0.0.1
       args:
-        timeout: 5
+        timeout: 10
+
+  - name: Some buttons
+    on:
+      path: /buttons
+    do:
+      render.buttons:
+        - name: "Send a ping to localhost"
+          url: /ping
+          classes: btn-lg btn-outline-danger
+        - name: Dir
+          url: /dir
+          classes: btn-warning
+        - name: ▶️ Play
+          url: /music/play
+        - name: ⏹️ Stop
+          url: /music/stop
+          classes: btn-lg btn-dark
+      #args:
+      #  template: /Users/thorsten/projects/http-everything/httpe/pkg/actions/renderbuttons/buttons.tpl.html

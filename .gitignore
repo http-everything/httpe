@@ -33,3 +33,6 @@ go.work
  # Hugo/Hyas Node Modules
  docs/node_modules
 /docs/node_modules/
+/docs/public/
+/docs/resources/_gen/assets/
+/docs/resources/_gen/images/

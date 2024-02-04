@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/http-everytning/httpe/main/pkg/rules/schema.json",
-  "title": "Httpe routes",
+  "title": "HTTPE Rules",
   "description": "Definition of routes and linked actions for the httpe server",
   "type": "object",
   "properties": {
@@ -20,7 +20,8 @@
             "type": "object",
             "properties": {
               "path": {
-                "type": "string"
+                "type": "string",
+                "description": "URL Path the rule listens on. e.g. /my-action"
               },
               "methods": {
                 "description": "optional http methods, case-insensitive, if omitted, matching path applies to any method",
@@ -73,6 +74,29 @@
                 "description": "serve files from directory",
                 "type": "string"
               },
+              "render.buttons": {
+                "description": "render a list of buttons to fire requests.",
+                "type": "array",
+                "items": {
+                  "description": "button configuration",
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "text on the button"
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "URL where HTTP GET request will be fired to on button click"
+                    },
+                    "classes": {
+                      "type": "string",
+                      "description": "Additional CSS class(es) separated with blank space from list of Bootstrap5 button classes"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
               "args": {
                 "description": "options for the module",
                 "type": "object",
@@ -88,6 +112,10 @@
                   },
                   "cwd": {
                     "description": "change working directory. If not set, the OS temp dir will be used",
+                    "type": "string"
+                  },
+                  "template": {
+                    "description": "Path to a custom template for rendering, supported by 'render.buttons'",
                     "type": "string"
                   }
                 }
@@ -128,6 +156,11 @@
               {
                 "required": [
                   "serve.directory"
+                ]
+              },
+              {
+                "required": [
+                  "render.buttons"
                 ]
               }
             ]

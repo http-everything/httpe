@@ -39,6 +39,8 @@ HTTPE has templating on board allowing you to customize almost every part of the
 Actions are not limited to script execution. You can serve static and dynamic content, directories, and redirects.
 More actions coming soon such as email sending, storing and retrieving data and much more.
 
+Use the [built-in user interface](/docs/get-started/buttons/) to trigger action from any browser or your mobile phone.
+
 HTTPE has TLS and authentication built-in.
 
 {{< callout context="tip" title="Caution" icon="alert-triangle-filled" >}}

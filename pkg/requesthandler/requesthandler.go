@@ -5,6 +5,7 @@ import (
 	"http-everything/httpe/pkg/actions/answercontent"
 	"http-everything/httpe/pkg/actions/answerfile"
 	"http-everything/httpe/pkg/actions/redirect"
+	"http-everything/httpe/pkg/actions/renderbuttons"
 	"http-everything/httpe/pkg/actions/runscript"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/response"
@@ -46,6 +47,8 @@ func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
 			actioner = answerfile.AnswerFile{}
 		case rules.RedirectPermanent, rules.RedirectTemporary:
 			actioner = redirect.Redirect{}
+		case rules.RenderButtons:
+			actioner = renderbuttons.RenderButtons{}
 
 		default:
 			// Do nothing, just create a response
