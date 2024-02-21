@@ -1,11 +1,12 @@
 package servedirectory_test
 
 import (
-	"http-everything/httpe/pkg/actions/servedirectory"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"http-everything/httpe/pkg/actions/servedirectory"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

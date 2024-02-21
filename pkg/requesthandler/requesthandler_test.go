@@ -1,13 +1,14 @@
 package requesthandler_test
 
 import (
-	"http-everything/httpe/pkg/requesthandler"
-	"http-everything/httpe/pkg/rules"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"runtime"
 	"testing"
+
+	"http-everything/httpe/pkg/requesthandler"
+	"http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

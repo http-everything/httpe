@@ -2,11 +2,12 @@ package answercontent_test
 
 import (
 	"fmt"
+	"testing"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answercontent"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -37,7 +38,7 @@ func TestAnswerContentExecute(t *testing.T) {
 
 		assert.ErrorContains(t,
 			err,
-			"template: input:1:3: executing \"input\" at <.bad>: can't evaluate "+
+			"template: simple_string:1:3: executing \"simple_string\" at <.bad>: can't evaluate "+
 				"field bad in type templating.templateData",
 		)
 	})

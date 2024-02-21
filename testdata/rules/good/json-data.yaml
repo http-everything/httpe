@@ -1,0 +1,12 @@
+---
+rules:
+  - name: Json data
+    on:
+      path: /json
+    do:
+      answer.content: |
+        Field 'name' without default: {{ .Input.JSON.name }}
+        Field 'name' with default:    {{ .Input.JSON.name|Default "John" }}
+        
+        Nonexistent field without default: {{ .Input.JSON.nonexistent }}
+        Nonexistent field with default:    {{ .Input.JSON.nonexistent|Default "Yeah!" }}

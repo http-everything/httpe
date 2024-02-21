@@ -26,7 +26,7 @@ jobs:
           pwd
           curl -sL https://github.com/gohugoio/hugo/releases/download/v0.122.0/hugo_0.122.0_linux-amd64.tar.gz|tar xzf - hugo
           sudo mv hugo /usr/local/bin/hugo
-          hugo --version||true
+          hugo version||true
           cd docs
           test -e public||mkdir public
           npm install

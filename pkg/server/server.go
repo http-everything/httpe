@@ -5,17 +5,18 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
+
 	"http-everything/httpe/pkg/actions/servedirectory"
 	"http-everything/httpe/pkg/config"
 	"http-everything/httpe/pkg/middleware"
 	"http-everything/httpe/pkg/requesthandler"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/logger"
-	"io"
-	"net/http"
-	"os"
-	"os/signal"
-	"time"
 
 	"github.com/gorilla/mux"
 

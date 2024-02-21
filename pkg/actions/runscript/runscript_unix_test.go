@@ -4,9 +4,6 @@ package runscript_test
 
 import (
 	"fmt"
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/runscript"
-	"http-everything/httpe/pkg/rules"
 	"os"
 	"os/exec"
 	"runtime"
@@ -14,6 +11,10 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"http-everything/httpe/pkg/actions"
+	"http-everything/httpe/pkg/actions/runscript"
+	"http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/require"
 

@@ -2,8 +2,9 @@ package extract_test
 
 import (
 	"encoding/json"
-	"http-everything/httpe/pkg/share/extract"
 	"testing"
+
+	"http-everything/httpe/pkg/share/extract"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

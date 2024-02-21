@@ -117,6 +117,10 @@
                   "template": {
                     "description": "Path to a custom template for rendering, supported by 'render.buttons'",
                     "type": "string"
+                  },
+                  "file_uploads": {
+                    "description": "Allow the upload if files.",
+                    "type": "boolean"
                   }
                 }
               }

@@ -2,12 +2,13 @@ package renderbuttons_test
 
 import (
 	"fmt"
+	"strings"
+	"testing"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/renderbuttons"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
-	"strings"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

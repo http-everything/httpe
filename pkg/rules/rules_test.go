@@ -3,13 +3,14 @@ package rules_test
 import (
 	"encoding/json"
 	"fmt"
-	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/share/extract"
-	"http-everything/httpe/pkg/share/logger"
 	"os"
 	"runtime"
 	"strings"
 	"testing"
+
+	"http-everything/httpe/pkg/rules"
+	"http-everything/httpe/pkg/share/extract"
+	"http-everything/httpe/pkg/share/logger"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

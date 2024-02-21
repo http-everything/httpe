@@ -2,12 +2,13 @@ package middleware_test
 
 import (
 	"bytes"
-	"http-everything/httpe/pkg/middleware"
-	"http-everything/httpe/pkg/rules"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"http-everything/httpe/pkg/middleware"
+	"http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

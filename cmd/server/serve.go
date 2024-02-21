@@ -3,9 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"http-everything/httpe/pkg/rules"
 	"io"
 	"os"
+
+	"http-everything/httpe/pkg/rules"
 
 	"http-everything/httpe/pkg/config"
 	"http-everything/httpe/pkg/server"
@@ -95,8 +96,10 @@ func setupLogs(cfg *config.Config) (baseLogger *logger.Logger, accessLogWriter i
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to open server log: %w", err)
 	}
-	var AccessLogWriter = os.Stdout
-	if cfg.S.AccessLogFile != "" {
+	var AccessLogWriter io.Writer
+	if cfg.S.AccessLogFile == "-" {
+		AccessLogWriter = os.Stdout
+	} else if cfg.S.AccessLogFile != "" {
 		AccessLogWriter, err = os.OpenFile(cfg.S.AccessLogFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, accessLogPermissions)
 		if err != nil {
 			return nil, nil, fmt.Errorf("failed to open access log: %w", err)

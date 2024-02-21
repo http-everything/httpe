@@ -5,11 +5,12 @@ import (
 	_ "embed"
 	"fmt"
 	"html/template"
+	"os"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/templating"
-	"os"
 )
 
 //go:embed buttons.tpl.html

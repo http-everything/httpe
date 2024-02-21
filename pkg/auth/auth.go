@@ -5,8 +5,9 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"errors"
-	"http-everything/httpe/pkg/rules"
 	"net/http"
+
+	"http-everything/httpe/pkg/rules"
 )
 
 // IsRequestAuthenticated checks if the request is authenticated based on the provided list of users, hashing algorithm,

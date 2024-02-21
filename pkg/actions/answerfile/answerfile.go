@@ -2,11 +2,12 @@ package answerfile
 
 import (
 	"errors"
+	"os"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/templating"
-	"os"
 )
 
 type AnswerFile struct{}

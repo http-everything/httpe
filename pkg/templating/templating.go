@@ -2,12 +2,13 @@ package templating
 
 import (
 	"bytes"
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/requestdata"
 	"io"
 	"reflect"
 	"strings"
 	"text/template"
+
+	"http-everything/httpe/pkg/actions"
+	"http-everything/httpe/pkg/requestdata"
 )
 
 type templateData struct {
@@ -24,29 +25,35 @@ func recovery() {
 var TplFuncs = template.FuncMap{
 	"ToUpper": strings.ToUpper,
 	"ToLower": strings.ToLower,
-	"Default": func(arg interface{}, value interface{}) interface{} {
+	"Default": func(defVal interface{}, curVal interface{}) interface{} {
 		defer recovery()
 
-		v := reflect.ValueOf(value)
-		switch v.Kind() {
-		case reflect.String, reflect.Slice, reflect.Array, reflect.Map:
-			if v.Len() == 0 {
-				return arg
+		c := reflect.ValueOf(curVal)
+		if !c.IsValid() {
+			return defVal
+		}
+		if c.IsZero() {
+			return defVal
+		}
+		switch c.Kind() {
+
+		case reflect.Slice, reflect.Array, reflect.Map, reflect.String:
+			if c.Len() == 0 {
+				return defVal
 			}
 		case reflect.Bool:
-			if !v.Bool() {
-				return arg
+			if !c.Bool() {
+				return defVal
 			}
 		default:
-			return value
+			return curVal
 		}
-
-		return value
+		return curVal
 	},
 }
 
 func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData requestdata.Data, wr io.Writer) (err error) {
-	te, err := template.New("response").Funcs(TplFuncs).Parse(tpl)
+	te, err := newTpl(tpl, "action_response")
 	if err != nil {
 		return err
 	}
@@ -63,7 +70,7 @@ func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData
 }
 
 func RenderString(input string, reqData requestdata.Data) (output string, err error) {
-	te, err := template.New("input").Funcs(TplFuncs).Parse(input)
+	te, err := newTpl(input, "simple_string")
 	if err != nil {
 		return "", err
 	}
@@ -76,6 +83,7 @@ func RenderString(input string, reqData requestdata.Data) (output string, err er
 	if err != nil {
 		return "", err
 	}
+	//return strings.ReplaceAll(bu.String(), "<no value>", ""), nil
 	return bu.String(), nil
 }
 
@@ -87,4 +95,8 @@ func RenderStringMap(input map[string]string, reqData requestdata.Data) (output 
 		}
 	}
 	return output, nil
+}
+
+func newTpl(input string, name string) (*template.Template, error) {
+	return template.New(name).Funcs(TplFuncs).Option("missingkey=zero").Parse(input)
 }

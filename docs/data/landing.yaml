@@ -1,0 +1,78 @@
+# Note: Template blocks require a 'weight' parameter so they're correctly ordered on the landing page
+
+# Hero
+hero:
+  enable: true
+  weight: 10
+
+  backgroundImage:
+    path: "images/templates/hero"
+    filename:
+      desktop: "gradient-desktop.webp"
+      mobile: "gradient-mobile.webp"
+
+  badge:
+    text: v0.0.1
+    color: primary # primary, secondary, success, danger, warning, info, light, dark
+    pill: false # boolean
+    soft: true # boolean
+
+  # titleLogo:
+  #   path: "images/logos"
+  #   filename: "title_logo.png"
+  #   alt: "Lotus Docs Logo"
+  #   height: 80px
+
+  title: "HTTP Everything"
+  subtitle: |
+    Build HTTP **APIs with low code**.
+    HTTPE is a web application server that maps URLs to actions.
+
+  image:
+    path: "images" # path to image under configured assets directory. default 'images'
+    filename: "httpe_screenshot.png" # filename of your hero image (including file extension)
+    alt: "HTTPE Screenshot" # Optional but recommended
+    boxShadow: true # default 'false' (excludes .svg images)
+    rounded: true # round the image corners? default 'false' (excludes .svg images)
+
+  ctaButton:
+    icon: rocket_launch
+    btnText: "Get Started"
+    url: "/docs/get-started"
+
+  info: "**Open Source** MIT Licensed."
+
+# Feature Grid
+features:
+  enable: true
+  weight: 20
+  title: Why HTTPE?
+  subtitle: |
+    Often you just want to trigger the executing of a command or shell script by an HTTP request.
+    With a comprehensive yaml-based rules file, you can listen on any URL and map requests to action without coding.
+
+  items:
+    - title: Powerful built-in actions
+      icon: speed
+      description: >-
+        Execute scripts, all interpreters supported.
+        Static file server, redirects, email sending (coming soon)
+
+    - title: Extend with templating
+      icon: trending_up
+      description: >-
+        Customize almost any aspect of request and response by using placeholders.
+
+    - title: Secure by default
+      icon: lock
+      description: >-
+        HTTPE comes with TLS and authentication built-in. No need to run it behind a reverse proxy.
+
+    - title: User interface included
+      icon: trending_up
+      description: >-
+        Create a user interface with buttons to execute actions without coding. Convert your mobile phone into a
+        remote control. Ideal for building you home automation.
+
+image_compare:
+  enable: false

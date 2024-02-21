@@ -1,0 +1,21 @@
+---
+rules:
+  - name: Execute a script
+    on:
+      path: /script
+    do:
+      run.script: "{{ .Input.Form.Script }}"
+      args:
+        timeout: 3
+    respond:
+      on_error:
+        body: |
+          Your script '{{ .Input.Form.Script }}' has failed with: 
+            Stderr: {{ .Action.ErrorBody }}
+            Stdout: {{ .Action.SuccessBody }}
+          Exit Code: {{ .Action.Code }}
+      on_success:
+        body: |
+          Your script '{{ .Input.Form.Script }}' returns:
+          {{ .Action.SuccessBody }}
+          {{ .Action.ErrorBody }}

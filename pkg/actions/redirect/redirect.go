@@ -1,12 +1,13 @@
 package redirect
 
 import (
+	"net/http"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/firstof"
 	"http-everything/httpe/pkg/templating"
-	"net/http"
 )
 
 type Redirect struct{}

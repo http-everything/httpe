@@ -1,6 +1,8 @@
 package requesthandler
 
 import (
+	"net/http"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answercontent"
 	"http-everything/httpe/pkg/actions/answerfile"
@@ -11,7 +13,6 @@ import (
 	"http-everything/httpe/pkg/response"
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/logger"
-	"net/http"
 )
 
 const DefaultMaxRequestBody = "512KB"
@@ -23,7 +24,7 @@ func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
 		respWriter := response.New(w, rule.Respond, logger)
 
 		// Collect data from the request to be made available to the template engine and add to the response writer
-		reqData, err := requestdata.Collect(r)
+		reqData, err := requestdata.Collect(r, rule.Do.Args)
 		if err != nil {
 			respWriter.InternalServerError(err)
 			return

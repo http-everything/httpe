@@ -3,12 +3,15 @@ package requestdata
 import (
 	"encoding/json"
 	"fmt"
-	"http-everything/httpe/pkg/filetype"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+
+	"http-everything/httpe/pkg/rules"
+
+	"http-everything/httpe/pkg/filetype"
 
 	"github.com/gorilla/mux"
 
@@ -51,7 +54,7 @@ type JSON interface{}
 type Params map[string]string
 type URLPlaceholders map[string]string
 
-func Collect(r *http.Request) (d Data, err error) {
+func Collect(r *http.Request, ruleArgs rules.Args) (d Data, err error) {
 	formInput := make(map[string]string)
 	params := make(map[string]string)
 	uploads := make([]Upload, 0)
@@ -89,8 +92,10 @@ func Collect(r *http.Request) (d Data, err error) {
 		if d.Input.Form, err = extractMultipartFormData(r); err != nil {
 			return d, err
 		}
-		if d.Input.Uploads, err = extractFileUploads(r); err != nil {
-			return d, err
+		if ruleArgs.FileUploads {
+			if d.Input.Uploads, err = extractFileUploads(r); err != nil {
+				return d, err
+			}
 		}
 	} else {
 		// Extract from Content-Type: application/x-www-form-urlencoded
@@ -195,10 +200,8 @@ func extractFileUploads(r *http.Request) (uploads []Upload, err error) {
 		return uploads, fmt.Errorf("error parsing form to extract uploads: %w", err)
 	}
 
-	// http://sanatgersappa.blogspot.com/2013/03/handling-multiple-file-uploads-in-go.html
 	m := r.MultipartForm
 	for name, file := range m.File {
-		fmt.Printf("name: %s, size %d, orig: %s\n", name, file[0].Size, file[0].Filename)
 		upload, err := file[0].Open()
 		if err != nil {
 			return uploads, fmt.Errorf("error extracting uploads: %w", err)
@@ -240,7 +243,13 @@ func extractURLPlaceholders(r *http.Request) (placeholders URLPlaceholders) {
 }
 
 func Mock() (d Data, err error) {
-	json, err := json.Marshal(`{"json key 1":"json value 1","json key 2":"json values 2"`)
+	var jd interface{}
+	err = json.Unmarshal([]byte(`
+		{
+            "jkey1":"json value 1",
+            "jkey2":"json value 2",
+            "nested": {"nkey1":"nvalue1"}
+        }`), &jd)
 	if err != nil {
 		return Data{}, err
 	}
@@ -252,6 +261,8 @@ func Mock() (d Data, err error) {
 			Method:     "get",
 			Headers: map[string]string{
 				"X-My-Header": "gotest",
+				"Upper":       "upper",
+				"lower":       "lower",
 			},
 		},
 		Input: Input{
@@ -268,7 +279,7 @@ func Mock() (d Data, err error) {
 				"URLVar2": "URL Value 2",
 				"redir":   "https://example.com",
 			},
-			JSON: json,
+			JSON: jd,
 			Uploads: []Upload{
 				{
 					FieldName: "my-upload-1",

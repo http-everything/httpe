@@ -1,8 +1,9 @@
 package remove_test
 
 import (
-	"http-everything/httpe/pkg/share/remove"
 	"testing"
+
+	"http-everything/httpe/pkg/share/remove"
 
 	"github.com/stretchr/testify/assert"
 )

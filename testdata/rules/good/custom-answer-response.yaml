@@ -1,0 +1,12 @@
+---
+rules:
+  - name: Custom response
+    on:
+     path: /test
+    do:
+      answer.content: This is an error
+    respond:
+      on_success:
+        body: |
+          Error: {{ .Action.SuccessBody }}
+        http_status: 400

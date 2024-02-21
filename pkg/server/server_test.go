@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
-	"http-everything/httpe/pkg/rules"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

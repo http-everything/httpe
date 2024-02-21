@@ -2,8 +2,10 @@ package templating_test
 
 import (
 	"bytes"
-	"http-everything/httpe/pkg/templating"
+	"fmt"
 	"testing"
+
+	"http-everything/httpe/pkg/templating"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -33,18 +35,85 @@ func TestRenderActionResponse(t *testing.T) {
 }
 
 func TestRenderString(t *testing.T) {
+	cases := []struct {
+		template string
+		want     string
+	}{
+		{
+			template: "Hello {{ .Input.Form.Field1 | ToUpper}}",
+			want:     "Hello FIELD VALUE 1",
+		},
+		{
+			template: "Hello {{ .Input.Form.Field1 | ToLower}}",
+			want:     "Hello field value 1",
+		},
+		{
+			template: "Hello {{ .Input.JSON.jkey1 }}",
+			want:     "Hello json value 1",
+		},
+		{
+			template: "{{ .Input.Form.Nonexistent }}",
+			want:     "",
+		},
+		{
+			template: `{{ .Input.Form.Nonexistent|Default "John" }}`,
+			want:     "John",
+		},
+		{
+			template: `{{ .Input.JSON.nested.nkey1 }}`,
+			want:     "nvalue1",
+		},
+		{
+			template: `{{ .Input.JSON.nested.nonexistent }}`,
+			want:     "<no value>",
+		},
+		{
+			template: `{{ .Input.JSON.nonexistent }}`,
+			want:     "<no value>",
+		},
+		{
+			template: `{{ .Input.JSON.nested.nonexistent|Default "John" }}`,
+			want:     "John",
+		},
+		{
+			template: "{{ .Meta.UserAgent }}",
+			want:     "golang",
+		},
+		{
+			template: "{{ .Meta.URL }}",
+			want:     "/some/path",
+		},
+		{
+			template: "{{ .Meta.RemoteAddr }}",
+			want:     "127.0.0.1",
+		},
+		{
+			template: "{{ .Meta.Method }}",
+			want:     "get",
+		},
+		{
+			template: `{{ .Meta.Headers.Upper }}`,
+			want:     "upper",
+		},
+		{
+			template: `{{ index .Meta.Headers "X-My-Header" }}`,
+			want:     "gotest",
+		},
+	}
 	// Create mock request data
 	reqData, err := requestdata.Mock()
 	require.NoError(t, err)
 
-	// Render template
-	inputTpl := "Hello {{.Input.Form.Field1 | ToUpper}}"
-	output, err := templating.RenderString(inputTpl, reqData)
-	require.NoError(t, err)
+	for i, tc := range cases {
+		t.Run(fmt.Sprintf("Test %d", i+1), func(t *testing.T) {
+			// Render template
+			output, err := templating.RenderString(tc.template, reqData)
+			require.NoError(t, err)
 
-	// Validate output
-	want := "Hello FIELD VALUE 1"
-	assert.Equal(t, want, output)
+			// Validate output
+			assert.Equal(t, tc.want, output)
+		})
+	}
 }
 
 func TestRenderStringMap(t *testing.T) {

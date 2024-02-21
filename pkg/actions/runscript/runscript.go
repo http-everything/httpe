@@ -4,6 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+	"time"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
@@ -11,12 +18,6 @@ import (
 	"http-everything/httpe/pkg/share/firstof"
 	"http-everything/httpe/pkg/share/remove"
 	"http-everything/httpe/pkg/templating"
-	"io"
-	"os"
-	"os/exec"
-	"runtime"
-	"strings"
-	"time"
 
 	"github.com/lithammer/shortuuid/v4"
 )
@@ -30,7 +31,11 @@ type Script struct{}
 func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
 	var exitCode = -1
 	timeoutSec := firstof.Int(rule.Do.Args.Timeout, DefaultTimeoutSecs)
-	script, _ := templating.RenderString(rule.Do.RunScript, reqData)
+	script, err := templating.RenderString(rule.Do.RunScript, reqData)
+	if err != nil {
+		return actions.ActionResponse{}, fmt.Errorf("error rendering script: %w", err)
+	}
+
 	interpreter := firstof.String(rule.Do.Args.Interpreter, defaultInterpreter())
 
 	// Change to the working directory if specified by the rule.

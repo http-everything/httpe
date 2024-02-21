@@ -36,3 +36,6 @@ go.work
 /docs/public/
 /docs/resources/_gen/assets/
 /docs/resources/_gen/images/
+
+# releases
+/dist/

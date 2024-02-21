@@ -1,0 +1,13 @@
+---
+rules:
+  - name: Metadata
+    on:
+      path: /meta
+    do:
+      answer.content: |
+        User Agent:  {{ .Meta.UserAgent }}
+        URL:         {{ .Meta.URL }}
+        Remote Add:  {{ .Meta.RemoteAddr }}
+        Method:      {{ .Meta.Method }}
+        X-My-Header: {{ index .Meta.Headers "X-My-Header" }}
+        

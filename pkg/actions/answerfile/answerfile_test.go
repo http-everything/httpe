@@ -2,13 +2,14 @@ package answerfile_test
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+	"testing"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answerfile"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
-	"os"
-	"runtime"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -46,7 +47,7 @@ func TestAnswerFileExecute(t *testing.T) {
 
 		_, err = actioner.Execute(rule, reqData)
 
-		assert.ErrorContains(t, err, "template: input:1:3: executing \"input\" at <.bad>: "+
+		assert.ErrorContains(t, err, "template: simple_string:1:3: executing \"simple_string\" at <.bad>: "+
 			"can't evaluate field bad in type templating.templateData")
 	})
 }

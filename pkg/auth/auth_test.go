@@ -2,10 +2,11 @@ package auth_test
 
 import (
 	"errors"
-	"http-everything/httpe/pkg/auth"
-	"http-everything/httpe/pkg/rules"
 	"net/http"
 	"testing"
+
+	"http-everything/httpe/pkg/auth"
+	"http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 )

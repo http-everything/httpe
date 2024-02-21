@@ -2,10 +2,11 @@ package logger_test
 
 import (
 	"fmt"
-	"http-everything/httpe/pkg/share/logger"
 	"os"
 	"strings"
 	"testing"
+
+	"http-everything/httpe/pkg/share/logger"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

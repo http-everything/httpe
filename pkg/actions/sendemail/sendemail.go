@@ -1,10 +1,11 @@
 package sendemail
 
 import (
+	"net/http"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
-	"net/http"
 )
 
 type Email struct{}

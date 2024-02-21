@@ -59,6 +59,7 @@ type Args struct {
 	Timeout     int    `yaml:"timeout" json:"timeout"`
 	Cwd         string `yaml:"cwd" json:"cwd"`
 	Template    string `yaml:"template" json:"template"`
+	FileUploads bool   `yaml:"file_uploads" json:"file_uploads"`
 }
 
 type With struct {

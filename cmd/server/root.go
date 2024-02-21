@@ -33,11 +33,11 @@ func Execute() {
 	CfgPath = pFlags.StringP("config", "c", "", "specify the config file to use")
 
 	pFlags.StringP("address", "a", config.DefaultServerAddress, "set the listen address for the server")
-	pFlags.StringP("data-dir", "d", config.DefaultDataDir, "set the data directory for license json files")
+	pFlags.StringP("data-dir", "d", config.DefaultDataDir, "set the data directory")
 	pFlags.String("log-level", config.DefaultLogLevel, "specify server log level. either error, info, or debug.")
 	pFlags.StringP("log-file", "l", "", "specify server log file")
 	pFlags.StringP("rules-file", "r", "", "specify rules to map route to actions")
-	pFlags.String("access-log-file", "", "set the access log file in the apache common log format")
+	pFlags.String("access-log-file", "", "set the access log file in the apache common log format. use '-' for writing to stdout.")
 	pFlags.String("cert-file", "", "specify the TLS certificate file")
 	pFlags.String("key-file", "", "specify the TLS key file")
 	pFlags.Bool("validate", false, "validate configuration and rules, then exit")

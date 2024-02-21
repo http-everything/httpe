@@ -2,14 +2,17 @@ package requestdata_test
 
 import (
 	"bytes"
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/share/extract"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/url"
 	"os"
 	"testing"
+
+	"http-everything/httpe/pkg/rules"
+
+	"http-everything/httpe/pkg/requestdata"
+	"http-everything/httpe/pkg/share/extract"
 
 	"github.com/gorilla/mux"
 
@@ -39,7 +42,7 @@ func TestRequestDataGet(t *testing.T) {
 		},
 		Host: "localhost",
 	}
-	reqData, err := requestdata.Collect(req)
+	reqData, err := requestdata.Collect(req, rules.Args{})
 	require.NoError(t, err)
 
 	assert.Equal(t, UserAgent, reqData.Meta.UserAgent)
@@ -71,7 +74,7 @@ func TestRequestDataPostWWWUrlEncoded(t *testing.T) {
 	// Add content-type header
 	req.Header.Add(HeaderContentType, "application/x-www-form-urlencoded")
 
-	reqData, err := requestdata.Collect(req)
+	reqData, err := requestdata.Collect(req, rules.Args{})
 	require.NoError(t, err)
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
@@ -109,19 +112,32 @@ func TestRequestDataPostMultipartFormData(t *testing.T) {
 	// Add headers
 	req.Header.Add(HeaderContentType, writer.FormDataContentType())
 
-	reqData, err := requestdata.Collect(req)
-	require.NoError(t, err)
-	fStat, err := file.Stat()
-	require.NoError(t, err)
+	t.Run("with file uploads", func(t *testing.T) {
+		reqData, err := requestdata.Collect(req, rules.Args{FileUploads: true})
+		require.NoError(t, err)
+		fStat, err := file.Stat()
+		require.NoError(t, err)
 
-	assert.Equal(t, "POST", reqData.Meta.Method)
-	assert.Equal(t, "/upload", reqData.Meta.URL)
-	assert.Equal(t, Name, reqData.Input.Form["name"])
-	assert.Equal(t, Email, reqData.Input.Form["email"])
-	assert.Equal(t, "file", reqData.Input.Uploads[0].FieldName)
-	assert.Equal(t, "text/UTF-8", reqData.Input.Uploads[0].Type)
-	assert.Equal(t, fStat.Size(), reqData.Input.Uploads[0].Size, "File size")
-	assert.Contains(t, reqData.Input.Uploads[0].Stored, requestdata.UploadPrefix)
+		assert.Equal(t, "POST", reqData.Meta.Method)
+		assert.Equal(t, "/upload", reqData.Meta.URL)
+		assert.Equal(t, Name, reqData.Input.Form["name"])
+		assert.Equal(t, Email, reqData.Input.Form["email"])
+		assert.Equal(t, "file", reqData.Input.Uploads[0].FieldName)
+		assert.Equal(t, "text/UTF-8", reqData.Input.Uploads[0].Type)
+		assert.Equal(t, fStat.Size(), reqData.Input.Uploads[0].Size, "File size")
+		assert.Contains(t, reqData.Input.Uploads[0].Stored, requestdata.UploadPrefix)
+	})
+
+	t.Run("without file uploads", func(t *testing.T) {
+		reqData, err := requestdata.Collect(req, rules.Args{FileUploads: false})
+		require.NoError(t, err)
+
+		assert.Equal(t, "POST", reqData.Meta.Method)
+		assert.Equal(t, "/upload", reqData.Meta.URL)
+		assert.Equal(t, Name, reqData.Input.Form["name"])
+		assert.Equal(t, Email, reqData.Input.Form["email"])
+		assert.Equal(t, 0, len(reqData.Input.Uploads))
+	})
 }
 
 func TestRequestDataPostJSON(t *testing.T) {
@@ -139,7 +155,7 @@ func TestRequestDataPostJSON(t *testing.T) {
 	// Set content type to JSON
 	req.Header.Set(HeaderContentType, "application/json")
 
-	reqData, err := requestdata.Collect(req)
+	reqData, err := requestdata.Collect(req, rules.Args{})
 	require.NoError(t, err)
 
 	assert.Equal(t, "POST", reqData.Meta.Method)
@@ -157,7 +173,7 @@ func TestURLPlaceholders(t *testing.T) {
 	}
 
 	req = mux.SetURLVars(req, vars)
-	reqData, err := requestdata.Collect(req)
+	reqData, err := requestdata.Collect(req, rules.Args{})
 	require.NoError(t, err)
 
 	assert.Equal(t, "foo", reqData.Input.URLPlaceholders["id"])
