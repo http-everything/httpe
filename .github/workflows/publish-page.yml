@@ -17,11 +17,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
 
-      - name: Build with Hugo and NPM
+      - name: Build with Hugo
         run: |
           pwd
           curl -sL https://github.com/gohugoio/hugo/releases/download/v0.122.0/hugo_0.122.0_linux-amd64.tar.gz|tar xzf - hugo
@@ -29,8 +26,7 @@ jobs:
           hugo version||true
           cd docs
           test -e public||mkdir public
-          npm install
-          npm run build
+          hugo --minify
           find public
 
       - name: Setup Pages
