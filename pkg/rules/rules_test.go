@@ -24,7 +24,7 @@ func TestRulesShouldSucceed(t *testing.T) {
 		if !strings.HasSuffix(file.Name(), ".yaml") {
 			continue
 		}
-		t.Run(file.Name(), func(T *testing.T) {
+		t.Run(file.Name(), func(t *testing.T) {
 			rulesCfg, ruleErr := rules.Read("../../testdata/rules/good/"+file.Name(), logger)
 			assert.NoError(t, ruleErr)
 			valErr := rulesCfg.Validate()

@@ -28,7 +28,18 @@ func TestAnswerFileExecute(t *testing.T) {
 
 	//Create the actioner that implements the action interface
 	var actioner actions.Actioner = answerfile.AnswerFile{}
-	t.Run("no errors", func(t *testing.T) {
+	t.Run("no errors, templating off", func(t *testing.T) {
+		err := os.WriteFile(testFile, []byte("This is a {{ .String }}"), 0600)
+		require.NoError(t, err)
+
+		actionResp, err := actioner.Execute(rule, reqData)
+		require.NoError(t, err)
+
+		assert.Equal(t, "This is a {{ .String }}", actionResp.SuccessBody)
+	})
+
+	t.Run("no errors, templating on", func(t *testing.T) {
+		rule.Do.Args.Templating = true
 		err := os.WriteFile(testFile, []byte("Agent is {{ .Meta.UserAgent }}, FormField1 is {{ .Input.Form.Field1 }}"), 0600)
 		require.NoError(t, err)
 

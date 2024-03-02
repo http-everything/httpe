@@ -4,10 +4,11 @@ import (
 	"errors"
 	"os"
 
+	"http-everything/httpe/pkg/templating"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/requestdata"
 	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/templating"
 )
 
 type AnswerFile struct{}
@@ -24,11 +25,15 @@ func (n AnswerFile) Execute(rule rules.Rule, reqData requestdata.Data) (response
 		return actions.ActionResponse{}, err
 	}
 
-	content, err := templating.RenderString(string(fileContent), reqData)
-	if err != nil {
-		return actions.ActionResponse{}, err
+	var content string
+	if rule.Do.Args.Templating {
+		content, err = templating.RenderString(string(fileContent), reqData)
+		if err != nil {
+			return actions.ActionResponse{}, err
+		}
+	} else {
+		content = string(fileContent)
 	}
-
 	return actions.ActionResponse{
 		SuccessBody: content,
 		Code:        0,

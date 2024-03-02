@@ -105,13 +105,14 @@ func (r *Response) ActionResponse(actionResp actions.ActionResponse) {
 		r.InternalServerError(err)
 		return
 	}
+	response, err := templating.RenderActionResponse(actionResp, tpl, r.reqData)
+	if err != nil {
+		r.InternalServerError(err)
+	}
 	// Set all http response headers giving precedence to the headers defined by the rules over the headers set by action.
 	for h, v := range merge.StringMapsI(ruleHeaders, headers) {
 		r.w.Header().Set(h, v)
 	}
 	r.w.WriteHeader(statusCode)
-	err = templating.RenderActionResponse(actionResp, tpl, r.reqData, r.w)
-	if err != nil {
-		r.InternalServerError(err)
-	}
+	fmt.Fprint(r.w, response)
 }

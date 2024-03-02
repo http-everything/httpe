@@ -150,11 +150,11 @@ func (rule *Rule) MaxRequestBody() string {
 	return ""
 }
 
-func (ruleResp *Respond) Headers(onError bool) map[string]string {
-	if onError {
-		return ruleResp.OnError.Headers
+func (ruleResp *Respond) Headers(onSuccess bool) map[string]string {
+	if onSuccess {
+		return ruleResp.OnSuccess.Headers
 	}
-	return ruleResp.OnSuccess.Headers
+	return ruleResp.OnError.Headers
 }
 
 func (rule *Rule) MatchesURI(URI string) bool {

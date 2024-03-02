@@ -91,14 +91,28 @@
                     },
                     "classes": {
                       "type": "string",
-                      "description": "Additional CSS class(es) separated with blank space from list of Bootstrap5 button classes"
+                      "description": "Additional CSS class(es) separated with blank space from list of Bootstrap5 button classes",
+                      "anyOf": [
+                        {
+                          "pattern": "^btn\\-"
+                        },
+                        {
+                          "enum": [
+                            ""
+                          ]
+                        }
+                      ]
                     }
                   },
+                  "required": [
+                    "name",
+                    "url"
+                  ],
                   "additionalProperties": false
                 }
               },
               "args": {
-                "description": "options for the module",
+                "description": "options for the action",
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
@@ -121,6 +135,9 @@
                   "file_uploads": {
                     "description": "Allow the upload if files.",
                     "type": "boolean"
+                  },
+                  "templating": {
+                    "description": "Enable templating for answer.file, default 'false'"
                   }
                 }
               }

@@ -16,7 +16,7 @@ import (
 
 func DummyRequestHandler(t *testing.T) http.Handler {
 	t.Helper()
-	fn := func(w http.ResponseWriter, r *http.Request) {}
+	fn := func(_ http.ResponseWriter, _ *http.Request) {}
 	return http.HandlerFunc(fn)
 }
 

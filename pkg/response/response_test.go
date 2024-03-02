@@ -50,12 +50,13 @@ func TestActionResponse(t *testing.T) {
 	err = json.Unmarshal([]byte(`{"jsonkey1": "jsonvalue1"}`), &jd)
 	require.NoError(t, err)
 	cases := []struct {
-		name       string
-		acRes      actions.ActionResponse
-		ruRes      rules.Respond
-		reqData    *requestdata.Data
-		want       []string
-		wantStatus int
+		name        string
+		acRes       actions.ActionResponse
+		ruRes       rules.Respond
+		reqData     *requestdata.Data
+		wantBody    []string
+		wantStatus  int
+		wantHeaders map[string]string
 	}{
 		{
 			name: "should return the success body using the default template",
@@ -65,8 +66,28 @@ func TestActionResponse(t *testing.T) {
 			},
 			ruRes:      rules.Respond{},
 			reqData:    nil,
-			want:       []string{"all good"},
+			wantBody:   []string{"all good"},
 			wantStatus: http.StatusOK,
+		},
+		{
+			name: "should return the success body using the default template with custom headers",
+			acRes: actions.ActionResponse{
+				SuccessBody: "all good",
+				Code:        0,
+			},
+			ruRes: rules.Respond{
+				OnSuccess: rules.OnSuccess{
+					Headers: rules.Headers{
+						"x-test": "my-header-values",
+					},
+				},
+			},
+			reqData:    nil,
+			wantBody:   []string{"all good"},
+			wantStatus: http.StatusOK,
+			wantHeaders: map[string]string{
+				"x-test": "my-header-values",
+			},
 		},
 		{
 			name: "should return the error body using the default template",
@@ -74,10 +95,19 @@ func TestActionResponse(t *testing.T) {
 				ErrorBody: "nothing is good",
 				Code:      1,
 			},
-			ruRes:      rules.Respond{},
+			ruRes: rules.Respond{
+				OnError: rules.OnError{
+					Headers: rules.Headers{
+						"x-error": "my-error-header",
+					},
+				},
+			},
 			reqData:    nil,
-			want:       []string{"nothing is good"},
+			wantBody:   []string{"nothing is good"},
 			wantStatus: http.StatusBadRequest,
+			wantHeaders: map[string]string{
+				"x-error": "my-error-header",
+			},
 		},
 		{
 			name: "should return body from custom template on success",
@@ -92,7 +122,7 @@ func TestActionResponse(t *testing.T) {
 				},
 			},
 			reqData:    nil,
-			want:       []string{"test good bad test"},
+			wantBody:   []string{"test good bad test"},
 			wantStatus: http.StatusOK,
 		},
 		{
@@ -109,7 +139,7 @@ func TestActionResponse(t *testing.T) {
 				},
 			},
 			reqData:    nil,
-			want:       []string{"test good bad 99 test"},
+			wantBody:   []string{"test good bad 99 test"},
 			wantStatus: http.StatusConflict,
 		},
 		{
@@ -149,7 +179,7 @@ func TestActionResponse(t *testing.T) {
 					JSON: jd,
 				},
 			},
-			want: []string{
+			wantBody: []string{
 				"formkey1: formvalue1",
 				"paramkey1: paramvalue1",
 				"Field Name: myfile",
@@ -176,8 +206,13 @@ func TestActionResponse(t *testing.T) {
 
 			// Validate status code
 			assert.Equal(t, tc.wantStatus, rr.Code)
-			for _, w := range tc.want {
+			for _, w := range tc.wantBody {
 				assert.Contains(t, rr.Body.String(), w)
+			}
+			if len(tc.wantHeaders) > 0 {
+				for h, v := range tc.wantHeaders {
+					assert.Equal(t, v, rr.Header().Get(h))
+				}
 			}
 		})
 	}

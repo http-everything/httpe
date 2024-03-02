@@ -2,7 +2,6 @@ package templating
 
 import (
 	"bytes"
-	"io"
 	"reflect"
 	"strings"
 	"text/template"
@@ -52,21 +51,22 @@ var TplFuncs = template.FuncMap{
 	},
 }
 
-func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData requestdata.Data, wr io.Writer) (err error) {
+func RenderActionResponse(actionResp actions.ActionResponse, tpl string, reqData requestdata.Data) (response string, err error) {
 	te, err := newTpl(tpl, "action_response")
 	if err != nil {
-		return err
+		return "", err
 	}
 	tplData := templateData{
 		Action: actionResp,
 		Meta:   reqData.Meta,
 		Input:  reqData.Input,
 	}
-	err = te.Execute(wr, tplData)
+	var bu bytes.Buffer
+	err = te.Execute(&bu, tplData)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return bu.String(), nil
 }
 
 func RenderString(input string, reqData requestdata.Data) (output string, err error) {
@@ -83,7 +83,6 @@ func RenderString(input string, reqData requestdata.Data) (output string, err er
 	if err != nil {
 		return "", err
 	}
-	//return strings.ReplaceAll(bu.String(), "<no value>", ""), nil
 	return bu.String(), nil
 }
 

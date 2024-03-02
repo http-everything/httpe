@@ -1,7 +1,6 @@
 package templating_test
 
 import (
-	"bytes"
 	"fmt"
 	"testing"
 
@@ -25,13 +24,12 @@ func TestRenderActionResponse(t *testing.T) {
 	}
 
 	// Render template
-	var buf bytes.Buffer
-	err = templating.RenderActionResponse(actionResp, actionResp.SuccessBody, reqData, &buf)
+	response, err := templating.RenderActionResponse(actionResp, actionResp.SuccessBody, reqData)
 	require.NoError(t, err)
 
 	// Validate output
 	want := "Hello Field Value 1"
-	assert.Equal(t, want, buf.String())
+	assert.Equal(t, want, response)
 }
 
 func TestRenderString(t *testing.T) {

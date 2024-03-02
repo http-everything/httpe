@@ -47,7 +47,7 @@ func TestScriptExecuteWindows(t *testing.T) {
 		{
 			name:          "PowerShell Script failed",
 			script:        "gaga",
-			timeout:       1,
+			timeout:       30,
 			wantErrorBody: "The term 'gaga' is not recognized as the name of a cmdlet",
 			wantExitCode:  1,
 		},

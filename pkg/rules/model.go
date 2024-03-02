@@ -49,8 +49,8 @@ type Do struct {
 }
 
 type Button struct {
-	Name    string `yaml:"name" json:"name"`
-	URL     string `yaml:"url" json:"url"`
+	Name    string `yaml:"name,omitempty" json:"name,omitempty"`
+	URL     string `yaml:"url,omitempty" json:"url,omitempty"`
 	Classes string `yaml:"classes" json:"classes"`
 }
 
@@ -60,6 +60,7 @@ type Args struct {
 	Cwd         string `yaml:"cwd" json:"cwd"`
 	Template    string `yaml:"template" json:"template"`
 	FileUploads bool   `yaml:"file_uploads" json:"file_uploads"`
+	Templating  bool   `yaml:"templating" json:"templating"`
 }
 
 type With struct {
