@@ -19,7 +19,7 @@ func Execute() {
 		Use:   "httpe",
 		Short: "Start the httpe server",
 		Long:  "The HTTPE server allows you to trigger a variety of actions via HTTP requests.",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			serve()
 		},
 	}

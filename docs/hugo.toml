@@ -23,3 +23,11 @@ title = 'HTTP Everything'
 
 [markup.goldmark.renderer]
 unsafe = true
+
+
+[menu]
+    [[menu.primary]]
+        name  = "Documentation"
+        url = "docs/"
+        identifier = "docs"
+        weight = 10
