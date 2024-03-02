@@ -2,15 +2,51 @@
 rules:
   - name: GET File 1
     on:
-      path: /file1
+      path: /file/1
       methods:
         - get
     do:
       answer.file: /etc/hosts
+      args:
+        templating: false
+
   - name: GET File 2
     on:
-      path: /file2
+      path: /file/2
       methods:
         - get
     do:
-      answer.file: /tmp/nonsense
+      answer.file: /tmp/test.txt
+      args:
+        template: true
+    respond:
+      on_success:
+        headers:
+          My-Header: Super Dupa
+      on_error:
+        headers:
+          My-Header: THIS IS AN ERROR
+
+  - name: Music
+    on:
+      path: /file/3
+      methods:
+        - get
+    do:
+      #answer.file: /tmp/music.mp3
+      answer.file: /Users/thorsten/Swound-2023-04-15.mp3
+      args:
+        templating: false
+    respond:
+      on_success:
+        headers:
+          Content-Type: audio/mpeg
+          Content-Disposition: filename="music.mp3"
+
+  - name: MP3
+    on:
+      path: /file/4
+      methods:
+        - get
+    do:
+      answer.file: /Users/thorsten/Swound-2023-04-15.mp3

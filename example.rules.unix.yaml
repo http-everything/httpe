@@ -1,0 +1,27 @@
+---
+rules:
+  - name: Say Hello
+    on:
+      path: /hello
+    do:
+      run.script: |
+        echo "Hello {{ .Input.Params.Name }}
+        Have a lovely $(date +%A) 😎"
+
+  - name: Date
+    on:
+      path: /date
+    do:
+      run.script: date
+
+  - name: Hello World
+    on:
+      path: /hello-world
+    do:
+      answer.content: Hello World
+
+  - name: Show hosts file
+    on:
+      path: /hosts
+    do:
+      answer.file: /etc/hosts

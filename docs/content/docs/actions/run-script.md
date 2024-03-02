@@ -1,6 +1,6 @@
 ---
-weight: 001
-title: "Run scripts"
+weight: 303
+title: "Run script"
 description: ""
 icon: "article"
 date: "2024-02-12T13:08:55+01:00"

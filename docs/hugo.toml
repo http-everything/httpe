@@ -2,16 +2,23 @@ baseURL = 'https://httpe.io/'
 languageCode = 'en-us'
 title = 'HTTP Everything'
 
-[params.docs]
-sidebarIcons = true
+[params]
+    [params.docs]
+        sidebarIcons = true
+
+    [params.social]
+        github = "http-everyting/httpe"
+
+    [params.footer]
+        copyright = "© :YEAR: Thorsten Kramm. Built in Cologne with ❤️, [Golang](https://go.dev/), and [Hugo](https://gohugo.io/)"
 
 [module]
-[[module.imports]]
-path = "github.com/colinwilson/lotusdocs"
-disable = false
-[[module.imports]]
-path = "github.com/gohugoio/hugo-mod-bootstrap-scss/v5"
-disable = false
+    [[module.imports]]
+    path = "github.com/colinwilson/lotusdocs"
+    disable = false
+    [[module.imports]]
+    path = "github.com/gohugoio/hugo-mod-bootstrap-scss/v5"
+    disable = false
 
 
 [markup.goldmark.renderer]

@@ -1,6 +1,6 @@
 ---
-weight: 002
-title: "Install HTTPE"
+weight: 200
+title: "Install & configure"
 description: ""
 icon: "article"
 date: "2024-02-12T12:58:48+01:00"
@@ -14,5 +14,5 @@ slug: install
 
 ## On Windows
 
-## On MacOS
+## On macOS
 

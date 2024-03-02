@@ -38,7 +38,8 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}l{{ end }}
     files:
-      - example.rules.yaml
+      - example.rules.unix.yaml
+      - example.rules.win.yaml
       - example.httpe.conf
     format_overrides:
       - goos: windows

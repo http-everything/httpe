@@ -1,6 +1,6 @@
 ---
-weight: 300
-title: "Actions"
+weight: 500
+title: "Middleware"
 description: ""
 icon: "folder"
 date: "2024-02-12T13:11:25+01:00"

@@ -12,7 +12,7 @@ hero:
       mobile: "gradient-mobile.webp"
 
   badge:
-    text: v0.0.1
+    text: v0.0.2
     color: primary # primary, secondary, success, danger, warning, info, light, dark
     pill: false # boolean
     soft: true # boolean
@@ -26,7 +26,8 @@ hero:
   title: "HTTP Everything"
   subtitle: |
     Build HTTP **APIs with low code**.
-    HTTPE is a web application server that maps URLs to actions.
+    HTTPE is a web application server that maps URLs to actions. Create UIs with no code to trigger actions with a
+    browser - desktop or mobile.
 
   image:
     path: "images" # path to image under configured assets directory. default 'images'
@@ -71,7 +72,7 @@ features:
     - title: User interface included
       icon: trending_up
       description: >-
-        Create a user interface with buttons to execute actions without coding. Convert your mobile phone into a
+        Create a user interface with buttons without coding to execute actions. Convert your mobile phone into a
         remote control. Ideal for building you home automation.
 
 image_compare:
