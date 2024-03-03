@@ -5,6 +5,7 @@ title = 'HTTP Everything'
 [params]
     [params.docs]
         sidebarIcons = true
+        prism = false
 
     [params.social]
         github = "http-everyting/httpe"

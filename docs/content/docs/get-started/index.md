@@ -27,6 +27,8 @@ tar xzf $DOWNLOAD
 ./httpe -r example.rules.unix.yaml
 ```
 
+## Execute the examples
+
 On a second terminal, execute a request like this
 
 ```shell
@@ -101,8 +103,7 @@ how HTTPE has executed a script and send back the output.
 
 {{< figure 
   src="buttons-date.png" 
-  caption="A button created from the rules." 
-  width="50%" 
+  caption="A button created from the rules."
 >}}
 
 ## Understand the rules

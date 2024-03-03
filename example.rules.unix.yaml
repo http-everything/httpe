@@ -25,3 +25,11 @@ rules:
       path: /hosts
     do:
       answer.file: /etc/hosts
+
+  - name: A button
+    on:
+      path: /button
+    do:
+      render.buttons:
+        - url: /date
+          name: Date

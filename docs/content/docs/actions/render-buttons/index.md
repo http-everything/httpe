@@ -1,5 +1,5 @@
 ---
-weight: 006
+weight: 306
 title: "Render Buttons"
 description: ""
 icon: "article"
