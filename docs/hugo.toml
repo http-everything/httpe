@@ -5,6 +5,7 @@ title = 'HTTP Everything'
 [params]
     [params.docs]
         sidebarIcons = true
+        # The theme appears to have a bug. 'false' means prism is enabled.
         prism = false
 
     [params.social]

@@ -10,9 +10,85 @@ toc: true
 slug: install
 ---
 
-## On Linux
+## Install the software
 
-## On Windows
+### On Linux
 
-## On macOS
+Download the most recent package for Linux, unpack and move the included files to the recommended locations.
 
+```shell
+sudo mkdir /etc/httpe
+sudo mkdir /var/log/httpe
+cd /tmp/
+DOWNLOAD="httpe_{{% httpe-version %}}_Linux_$(uname -m).tar.gz"
+curl -LO https://github.com/http-everything/httpe/releases/download/{{% httpe-version %}}/${DOWNLOAD}
+tar xzf $DOWNLOAD
+sudo mv httpe /usr/local/bin/httpe
+chmod +x /usr/local/bin/httpe
+sudo mv example.httpe.conf /etc/httpe/httpe.conf
+sudo mv example.rules.unix.yaml /etc/httpe/rules.yaml
+rm ${DOWNLOAD} example.rules.win.yaml
+```
+
+It's highly recommended not to run the httpe server as the root user. Create a dedicated user and change the ownership
+of the previously created files.
+
+```shell
+sudo useradd -d /var/lib/httpe -m -U -r -s /bin/false httpe
+sudo chgrp httpe /var/log/httpe/
+sudo chgrp httpe /etc/httpe/
+```
+
+Finally, create a systemd service, to run the server as a background server and start it automatically on boot.
+
+Create a file `/etc/systemd/system/httpe.service` with the following content:
+
+```text
+#
+# HTTPE systemd service 
+#
+[Unit]
+Description=HTTPE low code application server
+ConditionFileIsExecutable=/usr/local/bin/httpe
+StartLimitIntervalSec=5
+StartLimitBurst=10
+Documentation=https://httpe.io/docs/
+After=network.target network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/rportd "-c" "/etc/httpe/httpe.conf"
+User=rport
+Restart=always
+RestartSec=120
+EnvironmentFile=-/etc/sysconfig/httpe
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+Then start the server. Starting will very likely fail, because the configuration file is not yet ready. Continue reading
+about the configuration below. 
+
+### On Windows
+
+Open a PowerShell terminal **with administrative rights**.
+Download and unpack the files to an appropriated location.
+
+```powershell
+mkdir "C:\Program Files\httpe"
+cd "C:\Program Files\httpe"
+$download = "httpe_{{% httpe-version %}}_Windows_x86_64.zip"
+iwr "https://github.com/http-everything/httpe/releases/download/{{% httpe-version%}}/$download" -OutFile $download
+Expand-Archive -DestinationPath . .\httpe_0.0.1_Windows_x86_64.zip
+rm .\$download, .\example.rules.unix.yaml
+mv example.httpe.conf httpe.conf
+```
+
+### On macOS
+
+## Edit the configuration file
+
+Open the configuration file, `/etc/httpe/httpe.conf` on Linux, `C:\Program Files\httpe\httpe.conf` on Windows and 
+change it to your needs.
