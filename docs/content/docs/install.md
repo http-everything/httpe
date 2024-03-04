@@ -81,14 +81,35 @@ mkdir "C:\Program Files\httpe"
 cd "C:\Program Files\httpe"
 $download = "httpe_{{% httpe-version %}}_Windows_x86_64.zip"
 iwr "https://github.com/http-everything/httpe/releases/download/{{% httpe-version%}}/$download" -OutFile $download
-Expand-Archive -DestinationPath . .\httpe_0.0.1_Windows_x86_64.zip
+Expand-Archive -DestinationPath . $download
 rm .\$download, .\example.rules.unix.yaml
 mv example.httpe.conf httpe.conf
+mv example.rules.win.yaml rules.yaml
+```
+
+The current version of HTTPE cannot run as a Windows service. This might change in the future. Meanwhile, you can use
+[NSSM](https://nssm.cc/) to run the server as a Windows service.
+
+```powershell
+iwr "https://nssm.cc/release/nssm-2.24.zip" -OutFile nssm-2.24.zip
+mv .\nssm-2.24\win64\nssm.exe .
+rm .\nssm-2.24* -Force -Recurse
+.\nssm.exe install httpe "C:\Program Files\httpe\httpe.exe" "-c `"C:\Program Files\httpe\httpe.conf`""
 ```
 
 ### On macOS
+
+TBD
 
 ## Edit the configuration file
 
 Open the configuration file, `/etc/httpe/httpe.conf` on Linux, `C:\Program Files\httpe\httpe.conf` on Windows and 
 change it to your needs.
+
+Remember to quote backslashes with backslashes to enter path values in the config file. For example:
+
+```text
+## Specifies the rules file
+## Environment variable HTTPE_SERVER_RULES_FILE has precedence.
+rules_file = "C:\\Program Files\\httpe\\rules.yaml"
+```
