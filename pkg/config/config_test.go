@@ -34,6 +34,11 @@ func TestShouldValidateConfig(t *testing.T) {
 			name: "valid config",
 			cfg: &config.Config{
 				S: validServerConfig,
+				SMTP: &config.SMTPConfig{
+					Server:   "localhost",
+					Username: "john.doe",
+					Password: "abc",
+				},
 			},
 			wantError: nil,
 		},
@@ -89,6 +94,18 @@ func TestShouldValidateConfig(t *testing.T) {
 				},
 			},
 			wantError: config.ErrCertOrKeyMissing,
+		},
+		{
+			name: "bad smtp server",
+			cfg: &config.Config{
+				S: validServerConfig,
+				SMTP: &config.SMTPConfig{
+					Server:   "127. 0.0.125",
+					Username: "john.doe",
+					Password: "abc",
+				},
+			},
+			wantError: config.ErrBadSMTPServer,
 		},
 	}
 	for _, tc := range cases {

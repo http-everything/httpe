@@ -4,10 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/url"
 	"os"
 	"strings"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -27,6 +29,7 @@ var (
 	ErrCertOrKeyMissing       = errors.New("to activate TLS you must provide cert AND key")
 	ErrNoRulesFile            = errors.New("no rules file specified")
 	ErrRulesFileNotReadable   = errors.New("rules file not found or not readable")
+	ErrBadSMTPServer          = errors.New("SMTP server is not a valid hostname or IP address")
 )
 
 // SvrConfig represents the config settings for the server
@@ -43,9 +46,18 @@ type SvrConfig struct {
 	DumpRules     bool   `mapstructure:"dump_rules"`
 }
 
+type SMTPConfig struct {
+	Server   string `mapstructure:"server"`
+	Port     int    `mapstructure:"port"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	From     string `mapstructure:"from"`
+}
+
 // Config is used for managing the license server config values
 type Config struct {
-	S *SvrConfig `mapstructure:"server"`
+	S    *SvrConfig  `mapstructure:"server"`
+	SMTP *SMTPConfig `mapstructure:"smtp"`
 
 	pFlags *pflag.FlagSet
 	v      *viper.Viper
@@ -173,6 +185,12 @@ func (c *Config) Validate() (err error) {
 		return ErrRulesFileNotReadable
 	}
 
+	if c.SMTP != nil {
+		if !isValidHostOrIPAddress(c.SMTP.Server) {
+			return ErrBadSMTPServer
+		}
+	}
+
 	return nil
 }
 
@@ -180,4 +198,15 @@ func (c *Config) Validate() (err error) {
 func available(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
+}
+
+func isValidHostOrIPAddress(ip string) bool {
+	parsedIP := net.ParseIP(ip)
+	if parsedIP != nil {
+		return true
+	}
+	if govalidator.IsDNSName(ip) {
+		return true
+	}
+	return false
 }

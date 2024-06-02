@@ -8,6 +8,8 @@ import (
 	"strings"
 	"testing"
 
+	"http-everything/httpe/pkg/config"
+
 	"http-everything/httpe/pkg/rules"
 	"http-everything/httpe/pkg/share/extract"
 	"http-everything/httpe/pkg/share/logger"
@@ -16,9 +18,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var smtpConfig = &config.SMTPConfig{
+	Server: "127.0.0.1:25",
+}
+
 func TestRulesShouldSucceed(t *testing.T) {
 	logger, logFile := makeTestLogger(t)
 	files, err := os.ReadDir("../../testdata/rules/good/")
+
 	require.NoError(t, err)
 	for _, file := range files {
 		if !strings.HasSuffix(file.Name(), ".yaml") {
@@ -27,7 +34,7 @@ func TestRulesShouldSucceed(t *testing.T) {
 		t.Run(file.Name(), func(t *testing.T) {
 			rulesCfg, ruleErr := rules.Read("../../testdata/rules/good/"+file.Name(), logger)
 			assert.NoError(t, ruleErr)
-			valErr := rulesCfg.Validate()
+			valErr := rulesCfg.Validate(smtpConfig)
 			assert.NoError(t, valErr)
 			log, err := os.ReadFile(logFile)
 			assert.NoError(t, err)
@@ -92,6 +99,13 @@ func TestRulesShouldFail(t *testing.T) {
 			},
 			wantMarshalError: true,
 		},
+		{
+			name: "missing-email-fields",
+			wantErrors: []string{
+				"to is required",
+				"body is required",
+			},
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -99,7 +113,7 @@ func TestRulesShouldFail(t *testing.T) {
 			rulesCfg, ruleErr := rules.Read("../../testdata/rules/bad/"+tc.name+".yaml", logger)
 			var valErr error
 			if ruleErr == nil {
-				valErr = rulesCfg.Validate()
+				valErr = rulesCfg.Validate(smtpConfig)
 			}
 
 			log, err := os.ReadFile(logFile)
@@ -121,6 +135,18 @@ func TestRulesShouldFail(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestMissingSmtpConfig(t *testing.T) {
+	logger, logFile := makeTestLogger(t)
+	rulesCfg, ruleErr := rules.Read("../../testdata/rules/good/send-email.yaml", logger)
+	assert.NoError(t, ruleErr)
+	valErr := rulesCfg.Validate(nil)
+	assert.ErrorContains(t, valErr, "invalid rules")
+	log, err := os.ReadFile(logFile)
+	assert.NoError(t, err)
+
+	assert.Contains(t, string(log), "send.email requires an smtp configuration in httpe configuration file")
 }
 
 func TestYamlToJSON(t *testing.T) {

@@ -1,0 +1,15 @@
+---
+rules:
+  - name: Send email
+    on:
+      path: /email
+    do:
+      send.email:
+        from: sender@example.com
+        to: to@example.com
+        cc: cc@example.com
+        bcc: bcc@example.com
+        body: |
+          This is an email.
+          {{ .Input.Form.text }}
+        subject: "{{ .Input.Form.subject }}"

@@ -59,7 +59,7 @@ func serve() {
 		fmt.Println(rules.YamlToJSON(cfg.S.RulesFile))
 		return
 	}
-	err = rulesCfg.Validate()
+	err = rulesCfg.Validate(cfg.SMTP)
 	if err != nil {
 		reportErrorAndExit(baseLogger, err)
 	}

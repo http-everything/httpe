@@ -1,0 +1,12 @@
+---
+rules:
+  - name: Send email
+    on:
+      path: /email
+    do:
+      send.email:
+        cc: cc@example.com
+        bcc: bcc@example.com
+        xbody: |
+          This is a message from httpe.
+          Have a nice day.

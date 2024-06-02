@@ -55,7 +55,7 @@ func (s *Server) Setup() {
 	s.logger.Infof("setting up")
 	r := mux.NewRouter()
 	for _, rule := range *s.rules {
-		h := requesthandler.Execute(rule, s.logger)
+		h := requesthandler.Execute(rule, s.logger, s.cfg.SMTP)
 		m := middleware.New(rule, s.logger)
 		if len(rule.On.Methods) == 0 {
 			r.Handle(rule.On.Path, m.Collection(h))

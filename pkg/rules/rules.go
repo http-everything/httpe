@@ -8,6 +8,8 @@ import (
 	"os"
 	"strings"
 
+	"http-everything/httpe/pkg/config"
+
 	"http-everything/httpe/pkg/share/logger"
 
 	"gopkg.in/yaml.v3"
@@ -65,7 +67,7 @@ func YamlToJSON(yamlFile string) string {
 	return string(jsonData)
 }
 
-func (r *Rules) Validate() (err error) {
+func (r *Rules) Validate(smtpConfig *config.SMTPConfig) (err error) {
 	// Convert the rules into JSON
 	JSONConf, err := json.Marshal(r)
 	if err != nil {
@@ -87,9 +89,18 @@ func (r *Rules) Validate() (err error) {
 				rule.Name, strings.Join(ValidActions, ", "))
 			hasErrors = true
 		}
+		if rule.Action() == SendEmail {
+			if smtpConfig == nil {
+				r.logger.Errorf("rule %d: %s requires an smtp configuration in httpe configuration file",
+					i,
+					SendEmail,
+				)
+				hasErrors = true
+			}
+		}
 	}
 	if hasErrors {
-		return fmt.Errorf("invalid rules")
+		return fmt.Errorf("invalid rules: at least one rule is not valid")
 	}
 
 	// Validate against schema
@@ -107,7 +118,7 @@ func (r *Rules) Validate() (err error) {
 		for _, desc := range result.Errors() {
 			r.logger.Errorf("%s\n", desc)
 		}
-		return fmt.Errorf("invalid rules")
+		return fmt.Errorf("invalid rules: schema validation failed")
 	}
 	return nil
 }
@@ -119,7 +130,7 @@ func (rule *Rule) Action() (action string) {
 	if rule.Do.RunScript != "" {
 		return RunScript
 	}
-	if rule.Do.SendEmail != "" {
+	if rule.Do.SendEmail != nil {
 		return SendEmail
 	}
 	if rule.Do.AnswerContent != "" {

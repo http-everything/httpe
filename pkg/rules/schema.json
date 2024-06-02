@@ -58,10 +58,6 @@
                 "description": "file to respond, supports templating",
                 "type": "string"
               },
-              "send.email": {
-                "description": "send an email, supports templating",
-                "type": "string"
-              },
               "redirect.permanent": {
                 "description": "send a 301 permanent redirect, supports templating",
                 "type": "string"
@@ -110,6 +106,41 @@
                   ],
                   "additionalProperties": false
                 }
+              },
+              "send.email": {
+                "description": "send an email",
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "description": "email address of sender, optional",
+                    "type": "string"
+                  },
+                  "to": {
+                    "description": "email address of recipient, required",
+                    "type": "string"
+                  },
+                  "subject": {
+                    "description": "subject of email, required",
+                    "type": "string"
+                  },
+                  "cc": {
+                    "description": "email address of cc recipient, optional",
+                    "type": "string"
+                  },
+                  "bcc": {
+                    "description": "email address of bcc recipient, optional",
+                    "type": "string"
+                  },
+                  "body": {
+                    "description": "email body, required",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "to",
+                  "body"
+                ]
               },
               "args": {
                 "description": "options for the action",

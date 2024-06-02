@@ -38,7 +38,7 @@ type On struct {
 
 type Do struct {
 	RunScript         string   `yaml:"run.script,omitempty" json:"run.script,omitempty"`
-	SendEmail         string   `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	SendEmail         *Email   `yaml:"send.email,omitempty" json:"send.email,omitempty"`
 	AnswerContent     string   `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
 	AnswerFile        string   `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
 	RedirectPermanent string   `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
@@ -53,6 +53,22 @@ type Button struct {
 	URL     string `yaml:"url,omitempty" json:"url,omitempty"`
 	Classes string `yaml:"classes" json:"classes"`
 }
+
+type Email struct {
+	From    string `yaml:"from,omitempty" json:"from,omitempty"`
+	To      string `yaml:"to,omitempty" json:"to,omitempty"`
+	Cc      string `yaml:"cc,omitempty" json:"cc,omitempty"`
+	Bcc     string `yaml:"bcc,omitempty" json:"bcc,omitempty"`
+	Subject string `yaml:"subject,omitempty" json:"subject,omitempty"`
+	Body    string `yaml:"body,omitempty" json:"body,omitempty"`
+}
+
+//
+//type SmtpCfg struct {
+//	Server   string `yaml:"server,omitempty" json:"server,omitempty"`
+//	Username string `yaml:"username,omitempty" json:"username,omitempty"`
+//	Password string `yaml:"password,omitempty" json:"password,omitempty"`
+//}
 
 type Args struct {
 	Interpreter string `yaml:"interpreter" json:"interpreter"`

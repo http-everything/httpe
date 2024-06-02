@@ -3,6 +3,9 @@ package requesthandler
 import (
 	"net/http"
 
+	"http-everything/httpe/pkg/actions/sendemail"
+	"http-everything/httpe/pkg/config"
+
 	"http-everything/httpe/pkg/actions"
 	"http-everything/httpe/pkg/actions/answercontent"
 	"http-everything/httpe/pkg/actions/answerfile"
@@ -17,7 +20,7 @@ import (
 
 const DefaultMaxRequestBody = "512KB"
 
-func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
+func Execute(rule rules.Rule, logger *logger.Logger, smtpConfig *config.SMTPConfig) http.Handler {
 	//return http.StripPrefix("/dir", http.FileServer(http.Dir("/Users/thorsten/tmp")))
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		// Initialise a new http response writer.
@@ -41,7 +44,9 @@ func Execute(rule rules.Rule, logger *logger.Logger) http.Handler {
 			actioner = runscript.Script{}
 		case rules.SendEmail:
 			// Send an email
-			actioner = runscript.Script{}
+			actioner = sendemail.Email{
+				SMTPConfig: smtpConfig,
+			}
 		case rules.AnswerContent:
 			actioner = answercontent.AnswerContent{}
 		case rules.AnswerFile:

@@ -78,7 +78,7 @@ func TestRequestHandler(t *testing.T) {
 			req, err := http.NewRequest("get", "/", nil)
 			require.NoError(t, err)
 			rec := httptest.NewRecorder()
-			httpHandler := requesthandler.Execute(rule, nil)
+			httpHandler := requesthandler.Execute(rule, nil, nil)
 			httpHandler.ServeHTTP(rec, req)
 
 			assert.Equal(t, tc.wantBody, rec.Body.String())
