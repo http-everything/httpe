@@ -147,6 +147,7 @@ func TestMissingSmtpConfig(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Contains(t, string(log), "send.email requires an smtp configuration in httpe configuration file")
+	logger.Shutdown()
 }
 
 func TestYamlToJSON(t *testing.T) {
