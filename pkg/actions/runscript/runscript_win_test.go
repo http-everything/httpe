@@ -84,7 +84,7 @@ func TestScriptExecuteWindows(t *testing.T) {
 			script:       "ping -n 60 127.0.0.1",
 			timeout:      3,
 			interpreter:  "cmd",
-			wantError:    "script killed, timeout 3 sec exceeded",
+			wantError:    "timeout 3 sec exceeded",
 			wantExitCode: 0,
 		},
 		{
