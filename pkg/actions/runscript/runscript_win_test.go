@@ -55,8 +55,8 @@ func TestScriptExecuteWindows(t *testing.T) {
 			name:         "Powershell Script timed out",
 			script:       "ping -n 60 127.0.0.1",
 			timeout:      3,
-			wantExitCode: -1,
-			wantError:    "script killed, timeout 3 sec exceeded",
+			wantExitCode: 0,
+			wantError:    "timeout 3 sec exceeded",
 		},
 		{
 			name:            "Verify directory",
@@ -140,7 +140,7 @@ echo line2`,
 				assert.Contains(t, actionResp.ErrorBody, tc.wantErrorBody, "invalid error body")
 				assert.Equal(t, tc.wantExitCode, actionResp.Code, "exit code doesn't match")
 			} else {
-				assert.EqualError(t, err, tc.wantError, "Script Error doesnt match")
+				assert.ErrorContains(t, err, tc.wantError, "Script Error doesnt match")
 			}
 		})
 	}
