@@ -56,7 +56,7 @@ Documentation=https://httpe.io/docs/
 After=network.target network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/rportd "-c" "/etc/httpe/httpe.conf"
+ExecStart=/usr/local/bin/httpe "-c" "/etc/httpe/httpe.conf"
 User=rport
 Restart=always
 RestartSec=120
