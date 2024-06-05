@@ -57,7 +57,7 @@ After=network.target network-online.target
 
 [Service]
 ExecStart=/usr/local/bin/httpe "-c" "/etc/httpe/httpe.conf"
-User=rport
+User=httpe
 Restart=always
 RestartSec=120
 EnvironmentFile=-/etc/sysconfig/httpe
