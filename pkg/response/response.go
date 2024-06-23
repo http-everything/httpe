@@ -49,6 +49,7 @@ func (r *Response) InternalServerError(err error) {
 }
 
 func (r *Response) Unauthorised() {
+	r.w.Header().Set("WWW-Authenticate", "Basic realm='Authorization required'")
 	http.Error(r.w, "Unauthorised", http.StatusUnauthorized)
 }
 
