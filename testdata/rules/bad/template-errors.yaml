@@ -3,31 +3,27 @@ rules:
   - name: Example 1 Can't evaluate field Forn
     on:
       path: /test/1
-    do:
-      answer.content: "{{ .Input.Forn.Name }}"
+    answer.content: "{{ .Input.Forn.Name }}"
     # Returns 500 internal server error
     # action answer.content: template: input:1:9: executing "input" at <.Input.Forn.Name>: can't evaluate field Forn in type requestdata.Input
 
   - name: Example 2 Can't evaluate field URLPlaceholderx
     on:
       path: /test/2
-    do:
-      run.script: echo {{ .Input.URLPlaceholderx.name }}
+    run.script: echo {{ .Input.URLPlaceholderx.name }}
     # Returns 500 internal server error
     # action run.script: error rendering script: template: input:1:14: executing "input" at <.Input.URLPlaceholderx.name>: can't evaluate field URLPlaceholderx in type requestdata.Input
 
   - name: Example 3 No values
     on:
       path: /test/3
-    do:
-      answer.content: "{{ .Input.Form.Name }}"
+    answer.content: "{{ .Input.Form.Name }}"
     # Returns 200 OK
     # <no value>
 
   - name: Example 4 default value
     on:
       path: /test/4
-    do:
-      answer.content: >-
+    answer.content: >-
         {{ .Input.Form.Name|Default "John" }}
     # Returns 200 OK

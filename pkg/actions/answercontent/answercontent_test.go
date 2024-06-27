@@ -17,9 +17,7 @@ func TestAnswerContentExecute(t *testing.T) {
 	reqData, err := requestdata.Mock()
 	require.NoError(t, err)
 	rule := rules.Rule{
-		Do: &rules.Do{
-			AnswerContent: "Agent is {{ .Meta.UserAgent }}, FormField1 is {{ .Input.Form.Field1 }}",
-		},
+		AnswerContent: "Agent is {{ .Meta.UserAgent }}, FormField1 is {{ .Input.Form.Field1 }}",
 	}
 	//Create the actioner that implements the action interface
 	var actioner actions.Actioner = answercontent.AnswerContent{}
@@ -33,7 +31,7 @@ func TestAnswerContentExecute(t *testing.T) {
 		)
 	})
 	t.Run("with errors", func(t *testing.T) {
-		rule.Do.AnswerContent = "{{ .bad }}"
+		rule.AnswerContent = "{{ .bad }}"
 		_, err := actioner.Execute(rule, reqData)
 
 		assert.ErrorContains(t,

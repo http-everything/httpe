@@ -55,7 +55,7 @@ func TestRulesShouldFail(t *testing.T) {
 		{
 			name: "action-missing",
 			wantErrors: []string{
-				"rule 0 'Action missing' is missing a valid action in the 'do' section.",
+				"rule 0 'Action missing' is missing a valid action.",
 				fmt.Sprintf("Use one of '%s'", strings.Join(rules.ValidActions, ", ")),
 			},
 			wantMarshalError:        false,

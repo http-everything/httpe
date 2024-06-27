@@ -3,14 +3,12 @@ rules:
   - name: Form data single field
     on:
       path: /form/single
-    do:
-      answer.content: Hello {{ .Input.Form.name }}
+    answer.content: Hello {{ .Input.Form.name }}
 
   - name: Form data iteration
     on:
       path: /form/iter
-    do:
-      answer.content: |
+    answer.content: |
         This is your Form Input:
         {{- range $key,$value := .Input.Form }}
         * {{ $key }} = {{ $value }}

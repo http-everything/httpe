@@ -2,8 +2,7 @@ rules:
   - name: Wrong Headers
     on:
       path: /
-    do:
-      answer.content: foo
+    answer.content: foo
     respond:
       on_success:
         headers:

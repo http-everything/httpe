@@ -20,16 +20,14 @@ rules:
   - name: small limit
     on:
       path: /small
-    do:
-      answer.content: Hello
+    rule.answer.content: Hello
     with:
       max_request_body: 2B
 
   - name: large limit
     on:
       path: /large
-    do:
-      answer.content: Hello
+    rule.answer.content: Hello
     with:
       max_request_body: 10MB
 ```

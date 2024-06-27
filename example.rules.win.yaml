@@ -3,33 +3,28 @@ rules:
   - name: Say Hello
     on:
       path: /hello
-    do:
-      run.script: |
+    run.script: |
         Write-Output "Hello {{ .Input.Params.Name }}"
         Write-Output "Have a lovely $((Get-Date).DayOfWeek) 😎"
 
   - name: Date
     on:
       path: /date
-    do:
-      run.script: Get-Date
+    run.script: Get-Date
 
   - name: Hello World
     on:
       path: /hello-world
-    do:
-      answer.content: Hello World
+    answer.content: Hello World
 
   - name: Show hosts file
     on:
       path: /hosts
-    do:
-      answer.file: C:\Windows\System32\drivers\etc\hosts
+    answer.file: C:\Windows\System32\drivers\etc\hosts
 
   - name: A button
     on:
       path: /button
-    do:
-      render.buttons:
+    render.buttons:
         - url: /date
           name: Date

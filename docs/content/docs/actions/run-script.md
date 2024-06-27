@@ -21,14 +21,13 @@ rules:
       methods:
         - get
         - post
-    do:
-      run.script: |
+    run.script: |
         date
         id
         whoami
-      args:
-        interpreter: /bin/bash
-        timeout: 2
+    args:
+      interpreter: /bin/bash
+      timeout: 2
 ```
 
 ### Advanced
@@ -38,10 +37,9 @@ rules:
   - name: Execute some more commands
     on:
       path: /commands/2
-    do:
-      run.script: "{{ .Input.Form.Script }}"
-      args:
-        timeout: 3
+    run.script: "{{ .Input.Form.Script }}"
+    args:
+      timeout: 3
     respond:
       on_error:
         body: |
@@ -58,8 +56,7 @@ rules:
   - name: execute python
     on:
       path: /commands/3
-    do:
-      run.script: |
+    run.script: |
         import platform
         print(platform.python_version())
       args:

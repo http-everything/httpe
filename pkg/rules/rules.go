@@ -84,14 +84,14 @@ func (r *Rules) Validate(smtpConfig *config.SMTPConfig) (err error) {
 	var hasErrors = false
 	for i, rule := range *r.Rules {
 		if rule.Action() == "" {
-			r.logger.Errorf("rule %d '%s' is missing a valid action in the 'do' section. Use one of '%s'.",
+			r.logger.PrintAndLogErrorf("rule %d '%s' is missing a valid action. Use one of '%s'.",
 				i,
 				rule.Name, strings.Join(ValidActions, ", "))
 			hasErrors = true
 		}
 		if rule.Action() == SendEmail {
 			if smtpConfig == nil {
-				r.logger.Errorf("rule %d: %s requires an smtp configuration in httpe configuration file",
+				r.logger.PrintAndLogErrorf("rule %d: %s requires an smtp configuration in httpe configuration file",
 					i,
 					SendEmail,
 				)
@@ -114,9 +114,9 @@ func (r *Rules) Validate(smtpConfig *config.SMTPConfig) (err error) {
 	if result.Valid() {
 		r.logger.Debugf("successfully validated against schema")
 	} else {
-		r.logger.Errorf("schema validation against %s failed", SchemaURL)
+		r.logger.PrintAndLogErrorf("schema validation against %s failed", SchemaURL)
 		for _, desc := range result.Errors() {
-			r.logger.Errorf("%s\n", desc)
+			r.logger.PrintAndLogErrorf("%s\n", desc)
 		}
 		return fmt.Errorf("invalid rules: schema validation failed")
 	}
@@ -124,31 +124,28 @@ func (r *Rules) Validate(smtpConfig *config.SMTPConfig) (err error) {
 }
 
 func (rule *Rule) Action() (action string) {
-	if rule.Do == nil {
-		return ""
-	}
-	if rule.Do.RunScript != "" {
+	if rule.RunScript != "" {
 		return RunScript
 	}
-	if rule.Do.SendEmail != nil {
+	if rule.SendEmail != nil {
 		return SendEmail
 	}
-	if rule.Do.AnswerContent != "" {
+	if rule.AnswerContent != "" {
 		return AnswerContent
 	}
-	if rule.Do.AnswerFile != "" {
+	if rule.AnswerFile != "" {
 		return AnswerFile
 	}
-	if rule.Do.RedirectPermanent != "" {
+	if rule.RedirectPermanent != "" {
 		return RedirectPermanent
 	}
-	if rule.Do.RedirectTemporary != "" {
+	if rule.RedirectTemporary != "" {
 		return RedirectTemporary
 	}
-	if rule.Do.ServeDirectory != "" {
+	if rule.ServeDirectory != "" {
 		return ServeDirectory
 	}
-	if len(rule.Do.RenderButtons) > 0 {
+	if len(rule.RenderButtons) > 0 {
 		return RenderButtons
 	}
 	return ""

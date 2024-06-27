@@ -21,9 +21,7 @@ func TestAnswerFileExecute(t *testing.T) {
 	reqData, err := requestdata.Mock()
 	require.NoError(t, err)
 	rule := rules.Rule{
-		Do: &rules.Do{
-			AnswerFile: testFile,
-		},
+		AnswerFile: testFile,
 	}
 
 	//Create the actioner that implements the action interface
@@ -39,7 +37,7 @@ func TestAnswerFileExecute(t *testing.T) {
 	})
 
 	t.Run("no errors, templating on", func(t *testing.T) {
-		rule.Do.Args.Templating = true
+		rule.Args.Templating = true
 		err := os.WriteFile(testFile, []byte("Agent is {{ .Meta.UserAgent }}, FormField1 is {{ .Input.Form.Field1 }}"), 0600)
 		require.NoError(t, err)
 
@@ -66,9 +64,7 @@ func TestAnswerFileExecute(t *testing.T) {
 func TestAnswerFileNotFound(t *testing.T) {
 	testFile := t.TempDir() + "/test.txt"
 	rule := rules.Rule{
-		Do: &rules.Do{
-			AnswerFile: testFile,
-		},
+		AnswerFile: testFile,
 	}
 	//Create the actioner that implements the action interface
 	var actioner actions.Actioner = answerfile.AnswerFile{}

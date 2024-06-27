@@ -5,14 +5,15 @@ import (
 	"strings"
 	"testing"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/renderbuttons"
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/rules"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/html"
+
+	"http-everything/httpe/pkg/requestdata"
+
+	"http-everything/httpe/pkg/actions"
+	"http-everything/httpe/pkg/actions/renderbuttons"
+	"http-everything/httpe/pkg/rules"
 )
 
 func TestRenderButtons(t *testing.T) {
@@ -24,44 +25,42 @@ func TestRenderButtons(t *testing.T) {
 			name: "Embedded Template",
 			rule: rules.Rule{
 				Name: "Render My Buttons",
-				Do: &rules.Do{
-					RenderButtons: []rules.Button{
-						{
-							Name:    "Button 1",
-							URL:     "/action/1",
-							Classes: "btn-lg",
-						},
-						{
-							Name: "Button 2",
-							URL:  "/action/2",
-						},
+				RenderButtons: []rules.Button{
+					{
+						Name:    "Button 1",
+						URL:     "/action/1",
+						Classes: "btn-lg",
+					},
+					{
+						Name: "Button 2",
+						URL:  "/action/2",
 					},
 				},
 			},
 		},
+
 		{
 			name: "Template from file system",
 			rule: rules.Rule{
 				Name: "Render My Buttons",
-				Do: &rules.Do{
-					RenderButtons: []rules.Button{
-						{
-							Name:    "Button 1",
-							URL:     "/action/1",
-							Classes: "btn-lg",
-						},
-						{
-							Name: "Button 2",
-							URL:  "/action/2",
-						},
+				RenderButtons: []rules.Button{
+					{
+						Name:    "Button 1",
+						URL:     "/action/1",
+						Classes: "btn-lg",
 					},
-					Args: rules.Args{
-						Template: "./buttons.tpl.html",
+					{
+						Name: "Button 2",
+						URL:  "/action/2",
 					},
+				},
+				Args: rules.Args{
+					Template: "./buttons.tpl.html",
 				},
 			},
 		},
 	}
+
 	var actioner actions.Actioner = renderbuttons.RenderButtons{}
 	for _, tc := range cases {
 		t.Logf("%s: %s\n", tc.name, tc.rule.Name)
@@ -106,7 +105,7 @@ func TestRenderButtons(t *testing.T) {
 			for _, v := range buttons {
 				t.Logf("Button name: '%s', attr: '%s'\n", v.Name, v.Attribute)
 			}
-			for i, c := range tc.rule.Do.RenderButtons {
+			for i, c := range tc.rule.RenderButtons {
 				assert.Equal(t, c.Name, buttons[i].Name)
 				assert.Contains(t, buttons[i].Attribute, fmt.Sprintf("fetchUrl('%s')", c.URL))
 			}

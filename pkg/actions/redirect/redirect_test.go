@@ -20,9 +20,7 @@ func TestRedirectExecute(t *testing.T) {
 	var actioner actions.Actioner = redirect.Redirect{}
 	t.Run("Redir Perm", func(t *testing.T) {
 		rule := rules.Rule{
-			Do: &rules.Do{
-				RedirectPermanent: "{{ .Input.URLPlaceholders.redir }}",
-			},
+			RedirectPermanent: "{{ .Input.URLPlaceholders.redir }}",
 		}
 		actionResp, err := actioner.Execute(rule, reqData)
 		require.NoError(t, err)
@@ -32,9 +30,7 @@ func TestRedirectExecute(t *testing.T) {
 	})
 	t.Run("Redir Temp", func(t *testing.T) {
 		rule := rules.Rule{
-			Do: &rules.Do{
-				RedirectTemporary: "{{ .Input.URLPlaceholders.redir }}",
-			},
+			RedirectTemporary: "{{ .Input.URLPlaceholders.redir }}",
 		}
 		actionResp, err := actioner.Execute(rule, reqData)
 		require.NoError(t, err)

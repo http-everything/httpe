@@ -27,7 +27,7 @@ func Execute(rule rules.Rule, logger *logger.Logger, smtpConfig *config.SMTPConf
 		respWriter := response.New(w, rule.Respond, logger)
 
 		// Collect data from the request to be made available to the template engine and add to the response writer
-		reqData, err := requestdata.Collect(r, rule.Do.Args)
+		reqData, err := requestdata.Collect(r, rule.Args)
 		if err != nil {
 			respWriter.InternalServerError(err)
 			return
@@ -37,7 +37,7 @@ func Execute(rule rules.Rule, logger *logger.Logger, smtpConfig *config.SMTPConf
 		//Create a container for the action that implements the action interface
 		var actioner actions.Actioner
 
-		// Hand over the request to the action specified by the rule defined by 'rule.Do' using switch case
+		// Hand over the request to the action specified by the rule defined by 'rule' using switch case
 		switch rule.Action() {
 		case rules.RunScript:
 			// Execute a script

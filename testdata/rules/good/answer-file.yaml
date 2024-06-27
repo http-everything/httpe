@@ -5,20 +5,18 @@ rules:
       path: /file/1
       methods:
         - get
-    do:
-      answer.file: /etc/hosts
-      args:
-        templating: false
+    answer.file: /etc/hosts
+    args:
+      templating: false
 
   - name: GET File 2
     on:
       path: /file/2
       methods:
         - get
-    do:
-      answer.file: /tmp/test.txt
-      args:
-        template: true
+    answer.file: /tmp/test.txt
+    args:
+      template: true
     respond:
       on_success:
         headers:
@@ -32,11 +30,9 @@ rules:
       path: /file/3
       methods:
         - get
-    do:
-      #answer.file: /tmp/music.mp3
-      answer.file: /Users/thorsten/Swound-2023-04-15.mp3
-      args:
-        templating: false
+    answer.file: /tmp/music.mp3
+    args:
+      templating: false
     respond:
       on_success:
         headers:
@@ -48,5 +44,4 @@ rules:
       path: /file/4
       methods:
         - get
-    do:
-      answer.file: /Users/thorsten/Swound-2023-04-15.mp3
+    answer.file: /Users/thorsten/Swound-2023-04-15.mp3

@@ -3,33 +3,28 @@ rules:
   - name: Say Hello
     on:
       path: /hello
-    do:
-      run.script: |
+    run.script: |
         echo "Hello {{ .Input.Params.Name }}
         Have a lovely $(date +%A) 😎"
 
   - name: Date
     on:
       path: /date
-    do:
-      run.script: date
+    run.script: date
 
   - name: Hello World
     on:
       path: /hello-world
-    do:
-      answer.content: Hello World
+    answer.content: Hello World
 
   - name: Show hosts file
     on:
       path: /hosts
-    do:
-      answer.file: /etc/hosts
+    answer.file: /etc/hosts
 
   - name: A button
     on:
       path: /button
-    do:
-      render.buttons:
+    render.buttons:
         - url: /date
           name: Date

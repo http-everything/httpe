@@ -21,64 +21,57 @@ func TestRequestHandler(t *testing.T) {
 
 	cases := []struct {
 		name       string
-		do         *rules.Do
+		rule       rules.Rule
 		wantBody   string
 		wantStatus int
 	}{
 		{
-			name: "Answer Content",
-			do: &rules.Do{
-				AnswerContent: "foo",
-			},
+			name:       "Answer Content",
+			rule:       rules.Rule{AnswerContent: "foo"},
 			wantBody:   "foo",
 			wantStatus: http.StatusOK,
 		},
 		{
-			name: "Answer File",
-			do: &rules.Do{
-				AnswerFile: dummyFile,
-			},
+			name:       "Answer File",
+			rule:       rules.Rule{AnswerFile: dummyFile},
 			wantBody:   "test",
 			wantStatus: http.StatusOK,
 		},
 		{
-			name: "Redir Perm",
-			do: &rules.Do{
-				RedirectPermanent: "/test",
-			},
+			name:       "Redir Perm",
+			rule:       rules.Rule{RedirectPermanent: "/test"},
 			wantBody:   "",
 			wantStatus: http.StatusMovedPermanently,
 		},
 		{
-			name: "Redir Temp",
-			do: &rules.Do{
-				RedirectTemporary: "/test",
-			},
+			name:       "Redir Temp",
+			rule:       rules.Rule{RedirectTemporary: "/test"},
 			wantBody:   "",
 			wantStatus: http.StatusFound,
 		},
 		{
-			name: "Run Script",
-			do: &rules.Do{
-				RunScript: "echo test",
-			},
+			name:       "Run Script",
+			rule:       rules.Rule{RunScript: "echo test"},
 			wantBody:   "test" + newline(t),
 			wantStatus: http.StatusOK,
 		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			rule := rules.Rule{
-				On: &rules.On{
-					Path: "/",
-				},
-				Do: tc.do,
+			tc.rule.On = &rules.On{
+				Path: "/",
 			}
+			//rule := rules.Rule{
+			//	On: &rules.On{
+			//		Path: "/",
+			//	},
+			//	AnswerContent: "foo",
+			//}
 
 			req, err := http.NewRequest("get", "/", nil)
 			require.NoError(t, err)
 			rec := httptest.NewRecorder()
-			httpHandler := requesthandler.Execute(rule, nil, nil)
+			httpHandler := requesthandler.Execute(tc.rule, nil, nil)
 			httpHandler.ServeHTTP(rec, req)
 
 			assert.Equal(t, tc.wantBody, rec.Body.String())

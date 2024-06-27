@@ -6,11 +6,10 @@ rules:
       methods:
         - get
         - bad_method
-    do:
-      run.script: date >> /tmp/cmd1.log
-      args:
-        interpreter: /bin/bash
-        timeout: 1.0
+    run.script: date >> /tmp/cmd1.log
+    args:
+      interpreter: /bin/bash
+      timeout: 1.0
     with:
       auth_basic:
         - username: john.doe

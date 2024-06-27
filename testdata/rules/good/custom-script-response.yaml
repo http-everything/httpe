@@ -3,10 +3,9 @@ rules:
   - name: Execute a script
     on:
       path: /script
-    do:
-      run.script: "{{ .Input.Form.Script }}"
-      args:
-        timeout: 3
+    run.script: "{{ .Input.Form.Script }}"
+    args:
+      timeout: 3
     respond:
       on_error:
         body: |

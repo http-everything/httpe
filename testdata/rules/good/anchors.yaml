@@ -9,15 +9,13 @@ rules:
   - name: Test 1
     on:
       path: /test1
-    do:
-      answer.content: test1
+    answer.content: test1
     with:
       <<: *auth
 
   - name: Test
     on:
       path: /test2
-    do:
-      answer.content: test2
+    answer.content: test2
     with:
       <<: *auth

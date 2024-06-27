@@ -3,7 +3,6 @@ rules:
   - name: Say something
     on:
       path: /say
-    do:
-      answer.content: | 
+    answer.content: | 
         Hi {{ .Input.Params.name }}.
         You said: "{{ .Input.Form.text }}"

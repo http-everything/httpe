@@ -117,8 +117,7 @@ rules:
   - name: Hello World
     on:
       path: /hello
-    do:
-      run.script: |
+    run.script: |
         echo "Hello {{ .Input.Params.Name }}.
         Have a lovely $(date +%A)! 😎"
 
@@ -129,8 +128,8 @@ rules:
 * A rule must have a name for identification. (Line 4)
 * The `on` object defines the request matcher. In the shown example the rule takes action if the request goes to 
   the `hello`path. Because the `method` is not defined, this rules takes action on all request methods. (Lines 5-6)
-* With the `do` object you define which action to execute if the `on` definition matches the request. The example 
-  launches the `run.script` action. The script specified will be executed by the default shell. Stdout is returned as 
+* With the `run.script` object (Line 7) you define an action to execute if the `on` definition matches the request. 
+  The script specified will be executed by the default shell. Stdout is returned as 
   http response. (Lines 8-10)
 * `{{ .Input.Params.Name }}` is a template macro. HTTPE will replace it by the URL parameter `Name`
   before execution. (Line 9)

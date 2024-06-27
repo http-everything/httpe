@@ -19,16 +19,14 @@ rules:
       path: /content/1
       methods:
         - get
-    do:
-      answer.content: Hello World
+    answer.content: Hello World
 
   - name: Multi-Line
     on:
       path: /content/2
       methods:
         - post
-    do:
-      answer.content: |
+    answer.content: |
         Line 1
         Line 2
         {{ .Input.Form.Text }}

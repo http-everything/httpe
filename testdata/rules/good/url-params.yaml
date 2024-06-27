@@ -3,7 +3,6 @@ rules:
   - name: URL Query Parameters
     on:
       path: /params
-    do:
-      answer.content: |
+    answer.content: |
         Your name is {{ .Input.Params.name }}
         You live in {{ .Input.Params.city | Default "Berlin" }}

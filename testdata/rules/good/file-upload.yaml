@@ -5,14 +5,13 @@ rules:
       path: /upload
       methods:
         - post
-    do:
-      run.script: |
+    run.script: |
         {{ $upload := index .Input.Uploads 0 }} # Get the first upload
         echo "File upload completed: {{ $upload.FieldName }} {{ $upload.FileName }} {{ $upload.Type }}"
         echo "Stored in: {{ $upload.Stored }}"
         ls -lh {{ $upload.Stored }}
 
-      args:
-        file_uploads: true
+    args:
+      file_uploads: true
     with:
       max_request_body: 5MB

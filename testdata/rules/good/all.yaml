@@ -5,11 +5,10 @@ rules:
       methods:
         - get
         - post
-    do:
-      run.script: date >> /tmp/cmd1.log
-      args:
-        #interpreter: /bin/bash
-        timeout: 1.9
+    run.script: date >> /tmp/cmd1.log
+    args:
+      #interpreter: /bin/bash
+      timeout: 1.9
     with:
       auth_basic:
         - username: john.doe
@@ -29,8 +28,7 @@ rules:
   - name: simple rule
     on:
       path: /path/1
-    do:
-      answer.content: "text"
+    answer.content: "text"
     respond:
       on_success:
         body: hello world

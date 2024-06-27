@@ -25,9 +25,7 @@ func TestRequestHandlerWithAuth(t *testing.T) {
 		On: &rules.On{
 			Path: "/",
 		},
-		Do: &rules.Do{
-			AnswerContent: "foo",
-		},
+		AnswerContent: "foo",
 		With: &rules.With{
 			AuthBasic: []rules.User{
 				{
@@ -71,9 +69,7 @@ func TestRequestHandlerBodyTooLarge(t *testing.T) {
 		On: &rules.On{
 			Path: "/",
 		},
-		Do: &rules.Do{
-			AnswerContent: "foo",
-		},
+		AnswerContent: "foo",
 		With: &rules.With{
 			MaxRequestBody: "4B",
 		},

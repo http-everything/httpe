@@ -24,9 +24,9 @@ type buttons struct {
 }
 
 func (r RenderButtons) Execute(rule rules.Rule, _ requestdata.Data) (response actions.ActionResponse, err error) {
-	if rule.Do.Args.Template != "" {
+	if rule.Args.Template != "" {
 		// Overwrite the embedded template with a file from the file system
-		t, err := os.ReadFile(rule.Do.Args.Template)
+		t, err := os.ReadFile(rule.Args.Template)
 		if err != nil {
 			return actions.ActionResponse{}, fmt.Errorf("error reading template: %w", err)
 		}
@@ -40,7 +40,7 @@ func (r RenderButtons) Execute(rule rules.Rule, _ requestdata.Data) (response ac
 	var html bytes.Buffer
 	err = te.Execute(&html, buttons{
 		Title:   rule.Name,
-		Buttons: rule.Do.RenderButtons,
+		Buttons: rule.RenderButtons,
 	})
 	if err != nil {
 		return actions.ActionResponse{}, err

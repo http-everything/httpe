@@ -119,6 +119,11 @@ func (l *Logger) Errorf(f string, args ...interface{}) {
 	l.Logf(LogLevelError, f, args...)
 }
 
+func (l *Logger) PrintAndLogErrorf(f string, args ...interface{}) {
+	fmt.Fprintf(os.Stderr, f+"\n", args...)
+	l.Logf(LogLevelError, f, args...)
+}
+
 func (l *Logger) Infof(f string, args ...interface{}) {
 	l.Logf(LogLevelInfo, f, args...)
 }

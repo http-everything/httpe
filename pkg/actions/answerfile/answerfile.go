@@ -14,7 +14,7 @@ import (
 type AnswerFile struct{}
 
 func (n AnswerFile) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
-	fileContent, err := os.ReadFile(rule.Do.AnswerFile)
+	fileContent, err := os.ReadFile(rule.AnswerFile)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return actions.ActionResponse{
@@ -26,7 +26,7 @@ func (n AnswerFile) Execute(rule rules.Rule, reqData requestdata.Data) (response
 	}
 
 	var content string
-	if rule.Do.Args.Templating {
+	if rule.Args.Templating {
 		content, err = templating.RenderString(string(fileContent), reqData)
 		if err != nil {
 			return actions.ActionResponse{}, err

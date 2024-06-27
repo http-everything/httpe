@@ -21,18 +21,16 @@ rules:
       path: /file/1
       methods:
         - get
-    do:
-      answer.file: /etc/hosts
+    answer.file: /etc/hosts
 
   - name: GET File 2
     on:
       path: /file/2
       methods:
         - get
-    do:
-      answer.file: /tmp/test.txt
-      args:
-        template: true
+    answer.file: /tmp/test.txt
+    args:
+      template: true
     respond:
       on_success:
         headers:
@@ -46,10 +44,9 @@ rules:
       path: /file/3
       methods:
         - get
-    do:
-      answer.file: /tmp/music.mp3
-      args:
-        templating: false
+    answer.file: /tmp/music.mp3
+    args:
+      templating: false
     respond:
       on_success:
         headers:
@@ -86,13 +83,12 @@ files from disk.
 
 ## File Paths
 
-On Windows you can you both, a backslash or a forward slash to specify a file path. The below examples are both valid.
+On Windows you can do both, a backslash or a forward slash to specify a file path. The below examples are both valid.
 ```text
   - name: Hosts
     on:
        path: /hosts
-    do:
-      #answer.file: C:\Windows\System32\drivers\etc\hosts
+    #answer.file: C:\Windows\System32\drivers\etc\hosts
       answer.file: C:/Windows/System32/drivers/etc/hosts
 ```
 

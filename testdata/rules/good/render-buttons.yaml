@@ -3,30 +3,26 @@ rules:
   - name: Play Music
     on:
       path: /music/play
-    do:
-      run.script: |
+    run.script: |
         nohup afplay /Users/thorsten/Swound-2023-03-4.mp3 >/dev/null 2>&1 &
         echo "Music now playing"
 
   - name: Stop
     on:
       path: /music/stop
-    do:
-      run.script: killall afplay
+    run.script: killall afplay
 
   - name: ping
     on:
       path: /ping
-    do:
-      run.script: ping -c 4 {{ .Input.Params.Tgt }}
-      args:
-        timeout: 10
+    run.script: ping -c 4 {{ .Input.Params.Tgt }}
+    args:
+      timeout: 10
 
   - name: Some buttons
     on:
       path: /
-    do:
-      render.buttons:
+    render.buttons:
         - name: Send ping to Google
           url: /ping?Tgt=8.8.8.8
         - name: Send ping to Quad9

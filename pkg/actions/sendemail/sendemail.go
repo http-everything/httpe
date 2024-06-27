@@ -21,32 +21,32 @@ type Email struct {
 
 // Execute implements the actioner interface, being the final method executed by the action
 func (e Email) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
-	body, err := templating.RenderString(rule.Do.SendEmail.Body, reqData)
+	body, err := templating.RenderString(rule.SendEmail.Body, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}
 
-	subject, err := templating.RenderString(rule.Do.SendEmail.Subject, reqData)
+	subject, err := templating.RenderString(rule.SendEmail.Subject, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}
 
-	to, err := templating.RenderString(rule.Do.SendEmail.To, reqData)
+	to, err := templating.RenderString(rule.SendEmail.To, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}
-	cc, err := templating.RenderString(rule.Do.SendEmail.Cc, reqData)
+	cc, err := templating.RenderString(rule.SendEmail.Cc, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}
-	bcc, err := templating.RenderString(rule.Do.SendEmail.Bcc, reqData)
+	bcc, err := templating.RenderString(rule.SendEmail.Bcc, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, err
 	}
 
 	var from string
-	if rule.Do.SendEmail.From != "" {
-		from, err = templating.RenderString(rule.Do.SendEmail.From, reqData)
+	if rule.SendEmail.From != "" {
+		from, err = templating.RenderString(rule.SendEmail.From, reqData)
 		if err != nil {
 			return actions.ActionResponse{}, err
 		}

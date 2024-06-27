@@ -11,7 +11,7 @@ toc: true
 
 
 ## Preface
-Almost all parameters of the rules file support templating. Templating means, macros are replace by values. Templating
+Almost all parameters of the rules file support templating. Templating means, macros are replaced by values. Templating
 happens twice: Before and after the rule action is performed. This allows you to create interactive actions and to
 customize the response. Look at this very simple example.
 
@@ -21,8 +21,7 @@ rules:
   - name: Say something
     on:
       path: /say
-    do:
-      answer.content: |
+    answer.content: |
         Hi {{ .Input.Params.name }}.
         You said: "{{ .Input.Form.text }}"
 
@@ -82,8 +81,7 @@ rules:
   - name: URL Placeholders
     on:
       path: /say/{name}/{city}
-    do:
-      run.script: |
+    run.script: |
         echo "$(date) -- You are {{ .Input.URLPlaceholders.name }} from {{ .Input.URLPlaceholders.city }}"
 
 ```
@@ -104,14 +102,12 @@ rules:
   - name: Form data single field
     on:
       path: /form/single
-    do:
-      answer.content: Hello {{ .Input.Form.name }}
+    answer.content: Hello {{ .Input.Form.name }}
 
   - name: Form data iteration
     on:
       path: /form/iter
-    do:
-      answer.content: |
+    answer.content: |
         This is your Form Input:
         {{- range $key,$value := .Input.Form }}
         * {{ $key }} = {{ $value }}
@@ -149,8 +145,7 @@ rules:
   - name: Json data
     on:
       path: /json
-    do:
-      answer.content: >-
+    answer.content: >-
         Hello {{ .Input.JSON.person.first_name }} 
         {{ .Input.JSON.person.last_name }}
 
@@ -174,7 +169,7 @@ Accessing nonexistent fields that are at the very bottom will resolve to the str
 `{{ .Input.JSON.person.name }}` with submitted data `{"person":{"last_name":"Doe"}` returns "<no value>" because `person`
 is defined but `name` not.
 
-You can use the `|Default "someting"` to apply a default value if the field is unknown. 
+You can use the `|Default "something"` to apply a default value if the field is unknown. 
 
 ### File Uploads
 
@@ -189,15 +184,14 @@ rules:
       path: /upload
       methods:
         - post
-    do:
-      run.script: |
+    run.script: |
         {{ $upload := index .Input.Uploads 0 }} # Get the first upload
         echo "File upload completed: {{ $upload.FieldName }} {{ $upload.FileName }} {{ $upload.Type }}"
         echo "Stored in: {{ $upload.Stored }}"
         ls -lh {{ $upload.Stored }}
 
-      args:
-         file_uploads: true # Default: false
+    args:
+      file_uploads: true # Default: false
     with:
       max_request_body: 5MB
 ```
@@ -231,8 +225,7 @@ rules:
   - name: URL Query Parameters
     on:
       path: /params
-    do:
-      answer.content: |
+    answer.content: |
         Your name is {{ .Input.Params.name }}
         You live in {{ .Input.Params.city | Default "Berlin" }}
 
@@ -259,9 +252,8 @@ You can manipulate the response of all actions by overwriting the default output
 rules:
   - name: Custom response
     on:
-     path: /test
-    do:
-      answer.content: This is an error
+      path: /test
+    answer.content: This is an error
     respond:
       on_success:
         body: |
@@ -289,17 +281,16 @@ Additionally the default status 200 is overwritten by 400.
 rules:
   - name: Execute a script
     on:
-      path: /script
-    do:
-      run.script: "{{ .Input.Form.Script }}"
-      args:
-        timeout: 3
+        path: /script
+    run.script: "{{ .Input.Form.Script }}"
+    args:
+      timeout: 3
     respond:
       on_error:
         body: |
           Your script '{{ .Input.Form.Script }}' has failed with: 
-            Stderr: {{ .Action.ErrorBody }}
-            Stdout: {{ .Action.SuccessBody }}
+          Stderr: {{ .Action.ErrorBody }}
+          Stdout: {{ .Action.SuccessBody }}
           Exit Code: {{ .Action.Code }}
       on_success:
         body: |
@@ -375,13 +366,12 @@ rules:
   - name: Metadata
     on:
       path: /meta
-    do:
-      answer.content: |
-        User Agent:  {{ .Meta.UserAgent }}
-        URL:         {{ .Meta.URL }}
-        Remote Add:  {{ .Meta.RemoteAddr }}
-        Method:      {{ .Meta.Method }}
-        X-My-Header: {{ index .Meta.Headers "X-My-Header" }}
+    answer.content: |
+      User Agent:  {{ .Meta.UserAgent }}
+      URL:         {{ .Meta.URL }}
+      Remote Add:  {{ .Meta.RemoteAddr }}
+      Method:      {{ .Meta.Method }}
+      X-My-Header: {{ index .Meta.Headers "X-My-Header" }}
 
 ```
 

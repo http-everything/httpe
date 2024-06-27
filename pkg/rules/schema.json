@@ -42,180 +42,131 @@
               "path"
             ]
           },
-          "do": {
-            "description": "definition of what to do if request matches the route",
-            "type": "object",
-            "properties": {
-              "run.script": {
-                "description": "a command or script to execute, supports templating",
-                "type": "string"
-              },
-              "answer.content": {
-                "description": "text to respond, supports templating",
-                "type": "string"
-              },
-              "answer.file": {
-                "description": "file to respond, supports templating",
-                "type": "string"
-              },
-              "redirect.permanent": {
-                "description": "send a 301 permanent redirect, supports templating",
-                "type": "string"
-              },
-              "redirect.temporary": {
-                "description": "send a 303 temporary redirect, supports templating",
-                "type": "string"
-              },
-              "serve.directory": {
-                "description": "serve files from directory",
-                "type": "string"
-              },
-              "render.buttons": {
-                "description": "render a list of buttons to fire requests.",
-                "type": "array",
-                "items": {
-                  "description": "button configuration",
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "description": "text on the button"
+          "run.script": {
+            "description": "a command or script to execute, supports templating",
+            "type": "string"
+          },
+          "answer.content": {
+            "description": "text to respond, supports templating",
+            "type": "string"
+          },
+          "answer.file": {
+            "description": "file to respond, supports templating",
+            "type": "string"
+          },
+          "redirect.permanent": {
+            "description": "send a 301 permanent redirect, supports templating",
+            "type": "string"
+          },
+          "redirect.temporary": {
+            "description": "send a 303 temporary redirect, supports templating",
+            "type": "string"
+          },
+          "serve.directory": {
+            "description": "serve files from directory",
+            "type": "string"
+          },
+          "render.buttons": {
+            "description": "render a list of buttons to fire requests.",
+            "type": "array",
+            "items": {
+              "description": "button configuration",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "text on the button"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "URL where HTTP GET request will be fired to on button click"
+                },
+                "classes": {
+                  "type": "string",
+                  "description": "Additional CSS class(es) separated with blank space from list of Bootstrap5 button classes",
+                  "anyOf": [
+                    {
+                      "pattern": "^btn\\-"
                     },
-                    "url": {
-                      "type": "string",
-                      "description": "URL where HTTP GET request will be fired to on button click"
-                    },
-                    "classes": {
-                      "type": "string",
-                      "description": "Additional CSS class(es) separated with blank space from list of Bootstrap5 button classes",
-                      "anyOf": [
-                        {
-                          "pattern": "^btn\\-"
-                        },
-                        {
-                          "enum": [
-                            ""
-                          ]
-                        }
+                    {
+                      "enum": [
+                        ""
                       ]
                     }
-                  },
-                  "required": [
-                    "name",
-                    "url"
-                  ],
-                  "additionalProperties": false
+                  ]
                 }
               },
-              "send.email": {
-                "description": "send an email",
-                "type": "object",
-                "properties": {
-                  "from": {
-                    "description": "email address of sender, optional",
-                    "type": "string"
-                  },
-                  "to": {
-                    "description": "email address of recipient, required",
-                    "type": "string"
-                  },
-                  "subject": {
-                    "description": "subject of email, required",
-                    "type": "string"
-                  },
-                  "cc": {
-                    "description": "email address of cc recipient, optional",
-                    "type": "string"
-                  },
-                  "bcc": {
-                    "description": "email address of bcc recipient, optional",
-                    "type": "string"
-                  },
-                  "body": {
-                    "description": "email body, required",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "to",
-                  "body"
-                ]
+              "required": [
+                "name",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "send.email": {
+            "description": "send an email",
+            "type": "object",
+            "properties": {
+              "from": {
+                "description": "email address of sender, optional",
+                "type": "string"
               },
-              "args": {
-                "description": "options for the action",
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "interpreter": {
-                    "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
-                    "type": "string"
-                  },
-                  "timeout": {
-                    "description": "timeout (seconds, int) after which the script execution will be aborted",
-                    "type": "integer"
-                  },
-                  "cwd": {
-                    "description": "change working directory. If not set, the OS temp dir will be used",
-                    "type": "string"
-                  },
-                  "template": {
-                    "description": "Path to a custom template for rendering, supported by 'render.buttons'",
-                    "type": "string"
-                  },
-                  "file_uploads": {
-                    "description": "Allow the upload if files.",
-                    "type": "boolean"
-                  },
-                  "templating": {
-                    "description": "Enable templating for answer.file, default 'false'"
-                  }
-                }
+              "to": {
+                "description": "email address of recipient, required",
+                "type": "string"
+              },
+              "subject": {
+                "description": "subject of email, required",
+                "type": "string"
+              },
+              "cc": {
+                "description": "email address of cc recipient, optional",
+                "type": "string"
+              },
+              "bcc": {
+                "description": "email address of bcc recipient, optional",
+                "type": "string"
+              },
+              "body": {
+                "description": "email body, required",
+                "type": "string"
               }
             },
             "additionalProperties": false,
-            "oneOf": [
-              {
-                "required": [
-                  "answer.content"
-                ]
-              },
-              {
-                "required": [
-                  "run.script"
-                ]
-              },
-              {
-                "required": [
-                  "answer.file"
-                ]
-              },
-              {
-                "required": [
-                  "send.email"
-                ]
-              },
-              {
-                "required": [
-                  "redirect.permanent"
-                ]
-              },
-              {
-                "required": [
-                  "redirect.temporary"
-                ]
-              },
-              {
-                "required": [
-                  "serve.directory"
-                ]
-              },
-              {
-                "required": [
-                  "render.buttons"
-                ]
-              }
+            "required": [
+              "to",
+              "body"
             ]
+          },
+          "args": {
+            "description": "options for the action",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "interpreter": {
+                "description": "interpreter used to execute the command or script such as '/bin/bash' or 'powershell'",
+                "type": "string"
+              },
+              "timeout": {
+                "description": "timeout (seconds, int) after which the script execution will be aborted",
+                "type": "integer"
+              },
+              "cwd": {
+                "description": "change working directory. If not set, the OS temp dir will be used",
+                "type": "string"
+              },
+              "template": {
+                "description": "Path to a custom template for rendering, supported by 'render.buttons'",
+                "type": "string"
+              },
+              "file_uploads": {
+                "description": "Allow the upload if files.",
+                "type": "boolean"
+              },
+              "templating": {
+                "description": "Enable templating for answer.file, default 'false'"
+              }
+            }
           },
           "with": {
             "description": "optional options applied to the request",

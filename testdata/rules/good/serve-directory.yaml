@@ -3,18 +3,15 @@ rules:
   - name: Before
     on:
       path: /dir/some-file.txt
-    do:
-      answer.content: Access denied
+    answer.content: Access denied
     respond:
       on_success:
         http_status: 403
   - name: After
     on:
       path: /dir/go.mod
-    do:
-      answer.content: go.mod blocked
+    answer.content: go.mod blocked
   - name: Server Dir
     on:
       path: /dir
-    do:
-      serve.directory: /tmp/
+    serve.directory: /tmp/

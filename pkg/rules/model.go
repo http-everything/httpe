@@ -24,11 +24,19 @@ var ValidActions = []string{
 }
 
 type Rule struct {
-	Name    string  `yaml:"name,omitempty" json:"name,omitempty"`
-	On      *On     `yaml:"on" json:"on"`
-	Do      *Do     `yaml:"do" json:"do"`
-	With    *With   `yaml:"with" json:"with,omitempty"`
-	Respond Respond `yaml:"respond" json:"respond"`
+	Name              string   `yaml:"name,omitempty" json:"name,omitempty"`
+	On                *On      `yaml:"on" json:"on"`
+	RunScript         string   `yaml:"run.script,omitempty" json:"run.script,omitempty"`
+	SendEmail         *Email   `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	AnswerContent     string   `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
+	AnswerFile        string   `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
+	RedirectPermanent string   `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
+	RedirectTemporary string   `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
+	ServeDirectory    string   `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
+	RenderButtons     []Button `yaml:"render.buttons,omitempty" json:"render.buttons,omitempty"`
+	Args              Args     `yaml:"args" json:"args"`
+	With              *With    `yaml:"with" json:"with,omitempty"`
+	Respond           Respond  `yaml:"respond" json:"respond"`
 }
 
 type On struct {
@@ -62,13 +70,6 @@ type Email struct {
 	Subject string `yaml:"subject,omitempty" json:"subject,omitempty"`
 	Body    string `yaml:"body,omitempty" json:"body,omitempty"`
 }
-
-//
-//type SmtpCfg struct {
-//	Server   string `yaml:"server,omitempty" json:"server,omitempty"`
-//	Username string `yaml:"username,omitempty" json:"username,omitempty"`
-//	Password string `yaml:"password,omitempty" json:"password,omitempty"`
-//}
 
 type Args struct {
 	Interpreter string `yaml:"interpreter" json:"interpreter"`

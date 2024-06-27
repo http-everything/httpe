@@ -2,7 +2,6 @@ rules:
   - name: Execute some commands
     on:
       path: /commands/1
-    do:
-      run.script: date >> /tmp/cmd1.log
-      args:
-        timeout: "bla"
+    run.script: date >> /tmp/cmd1.log
+    args:
+      timeout: "bla"

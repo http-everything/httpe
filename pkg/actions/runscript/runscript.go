@@ -30,18 +30,18 @@ type Script struct{}
 
 func (s Script) Execute(rule rules.Rule, reqData requestdata.Data) (response actions.ActionResponse, err error) {
 	var exitCode = -1
-	timeoutSec := firstof.Int(rule.Do.Args.Timeout, DefaultTimeoutSecs)
-	script, err := templating.RenderString(rule.Do.RunScript, reqData)
+	timeoutSec := firstof.Int(rule.Args.Timeout, DefaultTimeoutSecs)
+	script, err := templating.RenderString(rule.RunScript, reqData)
 	if err != nil {
 		return actions.ActionResponse{}, fmt.Errorf("error rendering script: %w", err)
 	}
 
-	interpreter := firstof.String(rule.Do.Args.Interpreter, defaultInterpreter())
+	interpreter := firstof.String(rule.Args.Interpreter, defaultInterpreter())
 
 	// Change to the working directory if specified by the rule.
-	err = os.Chdir(firstof.String(rule.Do.Args.Cwd, os.TempDir()))
+	err = os.Chdir(firstof.String(rule.Args.Cwd, os.TempDir()))
 	if err != nil {
-		return actions.ActionResponse{}, fmt.Errorf("error changing to directory '%s': %w", rule.Do.Args.Cwd, err)
+		return actions.ActionResponse{}, fmt.Errorf("error changing to directory '%s': %w", rule.Args.Cwd, err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)

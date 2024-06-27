@@ -3,11 +3,9 @@ rules:
   - name: redirect perm
     on:
       path: /redirect/google
-    do:
-      redirect.permanent: https://www.google.com
+    redirect.permanent: https://www.google.com
 
   - name: redirect temp
     on:
       path: /redirect/{new_loc}
-    do:
-      redirect.temporary: https://{{ .Input.URLPlaceholders.new_loc }}
+    redirect.temporary: https://{{ .Input.URLPlaceholders.new_loc }}

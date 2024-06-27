@@ -18,7 +18,7 @@ func (r Redirect) Execute(rule rules.Rule, reqData requestdata.Data) (response a
 		httpStatus = http.StatusMovedPermanently
 	}
 	location, err := templating.RenderString(
-		firstof.String(rule.Do.RedirectTemporary, rule.Do.RedirectPermanent),
+		firstof.String(rule.RedirectTemporary, rule.RedirectPermanent),
 		reqData,
 	)
 	if err != nil {

@@ -12,7 +12,7 @@ hero:
       mobile: "gradient-mobile.webp"
 
   badge:
-    text: v0.0.2
+    text: v0.0.3
     color: primary # primary, secondary, success, danger, warning, info, light, dark
     pill: false # boolean
     soft: true # boolean
@@ -50,8 +50,8 @@ features:
   weight: 20
   title: Why HTTPE?
   subtitle: |
-    Often you just want to trigger the executing of a command or shell script by an HTTP request.
-    With a comprehensive yaml-based rules file, you can listen on any URL and map requests to action without coding.
+    Often you just want to trigger the execution of a command or shell script by an HTTP request.
+    With a comprehensive YAML-based rules file, you can listen on any URL and map requests to action without coding.
 
   items:
     - title: Powerful built-in actions
@@ -74,7 +74,7 @@ features:
       icon: trending_up
       description: >-
         Create a user interface with buttons without coding to execute actions. Convert your mobile phone into a
-        remote control. Ideal for building you home automation.
+        remote control. Ideal for building your home automation.
 
 image_compare:
   enable: false

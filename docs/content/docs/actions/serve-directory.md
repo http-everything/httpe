@@ -19,8 +19,7 @@ rules:
   - name: Before
     on:
       path: /dir/some-file.txt
-    do:
-      answer.content: Access denied
+    answer.content: Access denied
     respond:
       on_success:
         http_status: 403
@@ -28,8 +27,7 @@ rules:
   - name: Server Dir
     on:
       path: /dir
-    do:
-      serve.directory: /tmp/
+    serve.directory: /tmp/
 ```
 
 On accessing `http://localhost:3000/dir/` you get a list of files and folders inside the `/tmp` directory.

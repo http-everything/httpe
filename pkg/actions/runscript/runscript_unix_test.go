@@ -97,13 +97,11 @@ func TestScriptExecuteUnix(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			rule := rules.Rule{
-				Do: &rules.Do{
-					RunScript: tc.script,
-					Args: rules.Args{
-						Interpreter: tc.interpreter,
-						Timeout:     tc.timeout,
-						Cwd:         dir,
-					},
+				RunScript: tc.script,
+				Args: rules.Args{
+					Interpreter: tc.interpreter,
+					Timeout:     tc.timeout,
+					Cwd:         dir,
 				},
 			}
 

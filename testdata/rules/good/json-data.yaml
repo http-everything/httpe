@@ -3,8 +3,7 @@ rules:
   - name: Json data
     on:
       path: /json
-    do:
-      answer.content: |
+    answer.content: |
         Field 'name' without default: {{ .Input.JSON.name }}
         Field 'name' with default:    {{ .Input.JSON.name|Default "John" }}
         

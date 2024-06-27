@@ -25,8 +25,7 @@ rules:
   - name: Auth1
     on:
       path: /auth/1
-    do:
-      answer.content: I'm in
+    answer.content: I'm in
     with:
       auth_basic:
         - username: john
@@ -37,8 +36,7 @@ rules:
   - name: Auth2
     on:
       path: /auth/2
-    do:
-      answer.content: I'm in
+    answer.content: I'm in
     with:
       auth_basic:
         - username: john
@@ -50,8 +48,7 @@ rules:
   - name: Auth3
     on:
       path: /auth/3
-    do:
-      answer.content: I'm in
+    answer.content: I'm in
     with:
       auth_basic:
         - username: john
@@ -99,16 +96,14 @@ rules:
   - name: Test 1
     on:
       path: /test1
-    do:
-      answer.content: test1
+    answer.content: test1
     with:
       <<: *auth
 
   - name: Test
     on:
       path: /test2
-    do:
-      answer.content: test2
+    answer.content: test2
     with:
       <<: *auth
 ```

@@ -65,7 +65,7 @@ func (s *Server) Setup() {
 			}
 		}
 		if rule.Action() == rules.ServeDirectory {
-			r.PathPrefix(rule.On.Path).Handler(m.Collection(servedirectory.Handle(rule.On.Path, rule.Do.ServeDirectory)))
+			r.PathPrefix(rule.On.Path).Handler(m.Collection(servedirectory.Handle(rule.On.Path, rule.ServeDirectory)))
 		}
 	}
 	r.PathPrefix("/").Handler(http.HandlerFunc(s.catchAllHandler))

@@ -3,7 +3,6 @@ rules:
   - name: URL Placeholders
     on:
       path: /say/{name}/{city}
-    do:
-      run.script: |
+    run.script: |
         echo "$(date) -- You are {{ .Input.URLPlaceholders.name }} from {{ .Input.URLPlaceholders.city }}"
         

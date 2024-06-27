@@ -84,9 +84,7 @@ func TestShouldConnect(t *testing.T) {
 				Path:    "/",
 				Methods: []string{"get"},
 			},
-			Do: &rules.Do{
-				AnswerContent: "hello world",
-			},
+			AnswerContent: "hello world",
 		},
 	}
 

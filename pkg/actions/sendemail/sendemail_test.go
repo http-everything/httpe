@@ -68,9 +68,7 @@ func TestSendEmailShouldFail(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			rule := rules.Rule{
-				Do: &rules.Do{
-					SendEmail: tc.email,
-				},
+				SendEmail: tc.email,
 			}
 			//Create the actioner that implements the action interface
 			var actioner actions.Actioner = sendemail.Email{SMTPConfig: smtpConfig}
@@ -139,9 +137,7 @@ func TestSendEmailShouldSucceed(t *testing.T) {
 
 	for index, tc := range cases {
 		rule := rules.Rule{
-			Do: &rules.Do{
-				SendEmail: tc.email,
-			},
+			SendEmail: tc.email,
 		}
 		//Create the actioner that implements the action interface
 		var actioner actions.Actioner = sendemail.Email{SMTPConfig: smtpConfig}
@@ -158,12 +154,12 @@ func TestSendEmailShouldSucceed(t *testing.T) {
 		msg := smtpServer.MessagesAndPurge()[0].MsgRequest()
 		t.Logf("%d: Body Res: %s", index, msg)
 
-		assert.Contains(t, msg, fmt.Sprintf("From: %s\r\n", rule.Do.SendEmail.From))
-		assert.Contains(t, msg, fmt.Sprintf("To: %s\r\n", rule.Do.SendEmail.To))
-		if rule.Do.SendEmail.Cc != "" {
-			assert.Contains(t, msg, fmt.Sprintf("Cc: %s\r\n", rule.Do.SendEmail.Cc))
+		assert.Contains(t, msg, fmt.Sprintf("From: %s\r\n", rule.SendEmail.From))
+		assert.Contains(t, msg, fmt.Sprintf("To: %s\r\n", rule.SendEmail.To))
+		if rule.SendEmail.Cc != "" {
+			assert.Contains(t, msg, fmt.Sprintf("Cc: %s\r\n", rule.SendEmail.Cc))
 		}
-		assert.Contains(t, msg, fmt.Sprintf("Subject: %s\r\n", rule.Do.SendEmail.Subject))
-		assert.Contains(t, msg, fmt.Sprintf("\r\n\r\n%s\r\n", rule.Do.SendEmail.Body))
+		assert.Contains(t, msg, fmt.Sprintf("Subject: %s\r\n", rule.SendEmail.Subject))
+		assert.Contains(t, msg, fmt.Sprintf("\r\n\r\n%s\r\n", rule.SendEmail.Body))
 	}
 }

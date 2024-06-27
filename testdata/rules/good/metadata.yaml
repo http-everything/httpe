@@ -3,8 +3,7 @@ rules:
   - name: Metadata
     on:
       path: /meta
-    do:
-      answer.content: |
+    answer.content: |
         User Agent:  {{ .Meta.UserAgent }}
         URL:         {{ .Meta.URL }}
         Remote Add:  {{ .Meta.RemoteAddr }}

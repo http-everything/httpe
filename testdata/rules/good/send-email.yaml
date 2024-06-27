@@ -3,8 +3,7 @@ rules:
   - name: Send email
     on:
       path: /email
-    do:
-      send.email:
+    send.email:
         from: sender@example.com
         to: to@example.com
         cc: cc@example.com

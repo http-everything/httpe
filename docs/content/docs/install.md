@@ -74,7 +74,7 @@ about the configuration below.
 ### On Windows
 
 Open a PowerShell terminal **with administrative rights**.
-Download and unpack the files to an appropriated location.
+Download and unpack the files to an appropriate location.
 
 ```powershell
 mkdir "C:\Program Files\httpe"
@@ -113,3 +113,68 @@ Remember to quote backslashes with backslashes to enter path values in the confi
 ## Environment variable HTTPE_SERVER_RULES_FILE has precedence.
 rules_file = "C:\\Program Files\\httpe\\rules.yaml"
 ```
+
+## Enable TLS aka HTTPS
+
+HTTPE is capable to run with TLS enabled. Putting a reverse proxy in front of HTTP is not required.
+To activate TLS you first need a certificate and the corresponding server key. You can generate this pair
+using OpenSSL, or, if your server is exposed to the internet, you request a free Let's encrypt certificate.
+
+### Retrieve a certificate
+
+{{< alert context="info" text="The below documentation refers to Linux only." />}}
+
+Install Certbot
+```
+apt install certbot
+```
+
+Make sure port 443 and 80 are exposed to the internet and not in use by another program.
+Certbot will start its built-in webserver to validate the server address. Therefore, all
+webservers listening on 80 or 443 must be stopped.
+
+If your machine is behind NAT, create port forwarding for 80 and 443.
+
+Once you got the certificate, you can remove the port forwarding, but this will stop the auto-renewal.
+
+Request the certificate.
+
+```shell
+sudo certbot certonly --standalone \
+  --agree-tos --register-unsafely-without-email -d <yourdomain.com>
+```
+
+### Activate TLS in HTTPE
+
+Next change the group ownership so the httpe user can read the files.
+
+```shell
+chgrp -R httpe /etc/letsencrypt/archive/
+chmod -R 0770 /etc/letsencrypt/archive/
+chgrp -R httpe /etc/letsencrypt/live/
+chmod -R 0770 /etc/letsencrypt/live/
+chmod 0770 /var/log/httpe/
+```
+
+Now edit your `httpe.conf` file insert the paths to the certificate and key files.
+
+```toml
+[server]
+## Defines the IP address and port the API server listens on.
+## Environment variable HTTPE_SERVER_ADDRESS has precedence.
+address = "0.0.0.0:443"
+
+## A working directory
+## Environment variable HTTPE_SERVER_DATA_DIR has precedence.
+data_dir = "/var/lib/httpe"
+
+## If both cert_file and key_file are specified, then rportd will use them to serve the API with TLS/https.
+## Intermediate certificates should be included in cert_file if required.
+## Environment variables HTTPE_SERVER_CERT_FILE and HTTPE_SERVER_KEY_FILE have precedence.
+cert_file = "/etc/letsencrypt/live/<yourdomain.com>/fullchain.pem"
+key_file = "/etc/letsencrypt/live/<yourdomain.com>/privkey.pem"
+
+# ... snip snap, rest of your config
+```
+
+Start httpe and test it.
