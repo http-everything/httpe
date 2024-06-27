@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/config"
 
 	"github.com/spf13/cobra"
 )

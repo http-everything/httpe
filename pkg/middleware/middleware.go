@@ -3,11 +3,11 @@ package middleware
 import (
 	"net/http"
 
-	"http-everything/httpe/pkg/auth"
-	"http-everything/httpe/pkg/response"
-	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/share/firstof"
-	"http-everything/httpe/pkg/share/logger"
+	"github.com/http-everything/httpe/pkg/auth"
+	"github.com/http-everything/httpe/pkg/response"
+	"github.com/http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/share/firstof"
+	"github.com/http-everything/httpe/pkg/share/logger"
 
 	"github.com/dustin/go-humanize" //nolint:misspell
 )

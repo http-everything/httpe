@@ -9,9 +9,9 @@ import (
 	"os"
 	"strings"
 
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/rules"
 
-	"http-everything/httpe/pkg/filetype"
+	"github.com/http-everything/httpe/pkg/filetype"
 
 	"github.com/gorilla/mux"
 

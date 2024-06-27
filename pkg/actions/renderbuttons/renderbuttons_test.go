@@ -9,11 +9,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/html"
 
-	"http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/requestdata"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/renderbuttons"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/actions/renderbuttons"
+	"github.com/http-everything/httpe/pkg/rules"
 )
 
 func TestRenderButtons(t *testing.T) {

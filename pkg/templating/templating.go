@@ -6,8 +6,8 @@ import (
 	"strings"
 	"text/template"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/requestdata"
 )
 
 type templateData struct {

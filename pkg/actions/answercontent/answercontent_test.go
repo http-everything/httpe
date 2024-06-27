@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/answercontent"
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/actions/answercontent"
+	"github.com/http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

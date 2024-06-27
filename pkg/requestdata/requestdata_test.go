@@ -9,10 +9,10 @@ import (
 	"os"
 	"testing"
 
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/rules"
 
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/share/extract"
+	"github.com/http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/share/extract"
 
 	"github.com/gorilla/mux"
 

@@ -3,7 +3,7 @@ package firstof_test
 import (
 	"testing"
 
-	"http-everything/httpe/pkg/share/firstof"
+	"github.com/http-everything/httpe/pkg/share/firstof"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"http-everything/httpe/pkg/middleware"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/middleware"
+	"github.com/http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

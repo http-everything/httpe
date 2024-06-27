@@ -1,9 +1,3 @@
 package version
 
-var (
-	HTTPEServerVersion    = "0.0-src"
-	HTTPEServerBuildTime  = ""
-	HTTPEServerLocalBuild = ""
-	HTTPEServerGitRef     = ""
-	HTTPEServerCommitID   = ""
-)
+var HTTPEServerVersion = "0.0-src"

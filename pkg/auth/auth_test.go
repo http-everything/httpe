@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"testing"
 
-	"http-everything/httpe/pkg/auth"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/auth"
+	"github.com/http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 )

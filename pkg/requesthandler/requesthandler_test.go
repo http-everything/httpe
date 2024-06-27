@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"testing"
 
-	"http-everything/httpe/pkg/requesthandler"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/requesthandler"
+	"github.com/http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"http-everything/httpe/pkg/actions/servedirectory"
+	"github.com/http-everything/httpe/pkg/actions/servedirectory"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

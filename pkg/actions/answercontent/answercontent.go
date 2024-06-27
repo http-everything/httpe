@@ -1,10 +1,10 @@
 package answercontent
 
 import (
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/templating"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/templating"
 )
 
 type AnswerContent struct{}

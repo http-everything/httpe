@@ -3,7 +3,7 @@ package merge_test
 import (
 	"testing"
 
-	"http-everything/httpe/pkg/share/merge"
+	"github.com/http-everything/httpe/pkg/share/merge"
 
 	"github.com/stretchr/testify/assert"
 )

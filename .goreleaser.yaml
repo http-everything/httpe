@@ -8,10 +8,7 @@ builds:
   - id: httpe
     binary: httpe
     ldflags:
-      - "-X {{.Env.PROJECT}}/pkg/version.HTTPEServerVersion={{.Version}}"
-      - "-X {{.Env.PROJECT}}/pkg/version.HTTPEServerGitRef={{.Branch}}"
-      - "-X {{.Env.PROJECT}}/pkg/version.HTTPEServerCommitID={{.ShortCommit}}"
-      - "-X {{.Env.PROJECT}}/pkg/version.HTTPEServerBuildTime={{.CommitTimestamp}}"
+      - "-X {{.Env.PROJECT}}/pkg/share/version.HTTPEServerVersion={{.Version}}"
       - "-s -w"
     env:
       - CGO_ENABLED=0

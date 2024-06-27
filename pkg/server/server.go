@@ -11,12 +11,12 @@ import (
 	"os/signal"
 	"time"
 
-	"http-everything/httpe/pkg/actions/servedirectory"
-	"http-everything/httpe/pkg/config"
-	"http-everything/httpe/pkg/middleware"
-	"http-everything/httpe/pkg/requesthandler"
-	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/share/logger"
+	"github.com/http-everything/httpe/pkg/actions/servedirectory"
+	"github.com/http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/middleware"
+	"github.com/http-everything/httpe/pkg/requesthandler"
+	"github.com/http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/share/logger"
 
 	"github.com/gorilla/mux"
 

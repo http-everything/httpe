@@ -3,19 +3,19 @@ package requesthandler
 import (
 	"net/http"
 
-	"http-everything/httpe/pkg/actions/sendemail"
-	"http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/actions/sendemail"
+	"github.com/http-everything/httpe/pkg/config"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/answercontent"
-	"http-everything/httpe/pkg/actions/answerfile"
-	"http-everything/httpe/pkg/actions/redirect"
-	"http-everything/httpe/pkg/actions/renderbuttons"
-	"http-everything/httpe/pkg/actions/runscript"
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/response"
-	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/share/logger"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/actions/answercontent"
+	"github.com/http-everything/httpe/pkg/actions/answerfile"
+	"github.com/http-everything/httpe/pkg/actions/redirect"
+	"github.com/http-everything/httpe/pkg/actions/renderbuttons"
+	"github.com/http-everything/httpe/pkg/actions/runscript"
+	"github.com/http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/response"
+	"github.com/http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/share/logger"
 )
 
 const DefaultMaxRequestBody = "512KB"

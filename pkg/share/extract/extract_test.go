@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"http-everything/httpe/pkg/share/extract"
+	"github.com/http-everything/httpe/pkg/share/extract"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

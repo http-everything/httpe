@@ -1,8 +1,8 @@
 package actions
 
 import (
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/rules"
 )
 
 type ActionResponse struct {

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"testing"
 
-	"http-everything/httpe/pkg/templating"
+	"github.com/http-everything/httpe/pkg/templating"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/requestdata"
 )
 
 func TestRenderActionResponse(t *testing.T) {

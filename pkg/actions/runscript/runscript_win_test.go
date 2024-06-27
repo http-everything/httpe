@@ -3,14 +3,14 @@
 package runscript_test
 
 import (
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/actions/runscript"
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/actions/runscript"
+	"github.com/http-everything/httpe/pkg/rules"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/requestdata"
 )
 
 const PowerShell = "powershell"

@@ -3,7 +3,7 @@ package filetype_test
 import (
 	"testing"
 
-	"http-everything/httpe/pkg/filetype"
+	"github.com/http-everything/httpe/pkg/filetype"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

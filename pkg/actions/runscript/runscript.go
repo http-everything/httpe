@@ -11,13 +11,13 @@ import (
 	"strings"
 	"time"
 
-	"http-everything/httpe/pkg/actions"
-	"http-everything/httpe/pkg/requestdata"
-	"http-everything/httpe/pkg/rules"
-	"http-everything/httpe/pkg/share/buffer"
-	"http-everything/httpe/pkg/share/firstof"
-	"http-everything/httpe/pkg/share/remove"
-	"http-everything/httpe/pkg/templating"
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/requestdata"
+	"github.com/http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/share/buffer"
+	"github.com/http-everything/httpe/pkg/share/firstof"
+	"github.com/http-everything/httpe/pkg/share/remove"
+	"github.com/http-everything/httpe/pkg/templating"
 
 	"github.com/lithammer/shortuuid/v4"
 )

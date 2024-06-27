@@ -10,15 +10,15 @@ import (
 	"testing"
 	"time"
 
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/rules"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/net/context"
 
-	"http-everything/httpe/pkg/config"
-	"http-everything/httpe/pkg/server"
-	"http-everything/httpe/pkg/share/logger"
+	"github.com/http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/server"
+	"github.com/http-everything/httpe/pkg/share/logger"
 )
 
 func TestShouldReturnNotFoundForInvalidRoute(t *testing.T) {

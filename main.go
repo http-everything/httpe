@@ -1,7 +1,7 @@
 package main
 
 import (
-	cmd "http-everything/httpe/cmd/server"
+	cmd "github.com/http-everything/httpe/cmd/server"
 )
 
 func main() {

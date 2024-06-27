@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/config"
 )
 
 const (

@@ -6,12 +6,12 @@ import (
 	"io"
 	"os"
 
-	"http-everything/httpe/pkg/rules"
+	"github.com/http-everything/httpe/pkg/rules"
 
-	"http-everything/httpe/pkg/config"
-	"http-everything/httpe/pkg/server"
-	"http-everything/httpe/pkg/share/logger"
-	"http-everything/httpe/pkg/share/version"
+	"github.com/http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/server"
+	"github.com/http-everything/httpe/pkg/share/logger"
+	"github.com/http-everything/httpe/pkg/share/version"
 )
 
 const (
