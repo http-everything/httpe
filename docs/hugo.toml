@@ -9,7 +9,7 @@ title = 'HTTP Everything'
         prism = false
 
     [params.social]
-        github = "http-everyting/httpe"
+        github = "http-everything/httpe"
 
     [params.footer]
         copyright = "© :YEAR: Thorsten Kramm. Built in Cologne with ❤️, [Golang](https://go.dev/), and [Hugo](https://gohugo.io/)"
