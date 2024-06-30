@@ -3,6 +3,7 @@ package response
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/http-everything/httpe/pkg/actions"
 	"github.com/http-everything/httpe/pkg/requestdata"
@@ -20,6 +21,8 @@ const (
 	DefaultOnErrorTemplate   = "{{.Action.ErrorBody }}"
 )
 
+var DefaultHeaders map[string]string
+
 type Response struct {
 	reqData  requestdata.Data
 	logger   *logger.Logger
@@ -34,6 +37,20 @@ func New(w http.ResponseWriter, ruleResp rules.Respond, logger *logger.Logger) *
 		logger:   logger,
 		ruleResp: ruleResp,
 	}
+	csp := map[string]string{
+		"default-src": "'self'",
+		"script-src":  "'self' 'nonce-2a0f584a448239d92e65e67b37264fa8' 'unsafe-eval'",
+		"style-src":   "'self' 'unsafe-inline'",
+		"img-src":     "'self' data:",
+		"connect-src": "'self'",
+		"font-src":    "'self'",
+		"frame-src":   "'self'",
+	}
+	DefaultHeaders = make(map[string]string)
+	DefaultHeaders["Content-Security-Policy"] = cspToString(csp)
+	DefaultHeaders["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+	DefaultHeaders["X-Frame-Options"] = "sameorigin"
+	DefaultHeaders["X-Content-Type-Options"] = "nosniff"
 	return resp
 }
 
@@ -111,9 +128,20 @@ func (r *Response) ActionResponse(actionResp actions.ActionResponse) {
 		r.InternalServerError(err)
 	}
 	// Set all http response headers giving precedence to the headers defined by the rules over the headers set by action.
-	for h, v := range merge.StringMapsI(ruleHeaders, headers) {
+	for h, v := range merge.StringMapsI(ruleHeaders, headers, DefaultHeaders) {
 		r.w.Header().Set(h, v)
 	}
 	r.w.WriteHeader(statusCode)
 	fmt.Fprint(r.w, response)
+}
+
+func cspToString(csp map[string]string) (result string) {
+	var pairs []string
+
+	// Iterate over the map and format the key-value pairs
+	for key, value := range csp {
+		pairs = append(pairs, fmt.Sprintf("%s %s", key, value))
+	}
+
+	return strings.Join(pairs, "; ")
 }

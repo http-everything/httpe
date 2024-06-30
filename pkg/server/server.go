@@ -11,6 +11,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/http-everything/httpe/pkg/assetshandler"
+
 	"github.com/http-everything/httpe/pkg/actions/servedirectory"
 	"github.com/http-everything/httpe/pkg/config"
 	"github.com/http-everything/httpe/pkg/middleware"
@@ -68,6 +70,8 @@ func (s *Server) Setup() {
 			r.PathPrefix(rule.On.Path).Handler(m.Collection(servedirectory.Handle(rule.On.Path, rule.ServeDirectory)))
 		}
 	}
+	r.PathPrefix("/_assets").Handler(http.HandlerFunc(assetshandler.AssetsHandler)).Methods("get")
+	r.Path("/favicon.ico").Handler(http.HandlerFunc(assetshandler.AssetsHandler)).Methods("get")
 	r.PathPrefix("/").Handler(http.HandlerFunc(s.catchAllHandler))
 
 	if s.accessLogWriter != nil {
@@ -123,9 +127,9 @@ func (s *Server) Serve(ctx context.Context, withWait bool) (err error) {
 }
 
 // catchAllHandler returns unauthorised for all unknown routes
-func (s *Server) catchAllHandler(w http.ResponseWriter, _ *http.Request) {
+func (s *Server) catchAllHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
-	_, err := w.Write([]byte("not found\n"))
+	_, err := w.Write([]byte(r.RequestURI + " not found\n"))
 	if err != nil {
 		s.logger.Errorf("unable to write response: %s", err)
 	}

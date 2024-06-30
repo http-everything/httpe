@@ -38,7 +38,7 @@ func TestShouldReturnNotFoundForInvalidRoute(t *testing.T) {
 	svr.Handler.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusNotFound, w.Code)
-	assert.Contains(t, accessLog.String(), fmt.Sprintf("GET %s HTTP/1.1\" 404 %d", testPath, 10))
+	assert.Contains(t, accessLog.String(), fmt.Sprintf("GET %s HTTP/1.1\" 404 %d", testPath, 21))
 }
 
 func TestShouldConnectToTLSServer(t *testing.T) {
