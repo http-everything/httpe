@@ -27,6 +27,7 @@ jobs:
           curl -sL https://github.com/gohugoio/hugo/releases/download/v0.123.1/hugo_extended_0.123.1_linux-amd64.tar.gz|tar xzf - hugo
           sudo mv hugo /usr/local/bin/hugo
           hugo version||true
+          git tag|tail -n1 > docs/layouts/shortcodes/httpe-version.html
           cd docs
           test -e public||mkdir public
           hugo --minify
