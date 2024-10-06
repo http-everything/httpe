@@ -13,7 +13,7 @@ import (
 	"github.com/http-everything/httpe/pkg/share/merge"
 	"github.com/http-everything/httpe/pkg/templating"
 
-	"github.com/dustin/go-humanize" //nolint:misspell
+	humanise "github.com/dustin/go-humanize" //nolint:misspell
 )
 
 const (
@@ -73,8 +73,8 @@ func (r *Response) Unauthorised() {
 func (r *Response) RequestEntityTooLarge(current int, limit int) {
 	msg := fmt.Sprintf(
 		"Request entity too large. %s sent exceeds limit of %s",
-		humanize.Bytes(uint64(current)),
-		humanize.Bytes(uint64(limit)),
+		humanise.Bytes(uint64(current)), // #nosec G115
+		humanise.Bytes(uint64(limit)),   // #nosec G115
 	)
 	http.Error(r.w, msg, http.StatusRequestEntityTooLarge)
 }

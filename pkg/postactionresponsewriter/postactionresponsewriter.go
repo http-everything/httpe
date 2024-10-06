@@ -3,14 +3,15 @@ package postactionresponsewriter
 import (
 	json2 "encoding/json"
 	"fmt"
-	"github.com/http-everything/httpe/pkg/actions"
-	"github.com/http-everything/httpe/pkg/config"
-	"github.com/http-everything/httpe/pkg/share/logger"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 	"os"
 	"path/filepath"
 	"regexp"
 	"time"
+
+	"github.com/http-everything/httpe/pkg/actions"
+	"github.com/http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/share/logger"
+	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 const FilePrefix = "httpe-postrun"
@@ -93,7 +94,7 @@ func (p *PostActionResponseWriter) dataDirCleanup() (int, error) {
 	pattern := `^` + FilePrefix + `-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-[a-z0-9]{12}\.json$`
 	re, err := regexp.Compile(pattern)
 	if err != nil {
-		return 0, fmt.Errorf("failed to compile regex: %v", err)
+		return 0, fmt.Errorf("failed to compile regex: %w", err)
 	}
 
 	// Get the current time
@@ -103,7 +104,7 @@ func (p *PostActionResponseWriter) dataDirCleanup() (int, error) {
 	// Open the directory
 	dirEntries, err := os.ReadDir(p.dataDir)
 	if err != nil {
-		return 0, fmt.Errorf("failed to read directory: %v", err)
+		return 0, fmt.Errorf("failed to read directory: %w", err)
 	}
 
 	// Iterate over each entry in the directory
@@ -123,7 +124,7 @@ func (p *PostActionResponseWriter) dataDirCleanup() (int, error) {
 		// Get file info to check its modification time
 		info, err := entry.Info()
 		if err != nil {
-			return 0, fmt.Errorf("failed to get file info for %s: %v", filePath, err)
+			return 0, fmt.Errorf("failed to get file info for %s: %w", filePath, err)
 		}
 
 		// Check if the file is older than the retention duration
@@ -131,7 +132,7 @@ func (p *PostActionResponseWriter) dataDirCleanup() (int, error) {
 			// Delete the file
 			err := os.Remove(filePath)
 			if err != nil {
-				return 0, fmt.Errorf("failed to delete file %s: %v", filePath, err)
+				return 0, fmt.Errorf("failed to delete file %s: %w", filePath, err)
 			}
 			deletedFilesCount++
 		}

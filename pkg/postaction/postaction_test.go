@@ -1,6 +1,11 @@
 package postaction_test
 
 import (
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
+
 	"github.com/http-everything/httpe/pkg/config"
 	"github.com/http-everything/httpe/pkg/postaction"
 	"github.com/http-everything/httpe/pkg/requestdata"
@@ -8,10 +13,6 @@ import (
 	"github.com/http-everything/httpe/pkg/share/logger"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"os"
-	"path/filepath"
-	"testing"
-	"time"
 )
 
 func TestRunScript(t *testing.T) {

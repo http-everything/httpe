@@ -1,8 +1,6 @@
 package requesthandler_test
 
 import (
-	"github.com/http-everything/httpe/pkg/config"
-	"github.com/http-everything/httpe/pkg/share/logger"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -10,6 +8,9 @@ import (
 	"runtime"
 	"testing"
 	"time"
+
+	"github.com/http-everything/httpe/pkg/config"
+	"github.com/http-everything/httpe/pkg/share/logger"
 
 	"github.com/http-everything/httpe/pkg/requesthandler"
 	"github.com/http-everything/httpe/pkg/rules"
@@ -70,7 +71,7 @@ func TestRequestHandler(t *testing.T) {
 	}
 	require.NoError(t, err)
 	dataDir := t.TempDir()
-	logFile := filepath.Join("C:\\tmp", "test.log")
+	logFile := filepath.Join(t.TempDir(), "test.log")
 	l, err := logger.New("test", logFile, logger.DEBUG)
 	require.NoError(t, err)
 	conf := config.Config{S: &config.SvrConfig{DataDir: dataDir, DataRetention: "1s"}}

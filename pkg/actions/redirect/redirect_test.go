@@ -1,7 +1,6 @@
 package redirect_test
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -25,7 +24,7 @@ func TestRedirectExecute(t *testing.T) {
 		actionResp, err := actioner.Execute(rule, reqData)
 		require.NoError(t, err)
 
-		assert.Equal(t, fmt.Sprintf(reqData.Input.URLPlaceholders["redir"]), actionResp.SuccessHeaders["Location"])
+		assert.Equal(t, reqData.Input.URLPlaceholders["redir"], actionResp.SuccessHeaders["Location"])
 		assert.Equal(t, http.StatusMovedPermanently, actionResp.SuccessHTTPStatus)
 	})
 	t.Run("Redir Temp", func(t *testing.T) {
@@ -35,7 +34,7 @@ func TestRedirectExecute(t *testing.T) {
 		actionResp, err := actioner.Execute(rule, reqData)
 		require.NoError(t, err)
 
-		assert.Equal(t, fmt.Sprintf(reqData.Input.URLPlaceholders["redir"]), actionResp.SuccessHeaders["Location"])
+		assert.Equal(t, reqData.Input.URLPlaceholders["redir"], actionResp.SuccessHeaders["Location"])
 		assert.Equal(t, http.StatusFound, actionResp.SuccessHTTPStatus)
 	})
 }

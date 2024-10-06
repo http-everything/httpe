@@ -4,16 +4,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
+
 	"github.com/http-everything/httpe/pkg/actions"
 	"github.com/http-everything/httpe/pkg/config"
 	"github.com/http-everything/httpe/pkg/postactionresponsewriter"
 	"github.com/http-everything/httpe/pkg/share/logger"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"os"
-	"path/filepath"
-	"testing"
-	"time"
 )
 
 func TestPostActionResponseWriter(t *testing.T) {
@@ -23,7 +24,7 @@ func TestPostActionResponseWriter(t *testing.T) {
 	dataDir := t.TempDir()
 	conf := config.Config{S: &config.SvrConfig{DataDir: dataDir, DataRetention: "1s"}}
 
-	for try, _ := range []int{1, 2} {
+	for try := range []int{1, 2} {
 		t.Run(fmt.Sprintf("Round %d", try), func(t *testing.T) {
 			writer := postactionresponsewriter.New(&conf, l)
 			writer.AddActionResponse("test", actions.ActionResponse{

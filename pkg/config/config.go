@@ -3,12 +3,13 @@ package config
 import (
 	"errors"
 	"fmt"
-	"github.com/http-everything/httpe/pkg/share/timeunit"
 	"io"
 	"net"
 	"net/url"
 	"os"
 	"strings"
+
+	"github.com/http-everything/httpe/pkg/share/timeunit"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/spf13/pflag"

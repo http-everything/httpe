@@ -1,8 +1,9 @@
 package requesthandler
 
 import (
-	"github.com/http-everything/httpe/pkg/postaction"
 	"net/http"
+
+	"github.com/http-everything/httpe/pkg/postaction"
 
 	"github.com/http-everything/httpe/pkg/actions/sendemail"
 	"github.com/http-everything/httpe/pkg/config"

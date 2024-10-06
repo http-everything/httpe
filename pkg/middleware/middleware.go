@@ -9,7 +9,7 @@ import (
 	"github.com/http-everything/httpe/pkg/share/firstof"
 	"github.com/http-everything/httpe/pkg/share/logger"
 
-	"github.com/dustin/go-humanize" //nolint:misspell
+	humanise "github.com/dustin/go-humanize" //nolint:misspell
 )
 
 const DefaultMaxRequestBody = "512KB"
@@ -32,7 +32,7 @@ func (m Middleware) Collection(next http.Handler) http.Handler {
 		respWriter := response.New(w, m.rule.Respond, m.logger)
 
 		// Reject requests exceeding the max request body limit
-		lim, err := humanize.ParseBytes(firstof.String(m.rule.MaxRequestBody(), DefaultMaxRequestBody))
+		lim, err := humanise.ParseBytes(firstof.String(m.rule.MaxRequestBody(), DefaultMaxRequestBody))
 		if err != nil {
 			respWriter.InternalServerErrorf(
 				"error parsing max_request_body '%s': %s",
@@ -41,8 +41,9 @@ func (m Middleware) Collection(next http.Handler) http.Handler {
 			)
 			return
 		}
-		if int(r.ContentLength) > int(lim) {
-			respWriter.RequestEntityTooLarge(int(r.ContentLength), int(lim))
+
+		if r.ContentLength > 0 && r.ContentLength > int64(lim) { //nolint:gosec // disable G115
+			respWriter.RequestEntityTooLarge(int(r.ContentLength), int(lim)) //nolint:gosec // disable G115
 			return
 		}
 
