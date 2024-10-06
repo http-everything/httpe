@@ -23,37 +23,31 @@ var ValidActions = []string{
 	RenderButtons,
 }
 
+var ValidPostActions = []string{
+	SendEmail,
+	RunScript,
+}
+
 type Rule struct {
-	Name              string   `yaml:"name,omitempty" json:"name,omitempty"`
-	On                *On      `yaml:"on" json:"on"`
-	RunScript         string   `yaml:"run.script,omitempty" json:"run.script,omitempty"`
-	SendEmail         *Email   `yaml:"send.email,omitempty" json:"send.email,omitempty"`
-	AnswerContent     string   `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
-	AnswerFile        string   `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
-	RedirectPermanent string   `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
-	RedirectTemporary string   `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
-	ServeDirectory    string   `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
-	RenderButtons     []Button `yaml:"render.buttons,omitempty" json:"render.buttons,omitempty"`
-	Args              Args     `yaml:"args" json:"args"`
-	With              *With    `yaml:"with" json:"with,omitempty"`
-	Respond           Respond  `yaml:"respond" json:"respond"`
+	Name              string      `yaml:"name,omitempty" json:"name,omitempty"`
+	On                *On         `yaml:"on" json:"on"`
+	RunScript         string      `yaml:"run.script,omitempty" json:"run.script,omitempty"`
+	SendEmail         *Email      `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	AnswerContent     string      `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
+	AnswerFile        string      `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
+	RedirectPermanent string      `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
+	RedirectTemporary string      `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
+	ServeDirectory    string      `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
+	RenderButtons     []Button    `yaml:"render.buttons,omitempty" json:"render.buttons,omitempty"`
+	Args              Args        `yaml:"args" json:"args"`
+	With              *With       `yaml:"with" json:"with,omitempty"`
+	PostAction        *PostAction `yaml:"postaction" json:"postaction,omitempty"`
+	Respond           Respond     `yaml:"respond" json:"respond"`
 }
 
 type On struct {
 	Path    string   `yaml:"path,omitempty" json:"path,omitempty"`
 	Methods []string `yaml:"methods,omitempty" json:"methods,omitempty"`
-}
-
-type Do struct {
-	RunScript         string   `yaml:"run.script,omitempty" json:"run.script,omitempty"`
-	SendEmail         *Email   `yaml:"send.email,omitempty" json:"send.email,omitempty"`
-	AnswerContent     string   `yaml:"answer.content,omitempty" json:"answer.content,omitempty"`
-	AnswerFile        string   `yaml:"answer.file,omitempty" json:"answer.file,omitempty"`
-	RedirectPermanent string   `yaml:"redirect.permanent,omitempty" json:"redirect.permanent,omitempty"`
-	RedirectTemporary string   `yaml:"redirect.temporary,omitempty" json:"redirect.temporary,omitempty"`
-	ServeDirectory    string   `yaml:"serve.directory,omitempty" json:"serve.directory,omitempty"`
-	RenderButtons     []Button `yaml:"render.buttons,omitempty" json:"render.buttons,omitempty"`
-	Args              Args     `yaml:"args" json:"args"`
 }
 
 type Button struct {
@@ -84,6 +78,12 @@ type With struct {
 	AuthBasic      []User `yaml:"auth_basic,omitempty" json:"auth_basic,omitempty"`
 	AuthHashing    string `yaml:"auth_hashing,omitempty" json:"auth_hashing,omitempty"`
 	MaxRequestBody string `yaml:"max_request_body,omitempty" json:"max_request_body,omitempty"`
+}
+
+type PostAction struct {
+	RunScript string `yaml:"run.script,omitempty" json:"run.script,omitempty"`
+	SendEmail *Email `yaml:"send.email,omitempty" json:"send.email,omitempty"`
+	Args      Args   `yaml:"args" json:"args"`
 }
 
 type User struct {

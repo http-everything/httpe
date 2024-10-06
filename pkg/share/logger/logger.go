@@ -13,6 +13,9 @@ const (
 	LogLevelError LogLevel = 0
 	LogLevelInfo  LogLevel = 1
 	LogLevelDebug LogLevel = 2
+	DEBUG                  = "debug"
+	INFO                   = "info"
+	ERROR                  = "error"
 )
 
 // ParseLogLevel parses the string representation of a log level and returns the corresponding LogLevel enum value.

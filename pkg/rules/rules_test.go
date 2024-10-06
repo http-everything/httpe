@@ -106,6 +106,12 @@ func TestRulesShouldFail(t *testing.T) {
 				"body is required",
 			},
 		},
+		{
+			name: "wrong-postaction",
+			wantErrors: []string{
+				"rule 0 'Wrong Postaction' invalid postaction",
+			},
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

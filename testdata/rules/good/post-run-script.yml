@@ -1,0 +1,11 @@
+---
+rules:
+  - name: Single Line
+    on:
+      path: /content/1
+      methods:
+        - get
+    answer.content: Hello World
+    postaction:
+      run.script: |
+        echo 111

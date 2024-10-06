@@ -1,0 +1,10 @@
+---
+rules:
+  - name: Wrong Postaction
+    on:
+      path: /content/1
+      methods:
+        - get
+    answer.content: Hello World
+    postaction:
+      run.scripto: date

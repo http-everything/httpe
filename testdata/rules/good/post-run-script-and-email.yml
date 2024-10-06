@@ -1,0 +1,22 @@
+---
+rules:
+  - name: Single Line
+    on:
+      path: /content/1
+      methods:
+        - post
+    answer.content: Hello World
+    postaction:
+      run.script: |
+        sleep 100
+        date
+        echo {{ .Input.Form.text }}
+      send.email:
+        subject: Your configuration has changed to {{ .Input.Form.text }}
+        to: user@example.com
+        from: configalerts@example.com
+        body: |
+          This is a confirmation about your latest config changes.
+          From now on the following configuration is active:
+          
+          {{ .Input.Form.text }}

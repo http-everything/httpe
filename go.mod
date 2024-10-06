@@ -10,12 +10,13 @@ require (
 	github.com/h2non/filetype v1.1.3
 	github.com/liamg/magic v0.0.1
 	github.com/lithammer/shortuuid/v4 v4.0.0
+	github.com/matoous/go-nanoid/v2 v2.1.0
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/mocktools/go-smtp-mock/v2 v2.3.0
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.18.2
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/net v0.20.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df

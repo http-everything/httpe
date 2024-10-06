@@ -3,16 +3,14 @@ package sendemail
 import (
 	"errors"
 	"fmt"
-	"net/http"
-
 	"github.com/asaskevich/govalidator"
-	"gopkg.in/gomail.v2"
-
 	"github.com/http-everything/httpe/pkg/actions"
 	"github.com/http-everything/httpe/pkg/config"
 	"github.com/http-everything/httpe/pkg/requestdata"
 	"github.com/http-everything/httpe/pkg/rules"
 	"github.com/http-everything/httpe/pkg/templating"
+	"gopkg.in/gomail.v2"
+	"net/http"
 )
 
 type Email struct {

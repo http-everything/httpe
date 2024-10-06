@@ -1,6 +1,7 @@
 package requesthandler
 
 import (
+	"github.com/http-everything/httpe/pkg/postaction"
 	"net/http"
 
 	"github.com/http-everything/httpe/pkg/actions/sendemail"
@@ -20,8 +21,7 @@ import (
 
 const DefaultMaxRequestBody = "512KB"
 
-func Execute(rule rules.Rule, logger *logger.Logger, smtpConfig *config.SMTPConfig) http.Handler {
-	//return http.StripPrefix("/dir", http.FileServer(http.Dir("/Users/thorsten/tmp")))
+func Execute(rule rules.Rule, logger *logger.Logger, conf *config.Config) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		// Initialise a new http response writer.
 		respWriter := response.New(w, rule.Respond, logger)
@@ -45,7 +45,7 @@ func Execute(rule rules.Rule, logger *logger.Logger, smtpConfig *config.SMTPConf
 		case rules.SendEmail:
 			// Send an email
 			actioner = sendemail.Email{
-				SMTPConfig: smtpConfig,
+				SMTPConfig: conf.SMTP,
 			}
 		case rules.AnswerContent:
 			actioner = answercontent.AnswerContent{}
@@ -68,6 +68,8 @@ func Execute(rule rules.Rule, logger *logger.Logger, smtpConfig *config.SMTPConf
 		}
 		// Hand over the action response to our HTTP response writer
 		respWriter.ActionResponse(actionResp)
+		// Execute the post action asynchronously, if there are any.
+		go postaction.Execute(rule, reqData, conf, logger)
 	}
 	return http.HandlerFunc(fn)
 }

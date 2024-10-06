@@ -6,13 +6,13 @@ import (
 )
 
 type ActionResponse struct {
-	SuccessBody       string
-	ErrorBody         string
-	Code              int
-	SuccessHTTPStatus int
-	ErrorHTTPStatus   int
-	SuccessHeaders    map[string]string
-	ErrorHeaders      map[string]string
+	SuccessBody       string            `json:"success_body"`
+	ErrorBody         string            `json:"error_body"`
+	Code              int               `json:"code"`
+	SuccessHTTPStatus int               `json:"-"`
+	ErrorHTTPStatus   int               `json:"-"`
+	SuccessHeaders    map[string]string `json:"-"`
+	ErrorHeaders      map[string]string `json:"-"`
 }
 
 type Actioner interface {

@@ -1,6 +1,7 @@
 package config_test
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -20,10 +21,11 @@ const (
 
 func TestShouldValidateConfig(t *testing.T) {
 	validServerConfig := &config.SvrConfig{
-		Address:   Address,
-		CertFile:  CertFile,
-		KeyFile:   KeyFile,
-		RulesFile: "../../testdata/rules/good/all.yaml",
+		Address:       Address,
+		CertFile:      CertFile,
+		KeyFile:       KeyFile,
+		RulesFile:     "../../testdata/rules/good/all.yaml",
+		DataRetention: "1d",
 	}
 	cases := []struct {
 		name      string
@@ -106,6 +108,19 @@ func TestShouldValidateConfig(t *testing.T) {
 				},
 			},
 			wantError: config.ErrBadSMTPServer,
+		},
+		{
+			name: "bad retention time unit",
+			cfg: &config.Config{
+				S: &config.SvrConfig{
+					Address:       Address,
+					CertFile:      CertFile,
+					KeyFile:       KeyFile,
+					RulesFile:     "../../testdata/rules/good/all.yaml",
+					DataRetention: "1p",
+				},
+			},
+			wantError: fmt.Errorf("1p: invalid duration format or unsupported unit"),
 		},
 	}
 	for _, tc := range cases {

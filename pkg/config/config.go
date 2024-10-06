@@ -3,6 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"github.com/http-everything/httpe/pkg/share/timeunit"
 	"io"
 	"net"
 	"net/url"
@@ -17,6 +18,7 @@ import (
 const (
 	DefaultServerAddress  = "0.0.0.0:3000"
 	DefaultDataDir        = "./"
+	DefaultDataRetention  = "1d"
 	DefaultLogLevel       = "info"
 	DefaultConfigFilename = "httpe.conf"
 	EnvPrefix             = "httpe"
@@ -36,6 +38,7 @@ var (
 type SvrConfig struct {
 	Address       string `mapstructure:"address"`
 	DataDir       string `mapstructure:"data_dir"`
+	DataRetention string `mapstructure:"data_retention"`
 	CertFile      string `mapstructure:"cert_file"`
 	KeyFile       string `mapstructure:"key_file"`
 	AccessLogFile string `mapstructure:"access_log_file"`
@@ -95,11 +98,13 @@ func (c *Config) Setup() {
 
 	viperCfg.SetDefault("server.address", DefaultServerAddress)
 	viperCfg.SetDefault("server.data_dir", DefaultDataDir)
+	viperCfg.SetDefault("server.data_retention", DefaultDataRetention)
 	viperCfg.SetDefault("server.log_level", DefaultLogLevel)
 
 	if c.pFlags != nil {
 		_ = viperCfg.BindPFlag("server.address", c.pFlags.Lookup("address"))
 		_ = viperCfg.BindPFlag("server.data_dir", c.pFlags.Lookup("data-dir"))
+		_ = viperCfg.BindPFlag("server.data_retention", c.pFlags.Lookup("data-retention"))
 		_ = viperCfg.BindPFlag("server.cert_file", c.pFlags.Lookup("cert-file"))
 		_ = viperCfg.BindPFlag("server.key_file", c.pFlags.Lookup("key-file"))
 		_ = viperCfg.BindPFlag("server.access_log_file", c.pFlags.Lookup("access-log-file"))
@@ -189,6 +194,11 @@ func (c *Config) Validate() (err error) {
 		if !isValidHostOrIPAddress(c.SMTP.Server) {
 			return ErrBadSMTPServer
 		}
+	}
+
+	_, err = timeunit.ParseDuration(c.S.DataRetention)
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -34,6 +34,7 @@ func Execute() {
 
 	pFlags.StringP("address", "a", config.DefaultServerAddress, "set the listen address for the server")
 	pFlags.StringP("data-dir", "d", config.DefaultDataDir, "set the data directory")
+	pFlags.StringP("data-retention", "p", config.DefaultDataRetention, "set the data retention period")
 	pFlags.String("log-level", config.DefaultLogLevel, "specify server log level. either error, info, or debug.")
 	pFlags.StringP("log-file", "l", "", "specify server log file")
 	pFlags.StringP("rules-file", "r", "", "specify rules to map route to actions")

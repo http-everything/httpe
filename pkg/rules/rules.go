@@ -98,6 +98,12 @@ func (r *Rules) Validate(smtpConfig *config.SMTPConfig) (err error) {
 				hasErrors = true
 			}
 		}
+		if _, err := rule.PostAct(); err != nil {
+			r.logger.PrintAndLogErrorf("rule %d '%s' invalid postaction. Use one of '%s'.",
+				i,
+				rule.Name, strings.Join(ValidPostActions, ", "))
+			hasErrors = true
+		}
 	}
 	if hasErrors {
 		return fmt.Errorf("invalid rules: at least one rule is not valid")
@@ -149,6 +155,19 @@ func (rule *Rule) Action() (action string) {
 		return RenderButtons
 	}
 	return ""
+}
+
+func (rule *Rule) PostAct() (action string, err error) {
+	if rule.PostAction == nil {
+		return "", nil
+	}
+	if rule.PostAction.RunScript != "" {
+		return RunScript, nil
+	}
+	if rule.PostAction.SendEmail != nil {
+		return SendEmail, nil
+	}
+	return "", errors.New("invalid postaction")
 }
 
 func (rule *Rule) MaxRequestBody() string {

@@ -168,6 +168,22 @@
               }
             }
           },
+          "postaction": {
+            "description": "asynchronous action after main action and after response sent to client",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "run.script": {
+                "$ref": "#/properties/rules/items/properties/run.script"
+              },
+              "send.email": {
+                "$ref": "#/properties/rules/items/properties/send.email"
+              },
+              "args": {
+                "$ref": "#/properties/rules/items/properties/args"
+              }
+            }
+          },
           "with": {
             "description": "optional options applied to the request",
             "type": [
