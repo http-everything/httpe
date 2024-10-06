@@ -9,4 +9,12 @@ it has some drawbacks. Usually you expose a login shell to the network. For many
 So why not exposing a single command via HTTP(s) and call it with curl? 
 The httpe server makes it easy and secure. Just define a route and a command and start the server.
 
-[Read more](https://http-everything.github.io)
+HTTPE can do more for you:
+- Execute commands via HTTP request
+- Make requests and commands dynamic by using templates
+- Respond with static content
+- Service directories
+- Send emails via HTTP requests
+- Execute commands asynchronously
+
+[Read more](https://httpe.io/)
